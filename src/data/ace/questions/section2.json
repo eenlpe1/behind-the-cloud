@@ -1,0 +1,702 @@
+[
+  {
+    "id": "s2_q01",
+    "question": "A startup needs to deploy a stateless REST API that handles unpredictable traffic spikes, scales to zero when idle, and requires no infrastructure management. Which compute platform is the best fit?",
+    "options": {
+      "A": "Compute Engine with a managed instance group",
+      "B": "Cloud Run",
+      "C": "GKE Standard cluster",
+      "D": "Bare metal servers via Google Cloud Bare Metal Solution"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Run is designed for stateless containerized workloads, scales automatically including to zero, and requires no infrastructure management. A is wrong because managed instance groups require defining machine types and don't scale to zero by default. C is wrong because GKE Standard requires node pool management and doesn't naturally scale to zero without additional configuration. D is wrong because bare metal is for specialized workloads requiring physical hardware, not for simple stateless APIs.",
+    "topic": "Compute Engine",
+    "section": 2
+  },
+  {
+    "id": "s2_q02",
+    "question": "You need to run a containerized batch processing workload that requires custom machine types and specific GPU configurations. The workload runs for 4 hours daily. Which compute option is most appropriate?",
+    "options": {
+      "A": "Cloud Run",
+      "B": "GKE Autopilot",
+      "C": "Compute Engine with custom machine types and GPU attachment",
+      "D": "Cloud Run functions"
+    },
+    "correct": "C",
+    "explanation": "C is correct because Compute Engine supports custom machine types and GPU attachment, giving full control over hardware configuration for GPU-intensive batch workloads. A is wrong because Cloud Run is for HTTP-triggered stateless services and has limited GPU support for general batch processing. B is wrong because GKE Autopilot manages node provisioning automatically but may not support all custom machine type and GPU configurations as flexibly. D is wrong because Cloud Run functions are for event-driven short-lived executions, not 4-hour batch jobs.",
+    "topic": "Compute Engine",
+    "section": 2
+  },
+  {
+    "id": "s2_q03",
+    "question": "A team needs to deploy a web application that processes events published to a Pub/Sub topic. The application should scale automatically based on the number of unprocessed messages. Which is the best architecture?",
+    "options": {
+      "A": "Compute Engine instance that polls Pub/Sub on a fixed schedule",
+      "B": "Cloud Run service triggered by Eventarc for Pub/Sub events",
+      "C": "Cloud SQL with a trigger that processes messages",
+      "D": "Filestore NFS mount shared across multiple VMs"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Run integrates with Eventarc to receive Pub/Sub events as HTTP requests, scales automatically based on message volume, and scales to zero when there are no messages. A is wrong because polling on a fixed schedule introduces latency and doesn't scale based on message volume. C is wrong because Cloud SQL is a relational database, not a compute or messaging processing service. D is wrong because Filestore is a file storage service and has no compute or event processing capabilities.",
+    "topic": "Cloud Run",
+    "section": 2
+  },
+  {
+    "id": "s2_q04",
+    "question": "Your team is deploying a GKE cluster for a production workload that requires high availability across multiple zones and automatic management of the control plane. Which GKE configuration should you use?",
+    "options": {
+      "A": "GKE Standard with a zonal cluster",
+      "B": "GKE Autopilot with a regional cluster",
+      "C": "GKE Standard with a private zonal cluster",
+      "D": "A single-node GKE cluster for cost optimization"
+    },
+    "correct": "B",
+    "explanation": "B is correct because GKE Autopilot manages node provisioning and scaling automatically, and a regional cluster distributes the control plane and nodes across multiple zones for high availability. A is wrong because a zonal cluster has a single-zone control plane, creating a single point of failure. C is wrong because a private zonal cluster is still single-zone. D is wrong because a single-node cluster has no redundancy and is not suitable for production.",
+    "topic": "GKE",
+    "section": 2
+  },
+  {
+    "id": "s2_q05",
+    "question": "You need to choose a database for an application that requires ACID transactions, complex SQL queries across multiple tables, and must support up to 10TB of data with automatic scaling. Which database is most appropriate?",
+    "options": {
+      "A": "Cloud Bigtable",
+      "B": "Firestore",
+      "C": "Cloud Spanner",
+      "D": "Memorystore"
+    },
+    "correct": "C",
+    "explanation": "C is correct because Cloud Spanner provides fully managed relational database capabilities with ACID transactions, SQL support, and horizontal scaling to handle petabytes of data. A is wrong because Bigtable is a NoSQL wide-column store optimized for high-throughput analytics, not ACID SQL transactions. B is wrong because Firestore is a NoSQL document database with limited SQL capabilities and is not designed for complex relational queries. D is wrong because Memorystore is an in-memory cache (Redis/Memcached), not a persistent relational database.",
+    "topic": "Cloud SQL",
+    "section": 2
+  },
+  {
+    "id": "s2_q06",
+    "question": "A data engineering team needs a managed service to ingest, process, and analyze streaming data from IoT sensors at millions of events per second with very low latency reads. Which combination of services is most appropriate?",
+    "options": {
+      "A": "Cloud SQL for ingestion, BigQuery for analysis",
+      "B": "Pub/Sub for ingestion, Dataflow for processing, Bigtable for low-latency reads",
+      "C": "Firestore for ingestion, Spanner for analysis",
+      "D": "Cloud Storage for ingestion, Cloud SQL for analysis"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Pub/Sub handles high-throughput message ingestion, Dataflow provides managed stream processing, and Bigtable is optimized for low-latency reads at massive scale for time-series IoT data. A is wrong because Cloud SQL cannot handle millions of events per second ingestion. C is wrong because Firestore is a document database not designed for high-throughput streaming ingestion. D is wrong because Cloud Storage is object storage, not a streaming ingestion service.",
+    "topic": "BigQuery",
+    "section": 2
+  },
+  {
+    "id": "s2_q07",
+    "question": "Your application running on Compute Engine needs high-performance block storage that persists independently of the VM lifecycle and supports snapshotting. Which storage option is correct?",
+    "options": {
+      "A": "Local SSD",
+      "B": "Zonal Persistent Disk",
+      "C": "Cloud Storage bucket mounted via FUSE",
+      "D": "Filestore NFS"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Zonal Persistent Disk is a durable, block-level storage device that persists independently of VM lifecycle, supports online snapshotting, and can be attached to Compute Engine instances. A is wrong because Local SSD is ephemeral — data is lost when the VM stops or is deleted, and it cannot be snapshotted in the same way. C is wrong because Cloud Storage via FUSE is object storage mounted as a filesystem — it does not provide block-level performance suitable for databases or OS workloads. D is wrong because Filestore provides NFS file storage, not block storage.",
+    "topic": "Storage Selection",
+    "section": 2
+  },
+  {
+    "id": "s2_q08",
+    "question": "You need to create a load balancer that distributes HTTPS traffic to backend services across multiple regions with a single anycast IP address. Which load balancer should you use?",
+    "options": {
+      "A": "Regional internal Application Load Balancer",
+      "B": "Global external Application Load Balancer",
+      "C": "Regional external Network Load Balancer",
+      "D": "Internal TCP/UDP Load Balancer"
+    },
+    "correct": "B",
+    "explanation": "B is correct because the Global external Application Load Balancer uses a single anycast IP, supports HTTPS, and distributes traffic across backends in multiple regions using Google's global network. A is wrong because a regional internal Application Load Balancer is for internal traffic within a single region. C is wrong because a Network Load Balancer operates at Layer 4 and is regional, not global. D is wrong because an Internal TCP/UDP Load Balancer is for internal traffic within a VPC and is regional.",
+    "topic": "Cloud SQL",
+    "section": 2
+  },
+  {
+    "id": "s2_q09",
+    "question": "A team wants to use Terraform to manage their Google Cloud infrastructure. They need a foundation that follows Google Cloud best practices for enterprise environments including hub-and-spoke networking and security baselines. Which tooling should they start with?",
+    "options": {
+      "A": "Write all Terraform from scratch following documentation",
+      "B": "Use Fabric FAST — Google Cloud's Terraform-based opinionated foundation for enterprise environments",
+      "C": "Use Cloud Deployment Manager instead of Terraform",
+      "D": "Use Helm charts — they work with any cloud provider"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Fabric FAST (Fast Architecture Setup Toolkit) is Google Cloud's opinionated Terraform framework that provides enterprise-grade landing zones with security baselines, hub-and-spoke networking, and organizational best practices built in. A is wrong because while writing from scratch is possible, Fabric FAST accelerates setup significantly with proven patterns. C is wrong because Cloud Deployment Manager is Google's older IaC tool and the team specifically wants to use Terraform. D is wrong because Helm is a Kubernetes package manager, not a general IaC tool for provisioning Google Cloud infrastructure.",
+    "topic": "Terraform & IaC",
+    "section": 2
+  },
+  {
+    "id": "s2_q10",
+    "question": "You need to connect your on-premises data center to Google Cloud with a dedicated, private connection that provides consistent bandwidth and low latency without traffic traversing the public internet. Which connectivity option is correct?",
+    "options": {
+      "A": "Cloud VPN over the public internet",
+      "B": "Cloud Interconnect (Dedicated or Partner)",
+      "C": "VPC Network Peering",
+      "D": "Cloud NAT"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Interconnect provides a dedicated physical connection (Dedicated Interconnect) or a connection through a partner provider (Partner Interconnect) that does not traverse the public internet, offering consistent bandwidth and low latency. A is wrong because Cloud VPN encrypts traffic but still traverses the public internet, which doesn't meet the no-public-internet requirement. C is wrong because VPC Network Peering connects two VPC networks within Google Cloud — it doesn't connect on-premises data centers. D is wrong because Cloud NAT provides outbound internet access for private instances, not on-premises connectivity.",
+    "topic": "Cloud SQL",
+    "section": 2
+  },
+  {
+    "id": "s2_q11",
+    "question": "An e-commerce platform needs to store user session data that must be accessed with sub-millisecond latency. The data is temporary and can be rebuilt from a persistent store if lost. Which service is most appropriate?",
+    "options": {
+      "A": "Cloud Spanner",
+      "B": "Firestore",
+      "C": "Memorystore for Redis",
+      "D": "Cloud Storage"
+    },
+    "correct": "C",
+    "explanation": "C is correct because Memorystore for Redis is a fully managed in-memory data store providing sub-millisecond latency, ideal for session caching where data is temporary and acceptable to lose (since it can be rebuilt). A is wrong because Spanner is a globally distributed relational database with millisecond-range latency — overkill for temporary session data. B is wrong because Firestore is a persistent NoSQL document store with higher latency than an in-memory cache. D is wrong because Cloud Storage is object storage with higher latency, not suitable for sub-millisecond session access.",
+    "topic": "Cloud SQL",
+    "section": 2
+  },
+  {
+    "id": "s2_q12",
+    "question": "A team needs to deploy an AI agent that can use tools, maintain conversation state, and execute multi-step tasks. They want to use a fully managed Google Cloud service. Which platform should they use?",
+    "options": {
+      "A": "Cloud Run with a custom agent framework",
+      "B": "Agent Runtime on Gemini Enterprise Agent Platform",
+      "C": "GKE with a self-managed LLM",
+      "D": "Cloud Functions with Pub/Sub for state management"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Agent Runtime on Gemini Enterprise Agent Platform (formerly Vertex AI Agent Engine) is Google Cloud's fully managed platform specifically designed for deploying and running AI agents with tool use, state management, and multi-step task execution. A is wrong because Cloud Run is a general compute platform — it can run agents but requires significant custom framework work and doesn't provide managed agent runtime capabilities. C is wrong because self-managing an LLM on GKE adds significant operational overhead. D is wrong because Cloud Functions are short-lived event handlers, not suitable for stateful multi-step agent conversations.",
+    "topic": "Agent Runtime",
+    "section": 2
+  },
+  {
+    "id": "s2_q13",
+    "question": "You need to store backup files that are accessed approximately once per quarter. Cost optimization is the primary concern. Which Cloud Storage class is most appropriate?",
+    "options": {
+      "A": "Standard",
+      "B": "Nearline",
+      "C": "Coldline",
+      "D": "Archive"
+    },
+    "correct": "C",
+    "explanation": "C is correct because Coldline storage is designed for data accessed less than once per quarter (roughly once every 90 days), offering very low storage costs with a 90-day minimum storage duration. A is wrong because Standard storage has the highest cost per GB and is designed for frequently accessed data. B is wrong because Nearline is designed for data accessed less than once per month (30-day minimum), not quarterly — Coldline is more cost-effective for quarterly access. D is wrong because Archive is for data accessed less than once per year — using it for quarterly access would incur high retrieval costs.",
+    "topic": "Cloud Storage",
+    "section": 2
+  },
+  {
+    "id": "s2_q14",
+    "question": "You are deploying a GKE cluster that should not be accessible from the internet. Nodes should have no public IP addresses and the control plane should only be accessible from within your VPC. Which cluster type should you create?",
+    "options": {
+      "A": "Standard public cluster",
+      "B": "Private GKE cluster",
+      "C": "Autopilot cluster with firewall rules blocking internet access",
+      "D": "GKE cluster with Cloud Armor WAF protection"
+    },
+    "correct": "B",
+    "explanation": "B is correct because a private GKE cluster ensures nodes have only internal IP addresses and the control plane can be configured for private endpoint access only, preventing internet exposure. A is wrong because a standard public cluster exposes node and control plane endpoints to the internet. C is wrong because while Autopilot can be private, firewall rules alone on a public cluster don't prevent all internet exposure — the cluster type must explicitly be private. D is wrong because Cloud Armor is a WAF/DDoS protection service for internet-facing workloads, not a solution for removing internet exposure.",
+    "topic": "GKE",
+    "section": 2
+  },
+  {
+    "id": "s2_q15",
+    "question": "A machine learning workload requires training a large neural network model. The training job needs to maximize matrix multiplication throughput and minimize training time. Which hardware accelerator is most appropriate?",
+    "options": {
+      "A": "High-memory CPU instances",
+      "B": "GPUs (NVIDIA A100 or H100)",
+      "C": "TPUs (Tensor Processing Units)",
+      "D": "High-CPU instances with more vCPUs"
+    },
+    "correct": "C",
+    "explanation": "C is correct because TPUs (Tensor Processing Units) are Google's custom-designed ASICs specifically optimized for training large neural networks with maximum matrix multiplication throughput, significantly outperforming GPUs for large-scale TensorFlow and JAX workloads. B is also a valid choice for many ML workloads but TPUs are specifically optimized for large neural network training. A and D are wrong because CPU instances, regardless of memory or core count, are orders of magnitude slower for neural network training than hardware accelerators.",
+    "topic": "Compute Engine",
+    "section": 2
+  },
+  {
+    "id": "s2_q16",
+    "question": "Your team needs to create identical Compute Engine instances across multiple environments (dev, staging, prod) with the same configuration. Which is the recommended approach?",
+    "options": {
+      "A": "Manually configure each VM and document the steps",
+      "B": "Use instance templates to define the configuration, then create managed instance groups from the template",
+      "C": "Clone VMs between environments using disk snapshots",
+      "D": "Use Cloud Shell to run gcloud commands from a shared script"
+    },
+    "correct": "B",
+    "explanation": "B is correct because instance templates define the VM configuration (machine type, disk, network, metadata, startup scripts) in a reusable way, and managed instance groups use the template to create identical instances with autoscaling. A is wrong because manual configuration is error-prone and doesn't scale. C is wrong because snapshotting and cloning VMs is operationally complex and doesn't provide a reusable template for new instances. D is wrong because gcloud scripts can create instances but don't provide the template-based reusability and managed instance group features that support autoscaling.",
+    "topic": "Compute Engine",
+    "section": 2
+  },
+  {
+    "id": "s2_q17",
+    "question": "You need to load 500GB of CSV files from an on-premises server into BigQuery. The files are generated nightly and the transfer should be automated. Which approach is most appropriate?",
+    "options": {
+      "A": "Manually upload files to Cloud Storage each night and trigger a BigQuery load job",
+      "B": "Use Storage Transfer Service to automate the transfer from on-premises to Cloud Storage, then load into BigQuery",
+      "C": "Use the BigQuery streaming API to insert rows one at a time",
+      "D": "Use Cloud SQL to import the CSVs and then migrate to BigQuery"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Storage Transfer Service can be scheduled to automatically transfer files from on-premises sources to Cloud Storage, after which a BigQuery load job can be triggered to load the data. A is wrong because manual uploads are not automated and don't scale for nightly 500GB transfers. C is wrong because the BigQuery streaming API inserts rows one at a time with higher per-row costs — it's not suitable for bulk batch loading of large files. D is wrong because going through Cloud SQL adds unnecessary complexity and doesn't make sense for loading CSV data into BigQuery.",
+    "topic": "BigQuery",
+    "section": 2
+  },
+  {
+    "id": "s2_q18",
+    "question": "A company runs workloads that are fault-tolerant, stateless, and can be interrupted. They want to minimize Compute Engine costs significantly. Which VM option should they use?",
+    "options": {
+      "A": "Standard E2 instances",
+      "B": "Sole-tenant nodes",
+      "C": "Spot VMs",
+      "D": "Committed Use Discounts"
+    },
+    "correct": "C",
+    "explanation": "C is correct because Spot VMs (formerly preemptible VMs) offer up to 91% discount compared to standard VMs and are ideal for fault-tolerant, stateless workloads that can handle interruption. A is wrong because standard E2 instances don't offer the same level of cost savings. B is wrong because sole-tenant nodes provide physical isolation but are more expensive than shared instances, not cheaper. D is wrong because Committed Use Discounts require 1 or 3-year commitments and apply to standard instances — they don't provide the same level of discount as Spot VMs for interruptible workloads.",
+    "topic": "Compute Engine",
+    "section": 2
+  },
+  {
+    "id": "s2_q19",
+    "question": "You need to create a VPC firewall rule that allows SSH access (port 22) only from your company's office IP range (203.0.113.0/24) to all instances with the tag 'management'. Which rule configuration is correct?",
+    "options": {
+      "A": "Direction: Egress, Action: Allow, Source: 203.0.113.0/24, Target tags: management, Protocol/Port: tcp:22",
+      "B": "Direction: Ingress, Action: Allow, Source IP range: 203.0.113.0/24, Target tags: management, Protocol/Port: tcp:22",
+      "C": "Direction: Ingress, Action: Deny, Source IP range: 0.0.0.0/0, Target tags: management, Protocol/Port: tcp:22",
+      "D": "Direction: Ingress, Action: Allow, Source: any, Target tags: management, Protocol/Port: tcp:22"
+    },
+    "correct": "B",
+    "explanation": "B is correct because SSH is inbound traffic (Ingress direction), the action is Allow, the source restricts to the specific office IP range, and the target tag restricts which instances the rule applies to. A is wrong because the direction is Egress (outbound) — SSH connections from clients are ingress to the VM. C is wrong because denying all traffic doesn't achieve the goal of allowing SSH from the office. D is wrong because allowing SSH from any source defeats the purpose of restricting to the office IP range.",
+    "topic": "VPC Networking",
+    "section": 2
+  },
+  {
+    "id": "s2_q20",
+    "question": "You need a PostgreSQL-compatible database that provides high availability, automated backups, and can handle up to 96TB of storage with read replicas across regions. Which Google Cloud service is the best fit?",
+    "options": {
+      "A": "Cloud SQL for PostgreSQL",
+      "B": "AlloyDB for PostgreSQL",
+      "C": "Cloud Spanner",
+      "D": "Firestore in Datastore mode"
+    },
+    "correct": "B",
+    "explanation": "B is correct because AlloyDB is a fully managed PostgreSQL-compatible database designed for high performance, high availability with automatic failover, and can scale to very large storage requirements — it's optimized for demanding enterprise PostgreSQL workloads. A is wrong because Cloud SQL for PostgreSQL has storage limits (up to ~64TB) and may not match AlloyDB's performance for demanding workloads. C is wrong because Spanner uses a different dialect (ANSI SQL, not PostgreSQL-compatible) and is optimized for globally distributed transactions. D is wrong because Firestore is a NoSQL document database, not PostgreSQL-compatible.",
+    "topic": "AlloyDB",
+    "section": 2
+  },
+  {
+    "id": "s2_q21",
+    "question": "A security team wants to use Cloud NGFW to enforce firewall policies based on VM tags rather than traditional IP-based rules. What type of tags should be used with Cloud NGFW for secure, tamper-resistant targeting?",
+    "options": {
+      "A": "Network tags (string tags set on VMs)",
+      "B": "Secure Tags (resource manager tags with IAM-controlled creation)",
+      "C": "Labels applied to VM instances",
+      "D": "Instance groups with named port configurations"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud NGFW supports Secure Tags — resource manager tags that have IAM-controlled creation and assignment, making them tamper-resistant compared to standard network tags which any project editor can modify. A is wrong because standard network tags (string tags) can be set by anyone with compute.instances.setTags permission and are not as secure for firewall targeting. C is wrong because instance labels are metadata for organizational purposes and are not supported as firewall targeting mechanisms. D is wrong because instance groups are a compute resource grouping, not a firewall targeting mechanism.",
+    "topic": "Cloud NGFW",
+    "section": 2
+  },
+  {
+    "id": "s2_q22",
+    "question": "You need to deploy a containerized application to GKE. What is the minimum set of Kubernetes resources you need to define?",
+    "options": {
+      "A": "A Pod definition only",
+      "B": "A Deployment (or similar controller) and a Service",
+      "C": "A StatefulSet, PersistentVolume, and Ingress",
+      "D": "A DaemonSet and a ConfigMap"
+    },
+    "correct": "B",
+    "explanation": "B is correct because a Deployment manages the lifecycle of Pods (ensuring the desired number are running) and a Service provides a stable network endpoint to reach those Pods. Together they form the minimal deployable unit for a containerized app. A is wrong because while a bare Pod works, it has no self-healing — if it fails, it's not restarted. A Deployment is the correct abstraction. C is wrong because StatefulSet and PersistentVolume are needed for stateful apps, not all apps. D is wrong because DaemonSets run one Pod per node, which is for infrastructure tools like logging agents, not general application deployments.",
+    "topic": "GKE",
+    "section": 2
+  },
+  {
+    "id": "s2_q23",
+    "question": "You need to use Gemini CLI to help generate Terraform configuration for a new GKE cluster. What is the primary use case of Gemini CLI in infrastructure planning?",
+    "options": {
+      "A": "Gemini CLI directly provisions Google Cloud resources without Terraform",
+      "B": "Gemini CLI provides AI-assisted generation and explanation of infrastructure code and configurations through a command-line interface",
+      "C": "Gemini CLI replaces the gcloud CLI for all Google Cloud operations",
+      "D": "Gemini CLI is only available for Python and does not support Terraform HCL"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Gemini CLI is an AI-powered command-line tool that helps engineers generate, explain, and refine infrastructure configurations including Terraform HCL through natural language interaction. A is wrong because Gemini CLI generates and assists with code — it does not directly provision resources. C is wrong because Gemini CLI is a supplementary AI tool, not a replacement for the gcloud CLI. D is wrong because Gemini CLI supports multiple languages and configuration formats including Terraform HCL.",
+    "topic": "Terraform & IaC",
+    "section": 2
+  },
+  {
+    "id": "s2_q24",
+    "question": "A company needs to share a VPC network across multiple projects so that VMs in different projects can communicate using internal IPs without VPC peering. What networking feature enables this?",
+    "options": {
+      "A": "VPC Network Peering",
+      "B": "Shared VPC",
+      "C": "Cloud VPN between projects",
+      "D": "Internal TCP/UDP Load Balancer"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Shared VPC allows a host project to share its VPC network with service projects, enabling VMs in different service projects to communicate using internal IPs on the same network without any additional peering or VPN configuration. A is wrong because VPC Network Peering connects two separate VPC networks — it doesn't share a single VPC across multiple projects. C is wrong because Cloud VPN is for on-premises or external network connectivity, not intra-organization project connectivity. D is wrong because an Internal Load Balancer is a traffic distribution service, not a cross-project networking feature.",
+    "topic": "VPC Networking",
+    "section": 2
+  },
+  {
+    "id": "s2_q25",
+    "question": "You need to deploy a Cloud Run function that is triggered whenever a new file is uploaded to a Cloud Storage bucket. Which trigger mechanism should you configure?",
+    "options": {
+      "A": "Configure a Cloud Scheduler job to check the bucket every minute",
+      "B": "Use Eventarc to route Cloud Storage object change notifications to the Cloud Run function",
+      "C": "Set up a Pub/Sub subscription and have the function poll it",
+      "D": "Use Cloud Monitoring alerts to trigger the function when storage usage increases"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Eventarc natively routes Cloud Storage object change notifications (object finalized, deleted, etc.) as CloudEvents to Cloud Run services and functions, providing event-driven triggering without polling. A is wrong because polling every minute introduces latency and unnecessary API calls. C is wrong because while Pub/Sub can forward Cloud Storage notifications, using Eventarc is the simpler, more direct approach for this scenario. D is wrong because Cloud Monitoring alerts are for operational alerting, not for triggering application logic on storage events.",
+    "topic": "Cloud Run",
+    "section": 2
+  },
+  {
+    "id": "s2_q26",
+    "question": "Your application requires a database that supports ACID transactions, complex relational queries, and must be horizontally scalable across multiple regions for a global user base. Which database is the best fit?",
+    "options": {
+      "A": "Cloud SQL with read replicas in each region",
+      "B": "Cloud Spanner",
+      "C": "Bigtable with a custom multi-region setup",
+      "D": "Firestore with multi-region configuration"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Spanner is the only fully managed relational database that provides horizontal scaling, global distribution across regions, and ACID transactions with external consistency at a global scale. A is wrong because Cloud SQL with read replicas provides read scalability but write operations go to a single primary — it doesn't horizontally scale writes globally. C is wrong because Bigtable is NoSQL and doesn't support ACID transactions or complex SQL. D is wrong because Firestore is a NoSQL document database without complex relational query support or traditional ACID transaction semantics.",
+    "topic": "Cloud SQL",
+    "section": 2
+  },
+  {
+    "id": "s2_q27",
+    "question": "A team needs to differentiate between Standard and Premium Network Service Tiers for their application. When should they choose Premium Tier?",
+    "options": {
+      "A": "When they want to reduce costs at the expense of performance",
+      "B": "When traffic should be routed over Google's private global network with lowest latency and highest reliability",
+      "C": "When they only serve users within a single region",
+      "D": "When using internal load balancers between GKE pods"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Premium Network Service Tier routes traffic over Google's private global backbone network from the point of entry closest to the user, providing lower latency, higher reliability, and consistent performance for global applications. A is wrong because Standard Tier reduces costs by routing traffic over the public internet, but Premium Tier is chosen for performance, not cost. C is wrong because single-region applications don't benefit as much from Premium Tier's global routing — Standard Tier may suffice. D is wrong because internal load balancers between GKE pods use internal networking and are not subject to Network Service Tier selection.",
+    "topic": "Cloud SQL",
+    "section": 2
+  },
+  {
+    "id": "s2_q28",
+    "question": "You need to configure OS Login on Compute Engine instances to manage SSH access using IAM. What does OS Login provide that traditional SSH key management does not?",
+    "options": {
+      "A": "OS Login provides faster SSH connection times",
+      "B": "OS Login ties SSH access to IAM identities, enabling centralized access management and automatic key revocation when IAM permissions change",
+      "C": "OS Login encrypts the SSH session with a stronger cipher than standard SSH",
+      "D": "OS Login allows SSH access without any private key"
+    },
+    "correct": "B",
+    "explanation": "B is correct because OS Login links SSH access to Google identities and IAM roles — when an IAM permission is revoked, access is immediately removed without needing to delete SSH keys from individual instances. A is wrong because OS Login does not improve SSH connection speed. C is wrong because OS Login doesn't change the SSH cipher — standard SSH encryption is used. D is wrong because OS Login still uses SSH keys — it manages them through Google's infrastructure rather than requiring manual key management.",
+    "topic": "Compute Engine",
+    "section": 2
+  },
+  {
+    "id": "s2_q29",
+    "question": "You need to deploy a web application that requires high-performance file storage shared across multiple Compute Engine instances simultaneously, with POSIX compliance. Which storage option is correct?",
+    "options": {
+      "A": "Regional Persistent Disk attached to multiple VMs",
+      "B": "Filestore",
+      "C": "Cloud Storage with FUSE",
+      "D": "Local SSD on each VM"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Filestore provides fully managed NFS file storage that is POSIX-compliant and can be mounted simultaneously by multiple Compute Engine instances. A is wrong because Regional Persistent Disk supports multi-writer mode for up to 2 VMs simultaneously and has limitations — Filestore is the designed solution for general shared file storage. C is wrong because Cloud Storage via FUSE is object storage and does not provide full POSIX semantics needed by many applications. D is wrong because Local SSD is node-local and cannot be shared across VMs.",
+    "topic": "Storage Selection",
+    "section": 2
+  },
+  {
+    "id": "s2_q30",
+    "question": "A team needs to use Helm to deploy a Kubernetes application. What is Helm's primary role in the deployment workflow?",
+    "options": {
+      "A": "Helm provisions the underlying GKE cluster infrastructure",
+      "B": "Helm is a Kubernetes package manager that templates, versions, and manages the deployment of Kubernetes resources",
+      "C": "Helm replaces kubectl for all Kubernetes cluster operations",
+      "D": "Helm provides a GUI for managing Kubernetes workloads"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Helm is the standard Kubernetes package manager — it uses charts (templated Kubernetes manifests) to package, version, deploy, and manage Kubernetes applications consistently. A is wrong because Helm does not provision clusters — it deploys applications onto existing clusters. C is wrong because Helm complements kubectl but doesn't replace it for all operations. D is wrong because Helm is a command-line tool, not a GUI.",
+    "topic": "Terraform & IaC",
+    "section": 2
+  },
+  {
+    "id": "s2_q31",
+    "question": "You need to migrate 10TB of data from an Amazon S3 bucket to Cloud Storage on a one-time basis. Which is the most efficient approach?",
+    "options": {
+      "A": "Download all files locally then upload to Cloud Storage",
+      "B": "Use Storage Transfer Service to transfer directly from Amazon S3 to Cloud Storage",
+      "C": "Use the gsutil command-line tool from a Cloud Shell session",
+      "D": "Use BigQuery Data Transfer Service"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Storage Transfer Service is designed specifically for transferring data from external sources including Amazon S3 directly to Cloud Storage without any intermediate local storage, handling large-scale transfers efficiently. A is wrong because downloading 10TB locally first requires significant bandwidth, local storage, and time — it's inefficient for large transfers. C is wrong because running gsutil from Cloud Shell would transfer through Google's network but requires keeping a session active for potentially many hours. D is wrong because BigQuery Data Transfer Service is for loading data into BigQuery from specific SaaS sources, not for moving data between object storage services.",
+    "topic": "Cloud Storage",
+    "section": 2
+  },
+  {
+    "id": "s2_q32",
+    "question": "A GKE application needs to install and configure kubectl to interact with the cluster. After creating the cluster, what command fetches credentials and configures kubectl?",
+    "options": {
+      "A": "kubectl config set-cluster CLUSTER_NAME",
+      "B": "gcloud container clusters get-credentials CLUSTER_NAME --region REGION",
+      "C": "gcloud auth configure-docker REGION-docker.pkg.dev",
+      "D": "kubectl apply -f kubeconfig.yaml"
+    },
+    "correct": "B",
+    "explanation": "B is correct because gcloud container clusters get-credentials fetches the cluster credentials from GKE and automatically configures the kubectl context, allowing subsequent kubectl commands to target the cluster. A is wrong because kubectl config set-cluster requires manually specifying server URLs and certificates — it doesn't automatically fetch credentials. C is wrong because gcloud auth configure-docker configures Docker authentication for Artifact Registry, not kubectl cluster access. D is wrong because there is no standard kubeconfig.yaml file to apply — kubeconfig is a local file managed by the gcloud command.",
+    "topic": "GKE",
+    "section": 2
+  },
+  {
+    "id": "s2_q33",
+    "question": "Your company needs to store archival compliance data that must be retained for 7 years and will rarely if ever be accessed. Cost is the primary driver. Which Cloud Storage class is correct?",
+    "options": {
+      "A": "Standard",
+      "B": "Nearline",
+      "C": "Coldline",
+      "D": "Archive"
+    },
+    "correct": "D",
+    "explanation": "D is correct because Archive storage offers the lowest storage cost per GB and is designed for data accessed less than once per year with a 365-day minimum storage duration — ideal for long-term compliance archives. A is wrong because Standard has the highest storage cost and is for frequently accessed data. B is wrong because Nearline is for monthly access and would be significantly more expensive for 7-year archival data. C is wrong because Coldline is for quarterly access — Archive is even cheaper for data that is essentially never accessed.",
+    "topic": "Cloud Storage",
+    "section": 2
+  },
+  {
+    "id": "s2_q34",
+    "question": "You need to establish connectivity between two VPC networks in different projects within the same organization so their resources can communicate using internal IPs. Which approach has the lowest latency and no bandwidth limits?",
+    "options": {
+      "A": "Cloud VPN with BGP routing",
+      "B": "VPC Network Peering",
+      "C": "Cloud Interconnect between the two VPCs",
+      "D": "Shared VPC with both projects as service projects"
+    },
+    "correct": "B",
+    "explanation": "B is correct because VPC Network Peering directly connects two VPC networks using Google's internal network infrastructure with no additional hops, providing lowest latency and no bandwidth limitations unlike VPN tunnels. A is wrong because Cloud VPN adds encryption overhead and has bandwidth limits per tunnel, and it's designed for external connectivity. C is wrong because Cloud Interconnect is for on-premises to Google Cloud connectivity, not VPC-to-VPC connectivity. D is wrong because Shared VPC would require one project to become a host, changing the network architecture significantly.",
+    "topic": "VPC Networking",
+    "section": 2
+  },
+  {
+    "id": "s2_q35",
+    "question": "A financial services company needs a real-time analytics database that can ingest millions of transactions per second and query the last 30 days of data with low latency. Which service is the best fit?",
+    "options": {
+      "A": "Cloud SQL for PostgreSQL",
+      "B": "Firestore",
+      "C": "Bigtable",
+      "D": "Memorystore for Redis"
+    },
+    "correct": "C",
+    "explanation": "C is correct because Bigtable is a fully managed NoSQL wide-column store designed for high-throughput, low-latency analytics workloads with millions of rows per second, making it ideal for time-series financial transaction data. A is wrong because Cloud SQL cannot handle millions of transactions per second ingestion. B is wrong because Firestore is a document database with much lower throughput than Bigtable for this scale. D is wrong because Memorystore is an in-memory cache — data is not persistent and the storage capacity is insufficient for 30 days of high-volume transaction data.",
+    "topic": "BigQuery",
+    "section": 2
+  },
+  {
+    "id": "s2_q36",
+    "question": "You are designing a multi-region architecture for a Cloud Storage bucket. Which configuration ensures data is replicated across multiple regions for maximum availability?",
+    "options": {
+      "A": "Create a regional bucket and manually copy files to another region nightly",
+      "B": "Create a multi-region or dual-region bucket",
+      "C": "Enable versioning on a regional bucket",
+      "D": "Use Storage Transfer Service to sync between two regional buckets"
+    },
+    "correct": "B",
+    "explanation": "B is correct because multi-region and dual-region Cloud Storage buckets automatically replicate data across geographically separated locations, providing high availability and redundancy without manual intervention. A is wrong because manual nightly copying introduces data lag and operational burden. C is wrong because versioning protects against accidental deletion but doesn't replicate data across regions. D is wrong because syncing between regional buckets via Storage Transfer Service introduces delay and operational complexity compared to native multi-region buckets.",
+    "topic": "Cloud Storage",
+    "section": 2
+  },
+  {
+    "id": "s2_q37",
+    "question": "A developer needs to run a Kubernetes workload that maintains a stable network identity and persistent storage — each Pod must have a unique, stable hostname and its own PersistentVolume. Which Kubernetes resource is appropriate?",
+    "options": {
+      "A": "Deployment",
+      "B": "DaemonSet",
+      "C": "StatefulSet",
+      "D": "ReplicaSet"
+    },
+    "correct": "C",
+    "explanation": "C is correct because StatefulSets provide stable, unique network identities (pod-0, pod-1, etc.) and ordered, persistent storage via PersistentVolumeClaims — exactly what databases and other stateful applications need. A is wrong because Deployments are for stateless workloads where Pods are interchangeable and don't require stable identities. B is wrong because DaemonSets run exactly one Pod per node, used for cluster-wide services like logging agents. D is wrong because ReplicaSets are lower-level than Deployments and don't provide stable identities.",
+    "topic": "GKE",
+    "section": 2
+  },
+  {
+    "id": "s2_q38",
+    "question": "You need to configure VM Manager to automatically apply OS patches to your Compute Engine fleet. What is the correct service to use within VM Manager?",
+    "options": {
+      "A": "OS Config API — Patch Management",
+      "B": "Cloud Build with a patching pipeline",
+      "C": "Cloud Scheduler with a custom patching script",
+      "D": "Packer with a custom image builder"
+    },
+    "correct": "A",
+    "explanation": "A is correct because VM Manager includes the OS Config API which provides Patch Management — a fully managed service for creating patch jobs and schedules to automatically apply OS patches to your Compute Engine VM fleet. B is wrong because Cloud Build is a CI/CD service for building code, not for OS patching. C is wrong because while Cloud Scheduler can trigger scripts, it doesn't provide the managed patching workflow that VM Manager's Patch Management provides. D is wrong because Packer builds VM images — it doesn't patch running instances.",
+    "topic": "Compute Engine",
+    "section": 2
+  },
+  {
+    "id": "s2_q39",
+    "question": "You need to choose between Google Cloud Hyperdisk and standard Persistent Disk for a high-performance database workload. What is the primary advantage of Google Cloud Hyperdisk?",
+    "options": {
+      "A": "Hyperdisk is less expensive than standard Persistent Disk",
+      "B": "Hyperdisk provides configurable IOPS and throughput independent of disk size, enabling higher performance for demanding workloads",
+      "C": "Hyperdisk can be attached to more VMs simultaneously than Persistent Disk",
+      "D": "Hyperdisk automatically backs up data to Cloud Storage"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google Cloud Hyperdisk allows IOPS and throughput to be provisioned independently of the disk size, unlike standard Persistent Disk where performance scales with capacity. This enables very high IOPS configurations for demanding database workloads. A is wrong because Hyperdisk is generally more expensive than standard Persistent Disk due to its higher performance capabilities. C is wrong because multi-writer attachment rules are similar between types. D is wrong because both Hyperdisk and Persistent Disk support snapshots, but automatic backup to Cloud Storage is not a differentiating feature.",
+    "topic": "Storage Selection",
+    "section": 2
+  },
+  {
+    "id": "s2_q40",
+    "question": "You need to deploy a high-performance computing (HPC) workload on Google Cloud that requires a parallel distributed file system with very high bandwidth for thousands of compute nodes. Which storage service is designed for this use case?",
+    "options": {
+      "A": "Filestore",
+      "B": "Cloud Storage",
+      "C": "Google Cloud Managed Lustre",
+      "D": "Regional Persistent Disk"
+    },
+    "correct": "C",
+    "explanation": "C is correct because Google Cloud Managed Lustre is a fully managed parallel file system designed for HPC workloads requiring extremely high bandwidth, low latency, and the ability to serve thousands of clients concurrently — it's built on the Lustre filesystem used in supercomputing environments. A is wrong because Filestore (NFS) has bandwidth limitations that don't scale to thousands of HPC nodes at the performance levels needed. B is wrong because Cloud Storage is object storage and doesn't provide the filesystem semantics or bandwidth required for HPC workloads. D is wrong because Persistent Disk is block storage attached to individual VMs, not a distributed parallel filesystem.",
+    "topic": "Storage Selection",
+    "section": 2
+  },
+  {
+    "id": "s2_q41",
+    "question": "A team wants to use Google Cloud Managed Service for Apache Kafka. What is the primary use case for this service?",
+    "options": {
+      "A": "Replacing Cloud SQL for relational data management",
+      "B": "Providing fully managed Apache Kafka for real-time data streaming and event-driven architectures",
+      "C": "Replacing Dataflow for batch data processing",
+      "D": "Providing managed message queuing identical to Pub/Sub"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google Cloud Managed Service for Apache Kafka provides fully managed Kafka clusters for teams that need Apache Kafka's specific features (topic partitioning, consumer groups, Kafka Streams) for real-time streaming and event-driven architectures. A is wrong because Kafka is a streaming platform, not a relational database. C is wrong because Kafka is not a batch processing framework — Dataflow handles batch and stream processing pipelines. D is wrong because while Pub/Sub and Kafka both handle messaging, they have different semantics — Kafka has persistent logs and consumer offsets that differ from Pub/Sub's push/pull model.",
+    "topic": "BigQuery",
+    "section": 2
+  },
+  {
+    "id": "s2_q42",
+    "question": "You need to create a Cloud NGFW policy rule that applies to all VMs in a specific VPC rather than targeting individual VMs by tag. What is the correct target configuration?",
+    "options": {
+      "A": "Target tags: all-instances",
+      "B": "Apply the firewall policy to the VPC network directly",
+      "C": "Target service account: compute@developer.gserviceaccount.com",
+      "D": "Target IP range: 0.0.0.0/0"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud NGFW hierarchical and network firewall policies can be associated (applied) directly to a VPC network, causing all rules in that policy to apply to all VMs in that network without needing tag targeting. A is wrong because there is no all-instances tag — network policies are associated at the network level. C is wrong because targeting a specific service account would only apply to VMs using that service account. D is wrong because 0.0.0.0/0 is an IP range for source/destination in rules, not a targeting mechanism for which VMs the rule applies to.",
+    "topic": "Cloud NGFW",
+    "section": 2
+  },
+  {
+    "id": "s2_q43",
+    "question": "A team needs Config Connector to manage Google Cloud resources through Kubernetes manifests. What is Config Connector?",
+    "options": {
+      "A": "A Kubernetes operator that allows managing Google Cloud resources using Kubernetes CRDs and kubectl",
+      "B": "A Google Cloud CLI plugin for configuring network connectivity",
+      "C": "A Terraform provider for Google Cloud resources",
+      "D": "A cloud configuration backup service"
+    },
+    "correct": "A",
+    "explanation": "A is correct because Config Connector is a Kubernetes addon (operator) that lets you manage Google Cloud resources (Cloud SQL, Pub/Sub, GCS buckets, etc.) as Kubernetes Custom Resources, using kubectl and GitOps workflows. B is wrong because Config Connector is not a CLI plugin — it's a Kubernetes operator. C is wrong because Config Connector is not a Terraform provider — it uses Kubernetes CRDs, not Terraform HCL. D is wrong because Config Connector provisions and manages resources, not backs up configurations.",
+    "topic": "Terraform & IaC",
+    "section": 2
+  },
+  {
+    "id": "s2_q44",
+    "question": "You are deploying a Cloud Run application that processes requests with variable load. What autoscaling behavior does Cloud Run provide by default?",
+    "options": {
+      "A": "Cloud Run maintains a fixed number of instances regardless of traffic",
+      "B": "Cloud Run automatically scales instances based on incoming request concurrency, scaling to zero when idle",
+      "C": "Cloud Run requires manual scaling configuration before deployment",
+      "D": "Cloud Run only scales up to 5 instances by default"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Run automatically scales the number of container instances based on incoming request concurrency, and scales to zero when there is no traffic (unless minimum instances are configured), providing cost-efficient scaling without manual configuration. A is wrong because Cloud Run is built for dynamic scaling, not fixed instance counts. C is wrong because Cloud Run scales automatically without requiring manual configuration — autoscaling is the default behavior. D is wrong because Cloud Run can scale to thousands of instances — there is no 5-instance default limit.",
+    "topic": "Cloud Run",
+    "section": 2
+  },
+  {
+    "id": "s2_q45",
+    "question": "You need to decide whether to use GPUs or TPUs for a workload. The workload involves training a custom TensorFlow model with very large matrix operations at scale. Which accelerator is recommended and why?",
+    "options": {
+      "A": "GPUs — they are always faster than TPUs for all ML workloads",
+      "B": "TPUs — they are Google's custom ASICs optimized for large-scale TensorFlow/JAX matrix operations and offer higher throughput per dollar for these workloads",
+      "C": "GPUs — TPUs only support inference, not training",
+      "D": "Neither — use high-memory CPU instances for TensorFlow training"
+    },
+    "correct": "B",
+    "explanation": "B is correct because TPUs are specifically designed for the matrix multiplication operations that dominate neural network training in TensorFlow and JAX, offering significantly higher throughput per dollar for large-scale training compared to GPUs. A is wrong because while GPUs are more versatile, TPUs typically outperform GPUs for large TensorFlow/JAX training workloads. C is wrong because TPUs support both training and inference. D is wrong because CPU instances are orders of magnitude slower than hardware accelerators for ML training.",
+    "topic": "Compute Engine",
+    "section": 2
+  },
+  {
+    "id": "s2_q46",
+    "question": "A team needs a fully managed relational database for a new application that requires minimal operational overhead, automatic backups, and high availability with failover. The application uses MySQL. Which service should they choose?",
+    "options": {
+      "A": "Self-managed MySQL on a Compute Engine VM",
+      "B": "Cloud SQL for MySQL",
+      "C": "Bigtable",
+      "D": "Firestore"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud SQL for MySQL is a fully managed relational database service that handles automatic backups, failover replicas for high availability, patching, and scaling — minimizing operational overhead. A is wrong because self-managed MySQL on Compute Engine requires the team to handle all operational tasks including backups, patching, and failover configuration. C is wrong because Bigtable is a NoSQL wide-column store, not a MySQL-compatible relational database. D is wrong because Firestore is a NoSQL document database, not MySQL-compatible.",
+    "topic": "Cloud SQL",
+    "section": 2
+  },
+  {
+    "id": "s2_q47",
+    "question": "You need to deploy a Cloud Run application that should always have at least 2 instances running to avoid cold starts for latency-sensitive requests. How do you configure this?",
+    "options": {
+      "A": "Set the maximum instances to 2 in the Cloud Run configuration",
+      "B": "Set the minimum instances to 2 in the Cloud Run service configuration",
+      "C": "Deploy 2 separate Cloud Run services and use load balancing",
+      "D": "Cloud Run cannot maintain warm instances — cold starts are unavoidable"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Run supports a minimum instances configuration that keeps a specified number of instances warm at all times, eliminating cold starts for latency-sensitive applications while still allowing scaling beyond the minimum. A is wrong because setting maximum instances limits scale-up capacity but doesn't keep instances warm. C is wrong because deploying multiple services adds unnecessary complexity. D is wrong because Cloud Run explicitly supports minimum instances configuration to avoid cold starts.",
+    "topic": "Cloud Run",
+    "section": 2
+  },
+  {
+    "id": "s2_q48",
+    "question": "A team needs to upload a 100MB file to Cloud Storage using the command line. Which gcloud command achieves this?",
+    "options": {
+      "A": "gcloud storage cp ./file.zip gs://my-bucket/",
+      "B": "gcloud upload --source=./file.zip --destination=gs://my-bucket/",
+      "C": "gcloud storage push ./file.zip gs://my-bucket/",
+      "D": "gcloud buckets upload ./file.zip --bucket=my-bucket"
+    },
+    "correct": "A",
+    "explanation": "A is correct because gcloud storage cp is the correct command for copying files to Cloud Storage buckets using the gcloud CLI (the newer unified command). B is wrong because there is no gcloud upload command. C is wrong because there is no gcloud storage push command. D is wrong because there is no gcloud buckets upload command.",
+    "topic": "Cloud Storage",
+    "section": 2
+  },
+  {
+    "id": "s2_q49",
+    "question": "You need to deploy a private GKE cluster where nodes have no external IP addresses but still need to pull container images from the internet. What configuration enables this?",
+    "options": {
+      "A": "Assign external IPs to the nodes temporarily during the pull",
+      "B": "Configure Cloud NAT for the subnet used by the GKE cluster nodes",
+      "C": "Use VPC Network Peering with a project that has internet access",
+      "D": "Enable Private Google Access only — it provides full internet access"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud NAT provides outbound internet connectivity for VM instances (including GKE nodes) that don't have external IP addresses, enabling them to pull container images from external registries. A is wrong because temporarily assigning external IPs defeats the purpose of a private cluster. C is wrong because VPC Network Peering connects VPC networks together — it doesn't provide internet access. D is wrong because Private Google Access only allows access to Google APIs and services (like Artifact Registry), not to general internet resources like external container registries.",
+    "topic": "VPC Networking",
+    "section": 2
+  },
+  {
+    "id": "s2_q50",
+    "question": "A team wants to use the Application Design Center to plan their cloud architecture. What is the primary capability of Application Design Center?",
+    "options": {
+      "A": "Application Design Center is a code editor for writing Terraform configurations",
+      "B": "Application Design Center provides a visual interface for designing and generating Google Cloud architecture diagrams with AI assistance",
+      "C": "Application Design Center monitors deployed applications for performance issues",
+      "D": "Application Design Center is a replacement for the Google Cloud Console"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Application Design Center is Google Cloud's AI-assisted visual tool for designing cloud architectures — it helps teams create architecture diagrams and can generate deployment configurations based on the design. A is wrong because it is not a code editor for Terraform. C is wrong because Application Design Center is a planning tool, not a monitoring tool. D is wrong because it is a supplementary design tool, not a replacement for the Google Cloud Console.",
+    "topic": "Terraform & IaC",
+    "section": 2
+  }
+]

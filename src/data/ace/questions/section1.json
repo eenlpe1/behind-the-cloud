@@ -1,0 +1,702 @@
+[
+  {
+    "id": "s1_q01",
+    "question": "Your organization needs to structure Google Cloud resources for three separate business units — Finance, Engineering, and Marketing — each requiring independent billing and access control. What resource hierarchy best supports this requirement?",
+    "options": {
+      "A": "Create one project per business unit under a single folder, sharing one billing account",
+      "B": "Create a folder per business unit under the organization node, with separate projects and billing accounts per unit",
+      "C": "Create all resources in a single project and use IAM conditions to separate access",
+      "D": "Create separate Google Cloud organizations for each business unit"
+    },
+    "correct": "B",
+    "explanation": "B is correct because folders group projects logically under an organization, and separate billing accounts per business unit allow independent cost tracking and access. A is wrong because sharing one billing account prevents independent cost attribution. C is wrong because a single project cannot provide true billing separation between units. D is wrong because separate organizations add unnecessary administrative overhead and break centralized governance.",
+    "topic": "Resource Hierarchy",
+    "section": 1
+  },
+  {
+    "id": "s1_q02",
+    "question": "A company wants to prevent any project in their organization from creating resources in regions outside of us-central1 and us-east1. What is the most efficient way to enforce this?",
+    "options": {
+      "A": "Manually review all deployments and delete non-compliant resources",
+      "B": "Apply a resource locations constraint organization policy at the organization node",
+      "C": "Set firewall rules to block traffic from non-approved regions",
+      "D": "Create a custom IAM role that restricts region selection"
+    },
+    "correct": "B",
+    "explanation": "B is correct because the constraints/gcp.resourceLocations organization policy restricts where resources can be created and applies to all projects under the node it is set on. A is operationally inefficient and reactive. C is wrong because firewall rules control network traffic, not resource creation location. D is wrong because IAM roles control permissions, not resource location constraints.",
+    "topic": "Org Policies",
+    "section": 1
+  },
+  {
+    "id": "s1_q03",
+    "question": "A developer needs read-only access to Cloud Storage buckets in a specific project but should not be able to create, modify, or delete any resources. Which IAM role should you assign?",
+    "options": {
+      "A": "roles/storage.admin",
+      "B": "roles/storage.objectCreator",
+      "C": "roles/storage.objectViewer",
+      "D": "roles/viewer"
+    },
+    "correct": "C",
+    "explanation": "C is correct because roles/storage.objectViewer grants read-only access to Cloud Storage objects without any write permissions. A is wrong because storage.admin grants full control including delete. B is wrong because objectCreator allows creating new objects but not reading existing ones. D is wrong because roles/viewer is a basic role that grants read access across all services in a project, which violates the principle of least privilege for a Storage-only requirement.",
+    "topic": "IAM Roles",
+    "section": 1
+  },
+  {
+    "id": "s1_q04",
+    "question": "Your company uses Google Workspace and wants to automatically provision Cloud Identity accounts for new employees when they are added to the HR system. What is the recommended approach?",
+    "options": {
+      "A": "Manually create each user in the Google Admin console",
+      "B": "Use Google Cloud Directory Sync (GCDS) with your existing LDAP/Active Directory",
+      "C": "Write a custom script that calls the Admin SDK API on a schedule",
+      "D": "Enable automatic user provisioning using SAML federation with your IdP"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google Cloud Directory Sync (GCDS) is the recommended tool for synchronizing users and groups from an existing LDAP or Active Directory to Cloud Identity automatically. A is wrong because manual provisioning is error-prone and unscalable. C could work but is a custom solution that duplicates what GCDS already provides. D is wrong because SAML is for authentication (SSO), not user provisioning — it does not create accounts automatically.",
+    "topic": "Cloud Identity",
+    "section": 1
+  },
+  {
+    "id": "s1_q05",
+    "question": "A team wants to use the BigQuery API in their project but gets an error saying the API is not enabled. What is the fastest way to enable it?",
+    "options": {
+      "A": "Contact Google Cloud support to enable the API on your behalf",
+      "B": "Enable the BigQuery API in the APIs & Services section of the Google Cloud Console or via gcloud services enable bigquery.googleapis.com",
+      "C": "Create a new project where BigQuery is enabled by default",
+      "D": "Assign the roles/bigquery.admin role to the service account"
+    },
+    "correct": "B",
+    "explanation": "B is correct because APIs are enabled per project through the Console or the gcloud CLI with the services enable command. A is wrong because support tickets are unnecessary for enabling standard APIs. C is wrong because no project has all APIs enabled by default, and creating a new project is not necessary. D is wrong because IAM roles control access to an already-enabled API, not whether the API is enabled.",
+    "topic": "API Management",
+    "section": 1
+  },
+  {
+    "id": "s1_q06",
+    "question": "You need to monitor CPU utilization across all Compute Engine instances in your project and receive an alert when usage exceeds 80% for more than 5 minutes. Which Google Cloud service should you configure?",
+    "options": {
+      "A": "Cloud Logging with a log-based metric",
+      "B": "Cloud Monitoring with an alerting policy",
+      "C": "Cloud Trace with a latency threshold",
+      "D": "Error Reporting with a CPU threshold"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Monitoring collects resource metrics including CPU utilization and supports alerting policies with configurable thresholds and duration windows. A is wrong because Cloud Logging captures log data, not time-series metrics like CPU utilization (though log-based metrics exist, this is not the right tool for resource metrics). C is wrong because Cloud Trace measures request latency, not CPU usage. D is wrong because Error Reporting tracks application errors, not infrastructure metrics.",
+    "topic": "Cloud Observability",
+    "section": 1
+  },
+  {
+    "id": "s1_q07",
+    "question": "Your application is hitting the default quota limit for API requests to Cloud Vision API. What is the correct process to request an increase?",
+    "options": {
+      "A": "Delete and recreate the project to reset quota counters",
+      "B": "Switch to a different API that has higher default limits",
+      "C": "Navigate to IAM & Admin > Quotas in the Console and submit a quota increase request",
+      "D": "Enable billing on the project — paid projects automatically get higher quotas"
+    },
+    "correct": "C",
+    "explanation": "C is correct because quota increases are requested through the Quotas page under IAM & Admin in the Console, where you can select the specific quota and submit a request to Google. A is wrong because recreating the project resets usage but not quota limits. B is wrong because switching APIs is not a solution to a quota problem. D is wrong because while billing is required for some APIs, enabling billing does not automatically increase quotas — a formal request is still needed.",
+    "topic": "Quotas",
+    "section": 1
+  },
+  {
+    "id": "s1_q08",
+    "question": "A startup is setting up their first Google Cloud environment with no existing Google Workspace or Cloud Identity domain. They need centralized IAM management across multiple projects. What should they set up first?",
+    "options": {
+      "A": "Create multiple projects and manage IAM at the project level only",
+      "B": "Create a Cloud Identity domain to establish an organization node, then create projects under it",
+      "C": "Use personal Gmail accounts for all administrators",
+      "D": "Create a billing account first, then projects will automatically organize under an organization"
+    },
+    "correct": "B",
+    "explanation": "B is correct because creating a Cloud Identity domain automatically provisions a Google Cloud organization node, which enables centralized IAM, org policies, and resource hierarchy management. A is wrong because project-level-only IAM prevents centralized governance. C is wrong because personal Gmail accounts cannot create organization nodes and are not suitable for enterprise administration. D is wrong because a billing account does not create an organization — an organization requires a Cloud Identity or Google Workspace domain.",
+    "topic": "Cloud Networking",
+    "section": 1
+  },
+  {
+    "id": "s1_q09",
+    "question": "You want to understand what Google Cloud resources exist across all projects in your organization, including resources that may have been created without your team's knowledge. Which service provides this capability?",
+    "options": {
+      "A": "Cloud Logging — search logs for resource creation events",
+      "B": "Cloud Asset Inventory — export and analyze all assets across the organization",
+      "C": "Google Cloud Console — manually browse each project",
+      "D": "Billing export to BigQuery — analyze spend by resource"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Asset Inventory provides a complete, exportable inventory of all Google Cloud resources and IAM policies across an organization, including historical snapshots. A is wrong because while audit logs capture creation events, they require log retention and don't provide a current-state inventory. C is wrong because manual browsing is operationally infeasible at scale and cannot span projects automatically. D is wrong because billing export shows cost data per resource but doesn't provide a full resource inventory including free-tier or zero-cost resources.",
+    "topic": "Cloud Asset Inventory",
+    "section": 1
+  },
+  {
+    "id": "s1_q10",
+    "question": "You are using Gemini Cloud Assist to analyze your organization's resource configuration. A team member asks what Gemini Cloud Assist can help with. Which of the following is a valid use case?",
+    "options": {
+      "A": "Automatically remediating security vulnerabilities without human approval",
+      "B": "Providing natural language explanations of resource configurations and suggesting optimizations",
+      "C": "Replacing Cloud Monitoring alerting policies with AI-based predictions",
+      "D": "Automatically scaling Compute Engine instances based on predicted traffic"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Gemini Cloud Assist provides AI-powered assistance for understanding, configuring, and optimizing Google Cloud resources through natural language interaction in the Console. A is wrong because Gemini Cloud Assist provides recommendations and explanations but does not autonomously remediate issues without human action. C is wrong because it supplements, not replaces, Cloud Monitoring alerting. D is wrong because autoscaling is handled by managed instance groups or GKE, not Gemini Cloud Assist.",
+    "topic": "Gemini Cloud Assist",
+    "section": 1
+  },
+  {
+    "id": "s1_q11",
+    "question": "Your company has employees who use AWS credentials to access internal tools. You want these employees to access Google Cloud resources without creating separate Cloud Identity accounts. What should you configure?",
+    "options": {
+      "A": "Create Cloud Identity accounts manually for each AWS user",
+      "B": "Configure Workforce Identity Federation to map AWS IAM identities to Google Cloud IAM",
+      "C": "Share Google service account keys with AWS users",
+      "D": "Enable Google Workspace SSO with AWS as the identity provider"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Workforce Identity Federation allows external identities (from AWS, Azure AD, Okta, or any OIDC/SAML provider) to access Google Cloud resources using short-lived credentials without requiring separate Cloud Identity accounts. A is wrong because this defeats the purpose — you would still need separate accounts. C is wrong because sharing service account keys is a security anti-pattern and doesn't solve the identity management problem. D is wrong because Google Workspace SSO authenticates users to Google Workspace apps, not to Google Cloud IAM for workforce federation.",
+    "topic": "Workforce Identity Federation",
+    "section": 1
+  },
+  {
+    "id": "s1_q12",
+    "question": "A finance team needs to receive email alerts when their Google Cloud spend is projected to exceed $10,000 in a month. What should you configure?",
+    "options": {
+      "A": "A Cloud Monitoring alerting policy on billing metrics",
+      "B": "A billing budget with alert thresholds and email notification recipients",
+      "C": "A BigQuery scheduled query that checks daily spend",
+      "D": "An org policy that stops resource creation when spend exceeds the limit"
+    },
+    "correct": "B",
+    "explanation": "B is correct because billing budgets allow you to set a spend threshold and configure email alerts at percentage thresholds (e.g., 50%, 90%, 100%) to notify specified recipients. A is wrong because Cloud Monitoring alerting policies are for infrastructure metrics, not billing spend. C is wrong because a BigQuery query can report on spend but doesn't send automated alerts. D is wrong because org policies don't have billing spend conditions — a budget alert threshold stops notifications not resource creation by default (though budget action rules can cap spend with Pub/Sub triggers).",
+    "topic": "Billing Configuration",
+    "section": 1
+  },
+  {
+    "id": "s1_q13",
+    "question": "You need to export all Google Cloud billing data to analyze costs with custom SQL queries. Where should you configure the billing export?",
+    "options": {
+      "A": "Export to Cloud Storage as CSV files",
+      "B": "Export to BigQuery using the billing export configuration in the Billing Console",
+      "C": "Export to Firestore for real-time querying",
+      "D": "Export to Cloud Logging and query with Log Analytics"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google Cloud Billing natively supports exporting detailed and standard usage cost data directly to BigQuery, which enables custom SQL analysis. A is wrong because Cloud Storage export is not natively supported for billing data in the same structured way — BigQuery export is the standard approach. C is wrong because Firestore is not a supported billing export destination. D is wrong because Cloud Logging is for log data, not billing cost data.",
+    "topic": "Billing Configuration",
+    "section": 1
+  },
+  {
+    "id": "s1_q14",
+    "question": "An organization wants to ensure that no one can disable Cloud Audit Logs for any project within the organization. What is the correct way to enforce this?",
+    "options": {
+      "A": "Set an IAM deny policy on each project preventing audit log changes",
+      "B": "Configure a constraints/gcp.disableCloudLogging organization policy",
+      "C": "Set the audit log configuration at the organization level — it inherits to all projects and cannot be overridden at lower levels",
+      "D": "Create a Cloud Monitoring alert that detects when audit logs are disabled"
+    },
+    "correct": "C",
+    "explanation": "C is correct because audit log policies set at the organization node are inherited by all folders and projects and cannot be overridden at lower levels — this is a key property of organization-level audit configurations. A is partially useful but IAM deny policies don't prevent all audit log changes as effectively as the org-level setting. B is wrong because constraints/gcp.disableCloudLogging disables logging entirely, which is the opposite of what's needed. D is wrong because detection after the fact doesn't prevent the change.",
+    "topic": "Org Policies",
+    "section": 1
+  },
+  {
+    "id": "s1_q15",
+    "question": "A project has three teams: DevOps (needs full access), QA (needs read-only access), and Contractors (needs access to only Cloud Storage). Following least privilege, which approach is best?",
+    "options": {
+      "A": "Assign roles/editor to all teams for simplicity",
+      "B": "Assign roles/owner to DevOps, roles/viewer to QA, and roles/storage.objectViewer to Contractors",
+      "C": "Create one custom role with all permissions and assign it to everyone",
+      "D": "Assign roles/editor to DevOps, roles/viewer to QA, and roles/viewer to Contractors"
+    },
+    "correct": "B",
+    "explanation": "B is correct because it follows least privilege: DevOps gets broad but bounded access with roles/owner, QA gets read-only with roles/viewer, and Contractors get scoped access to only Cloud Storage with roles/storage.objectViewer. A is wrong because giving all teams the same elevated role violates least privilege. C is wrong because a single role for everyone doesn't differentiate access levels. D is wrong because giving Contractors roles/viewer grants read access across all services, not just Cloud Storage.",
+    "topic": "IAM Roles",
+    "section": 1
+  },
+  {
+    "id": "s1_q16",
+    "question": "Your organization's security policy requires that service accounts cannot be created in any project without explicit approval. What org policy constraint enforces this?",
+    "options": {
+      "A": "constraints/iam.disableServiceAccountKeyCreation",
+      "B": "constraints/iam.disableServiceAccountCreation",
+      "C": "constraints/compute.disableGuestAttributesAccess",
+      "D": "constraints/iam.allowedPolicyMemberDomains"
+    },
+    "correct": "B",
+    "explanation": "B is correct because constraints/iam.disableServiceAccountCreation prevents new service accounts from being created in projects where the policy is enforced. A is wrong because it prevents key creation for existing service accounts but doesn't prevent the service account itself from being created. C is wrong because it controls Compute Engine guest attributes, not service accounts. D is wrong because it restricts which domains can be added to IAM policies, not service account creation.",
+    "topic": "Org Policies",
+    "section": 1
+  },
+  {
+    "id": "s1_q17",
+    "question": "You need to verify that the Compute Engine API is available in the asia-southeast1 region before deploying workloads there. How do you check product/region availability?",
+    "options": {
+      "A": "Try to deploy a VM and check if it fails",
+      "B": "Check the Google Cloud products available by region page or use gcloud compute regions describe asia-southeast1",
+      "C": "Submit a support ticket asking Google if the region supports Compute Engine",
+      "D": "Check your billing account for regional restrictions"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google Cloud provides an official products-by-region availability page and the gcloud CLI can describe region capabilities before any deployment attempt. A is wrong because trial-and-error deployment is wasteful and could leave orphaned resources. C is wrong because support tickets are unnecessary for publicly available region information. D is wrong because billing accounts do not contain regional availability information.",
+    "topic": "Cloud Networking",
+    "section": 1
+  },
+  {
+    "id": "s1_q18",
+    "question": "A team needs to grant a third-party vendor temporary access to Cloud Storage for 48 hours only. What is the most secure approach?",
+    "options": {
+      "A": "Create a permanent IAM binding and remove it after 48 hours manually",
+      "B": "Use IAM Conditions with a date/time expression to grant time-bound access",
+      "C": "Share a service account key with the vendor",
+      "D": "Create a new Google account for the vendor and delete it after 48 hours"
+    },
+    "correct": "B",
+    "explanation": "B is correct because IAM Conditions support time-based expressions (request.time < timestamp) that automatically expire access without manual intervention. A is wrong because relying on manual removal is error-prone — the access may persist if removal is forgotten. C is wrong because sharing service account keys is a security anti-pattern and key rotation/revocation is operationally cumbersome. D is wrong because creating and deleting accounts is operationally heavy and a Google account is not required for IAM access.",
+    "topic": "IAM Roles",
+    "section": 1
+  },
+  {
+    "id": "s1_q19",
+    "question": "Your organization wants to link multiple projects to a single billing account for consolidated invoicing. What is the correct relationship between projects and billing accounts?",
+    "options": {
+      "A": "Each project must have its own billing account — one-to-one relationship only",
+      "B": "A billing account can be linked to multiple projects, but each project can only be linked to one billing account at a time",
+      "C": "A project can be linked to multiple billing accounts simultaneously for cost splitting",
+      "D": "Billing accounts are automatically created for each project and cannot be shared"
+    },
+    "correct": "B",
+    "explanation": "B is correct because one billing account can fund many projects (one-to-many), but each project can only be associated with a single billing account at any given time. A is wrong because multiple projects can share one billing account. C is wrong because a project cannot split billing across multiple accounts simultaneously. D is wrong because billing accounts are not auto-created per project — they must be explicitly created and linked.",
+    "topic": "Billing Configuration",
+    "section": 1
+  },
+  {
+    "id": "s1_q20",
+    "question": "A security audit reveals that several projects have APIs enabled that are not being used. What is the risk, and what should you do?",
+    "options": {
+      "A": "There is no risk — enabled but unused APIs have no security implications",
+      "B": "Unused APIs increase the attack surface; disable APIs that are not in use to reduce risk",
+      "C": "Unused APIs automatically disable themselves after 30 days",
+      "D": "Unused APIs should be kept enabled to avoid downtime if needed in the future"
+    },
+    "correct": "B",
+    "explanation": "B is correct because each enabled API represents a potential attack surface — if an API is compromised or misconfigured but enabled, it could be exploited. Best practice is to disable APIs that are not required. A is wrong because unused enabled APIs can be exploited if a service account has permissions to call them. C is wrong because APIs do not auto-disable. D is wrong because keeping unnecessary APIs enabled violates the principle of least privilege and increases exposure.",
+    "topic": "API Management",
+    "section": 1
+  },
+  {
+    "id": "s1_q21",
+    "question": "You need to set up uptime checks for your web application and receive notifications when the application is unreachable. Which Google Cloud Observability service handles this?",
+    "options": {
+      "A": "Cloud Logging",
+      "B": "Cloud Monitoring",
+      "C": "Cloud Trace",
+      "D": "Cloud Profiler"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Monitoring supports uptime checks that periodically probe your application endpoints and trigger alerting policies when checks fail. A is wrong because Cloud Logging captures log data but doesn't perform active endpoint probing. C is wrong because Cloud Trace analyzes request latency, not availability. D is wrong because Cloud Profiler analyzes application CPU and memory usage, not uptime.",
+    "topic": "Cloud Observability",
+    "section": 1
+  },
+  {
+    "id": "s1_q22",
+    "question": "A new project team wants to use Gemini Cloud Assist to get recommendations on their resource configurations. What is a prerequisite for using Gemini Cloud Assist?",
+    "options": {
+      "A": "The project must have at least 100 resources before Gemini Cloud Assist activates",
+      "B": "The Cloud AI Companion API must be enabled in the project",
+      "C": "Gemini Cloud Assist is only available for organizations with 500+ users",
+      "D": "You must have the roles/owner role to use Gemini Cloud Assist"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Gemini Cloud Assist requires the Cloud AI Companion API (cloudaicompanion.googleapis.com) to be enabled in the project, along with appropriate IAM permissions. A is wrong because there is no minimum resource count requirement. C is wrong because Gemini Cloud Assist is available regardless of organization size. D is wrong because you don't need roles/owner — specific Gemini Cloud Assist IAM roles (like roles/cloudaicompanion.user) are sufficient.",
+    "topic": "Gemini Cloud Assist",
+    "section": 1
+  },
+  {
+    "id": "s1_q23",
+    "question": "You need to prevent users in your organization from creating resources using personal Gmail accounts rather than corporate Cloud Identity accounts. Which org policy constraint enforces this?",
+    "options": {
+      "A": "constraints/iam.disableServiceAccountCreation",
+      "B": "constraints/iam.allowedPolicyMemberDomains",
+      "C": "constraints/compute.restrictCloudArmor",
+      "D": "constraints/gcp.resourceLocations"
+    },
+    "correct": "B",
+    "explanation": "B is correct because constraints/iam.allowedPolicyMemberDomains restricts which domains can be added as principals to IAM policies, effectively preventing personal Gmail accounts (gmail.com) from being granted project access. A is wrong because it controls service account creation, not user domain restrictions. C is wrong because it's a network security constraint unrelated to identity. D is wrong because it restricts resource location, not IAM member domains.",
+    "topic": "Org Policies",
+    "section": 1
+  },
+  {
+    "id": "s1_q24",
+    "question": "An enterprise wants to use their existing Okta identity provider for employees to access Google Cloud Console using SSO. What feature should they configure?",
+    "options": {
+      "A": "Google Cloud Directory Sync (GCDS)",
+      "B": "Workforce Identity Federation with Okta as the OIDC/SAML provider",
+      "C": "Cloud Identity with manual account creation",
+      "D": "Service account impersonation for each employee"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Workforce Identity Federation supports SAML 2.0 and OIDC providers like Okta, allowing employees to authenticate with their existing Okta credentials to access Google Cloud resources. A is wrong because GCDS synchronizes user accounts (provisioning) but does not handle SSO authentication. C is wrong because manual account creation is not SSO and doesn't leverage the existing Okta IdP. D is wrong because service account impersonation is for application-to-application access, not human user SSO.",
+    "topic": "Workforce Identity Federation",
+    "section": 1
+  },
+  {
+    "id": "s1_q25",
+    "question": "You need to track all changes to IAM policies across your organization for a compliance audit. Which service provides this data?",
+    "options": {
+      "A": "Cloud Asset Inventory with change history enabled",
+      "B": "Admin Activity audit logs in Cloud Logging",
+      "C": "Cloud Monitoring custom metrics",
+      "D": "Billing export to BigQuery"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Admin Activity audit logs automatically capture all IAM policy changes (setIamPolicy calls) and are enabled by default at no charge, making them ideal for compliance auditing. A is wrong because while Cloud Asset Inventory can show current IAM state and some history, audit logs are the authoritative source for change tracking. C is wrong because Cloud Monitoring metrics track performance data, not configuration changes. D is wrong because billing export captures cost data, not IAM changes.",
+    "topic": "Cloud Observability",
+    "section": 1
+  },
+  {
+    "id": "s1_q26",
+    "question": "Your team needs to create a VPC network that is isolated from the default network and has custom subnets in specific regions. What type of VPC should you create?",
+    "options": {
+      "A": "Auto mode VPC — it automatically creates subnets in all regions",
+      "B": "Custom mode VPC — you define subnets manually in chosen regions",
+      "C": "Legacy network — provides the most isolation",
+      "D": "Shared VPC — allows cross-project networking"
+    },
+    "correct": "B",
+    "explanation": "B is correct because custom mode VPC allows you to define subnets in specific regions with specific IP ranges, giving full control over network topology. A is wrong because auto mode creates subnets in every Google Cloud region automatically, which may not align with the requirement for specific regions only. C is wrong because legacy networks are deprecated and lack modern VPC features. D is wrong because Shared VPC is about sharing a network across projects, not about subnet customization in isolation.",
+    "topic": "Cloud Networking",
+    "section": 1
+  },
+  {
+    "id": "s1_q27",
+    "question": "A project owner wants to understand which IAM roles a specific user has been granted across multiple projects. What is the most efficient way to find this information?",
+    "options": {
+      "A": "Check each project's IAM page individually in the Console",
+      "B": "Use Cloud Asset Inventory to search for IAM policy bindings for the user across the organization",
+      "C": "Review Admin Activity audit logs and search for the user's email",
+      "D": "Run gcloud projects list and check each one manually"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Asset Inventory supports querying IAM policy bindings across all projects in an organization in a single query, providing an efficient cross-project view. A is wrong because checking each project individually is operationally inefficient at scale. C is wrong because audit logs show historical changes, not the current state of IAM bindings. D is wrong because listing projects and checking manually is also inefficient and prone to missing projects.",
+    "topic": "Cloud Asset Inventory",
+    "section": 1
+  },
+  {
+    "id": "s1_q28",
+    "question": "Your company's security team requires that all Google Cloud API calls from within the organization use private connectivity and never traverse the public internet. What networking feature enables this?",
+    "options": {
+      "A": "Cloud Armor",
+      "B": "Private Google Access and VPC Service Controls",
+      "C": "Cloud NAT",
+      "D": "Premium Network Service Tier"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Private Google Access allows VM instances without external IPs to reach Google APIs over Google's internal network, and VPC Service Controls creates a security perimeter around Google Cloud services to prevent data exfiltration via the public internet. A is wrong because Cloud Armor is a DDoS and WAF protection service, not a private connectivity feature. C is wrong because Cloud NAT provides outbound internet access for instances without external IPs — it still routes through the internet. D is wrong because Network Service Tiers affect performance routing, not whether traffic uses the public internet.",
+    "topic": "Cloud Networking",
+    "section": 1
+  },
+  {
+    "id": "s1_q29",
+    "question": "You notice that your project is close to its quota limit for Compute Engine VM instances and need more capacity for an upcoming project. What is the correct process?",
+    "options": {
+      "A": "Create a new project and move VMs there to avoid the quota limit",
+      "B": "Navigate to IAM & Admin > Quotas, select the VM quota, and request an increase",
+      "C": "Upgrade to a higher billing plan that includes more quota",
+      "D": "Use preemptible VMs which are exempt from instance quota limits"
+    },
+    "correct": "B",
+    "explanation": "B is correct because quota increase requests are submitted through the Quotas page in the Console or via the serviceusage.quotas.update permission, allowing Google to review and grant additional capacity. A is wrong because moving resources between projects is operationally complex and doesn't address the root quota constraint. C is wrong because there is no billing plan tier that automatically increases quotas — each increase must be requested. D is wrong because Spot/preemptible VMs still count against the same VM quota.",
+    "topic": "Quotas",
+    "section": 1
+  },
+  {
+    "id": "s1_q30",
+    "question": "A large enterprise is setting up Google Cloud for the first time and needs to establish an organization node. What must be true before an organization node is automatically created?",
+    "options": {
+      "A": "The enterprise must purchase a Google Cloud enterprise support plan",
+      "B": "The enterprise must register a domain with Google Domains",
+      "C": "The enterprise must have a Google Workspace or Cloud Identity account associated with their domain",
+      "D": "The enterprise must create at least one billing account first"
+    },
+    "correct": "C",
+    "explanation": "C is correct because a Google Cloud organization node is automatically provisioned when a Google Workspace or Cloud Identity account is created for a domain — the organization is tied to that domain. A is wrong because support plans do not create organization nodes. B is wrong because any domain can be used with Google Workspace/Cloud Identity, not just those registered with Google Domains. D is wrong because billing accounts are separate from the organization structure — the organization node is created by the Workspace/Cloud Identity domain, not by billing.",
+    "topic": "Cloud Networking",
+    "section": 1
+  },
+  {
+    "id": "s1_q31",
+    "question": "You want to use Gemini Cloud Assist to analyze whether your current resource configuration follows Google Cloud best practices. What capability of Gemini Cloud Assist supports this?",
+    "options": {
+      "A": "Gemini Cloud Assist can automatically apply best practice fixes without user confirmation",
+      "B": "Gemini Cloud Assist provides natural language explanations and recommendations based on your current resource state",
+      "C": "Gemini Cloud Assist replaces the need for Cloud Monitoring and Cloud Logging",
+      "D": "Gemini Cloud Assist only works with Compute Engine resources"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Gemini Cloud Assist uses AI to analyze your configuration and provide recommendations and explanations in natural language, helping you understand and improve your setup. A is wrong because Gemini Cloud Assist provides recommendations for human review — it does not autonomously apply changes. C is wrong because it complements but does not replace Cloud Monitoring or Logging. D is wrong because Gemini Cloud Assist works across multiple Google Cloud services, not just Compute Engine.",
+    "topic": "Gemini Cloud Assist",
+    "section": 1
+  },
+  {
+    "id": "s1_q32",
+    "question": "An org admin wants to prevent any project in the organization from disabling Data Access audit logs for Cloud Storage. What is the correct approach?",
+    "options": {
+      "A": "Set the Data Access audit log configuration at the organization level",
+      "B": "Create a custom IAM role that removes the ability to change audit settings",
+      "C": "Enable VPC Service Controls to protect audit logs",
+      "D": "Configure a Cloud Monitoring alert when audit logs are modified"
+    },
+    "correct": "A",
+    "explanation": "A is correct because audit log policies configured at the organization level are inherited by all projects and cannot be overridden at lower levels in the hierarchy. A is the authoritative enforcement mechanism. B is wrong because custom IAM roles limit permissions but don't prevent all paths to modifying audit configs at the project level. C is wrong because VPC Service Controls is a data exfiltration prevention tool, not an audit configuration enforcement tool. D is wrong because detection-only approaches don't prevent the action.",
+    "topic": "Cloud Observability",
+    "section": 1
+  },
+  {
+    "id": "s1_q33",
+    "question": "A billing admin needs to receive notifications when costs in a project reach 75% and 100% of a $5,000 monthly budget. How should they configure this?",
+    "options": {
+      "A": "Create two separate billing budgets — one for $3,750 and one for $5,000",
+      "B": "Create a single billing budget of $5,000 with alert thresholds at 75% and 100%",
+      "C": "Create a Cloud Monitoring alert on billing metrics at $3,750 and $5,000",
+      "D": "Configure a Pub/Sub topic that triggers when spend reaches these amounts"
+    },
+    "correct": "B",
+    "explanation": "B is correct because a single billing budget supports multiple alert thresholds (e.g., 50%, 75%, 90%, 100%) within the same budget configuration, all sending notifications to specified recipients. A is wrong because creating separate budgets for each threshold is unnecessarily complex — a single budget handles multiple thresholds. C is wrong because Cloud Monitoring billing metric alerts are more complex to configure and billing budgets are the native solution. D is wrong because while Pub/Sub integration is possible with budgets for programmatic actions, it's not the simple notification solution described.",
+    "topic": "Billing Configuration",
+    "section": 1
+  },
+  {
+    "id": "s1_q34",
+    "question": "Your team wants to query all Cloud Storage buckets across all projects in the organization to identify any buckets with public access. Which approach is most scalable?",
+    "options": {
+      "A": "Manually check each project's Cloud Storage page in the Console",
+      "B": "Use Cloud Asset Inventory to query storage.Bucket assets and check their IAM policies",
+      "C": "Enable Cloud Audit Logs and search for public access events",
+      "D": "Use Security Command Center to scan for public buckets"
+    },
+    "correct": "D",
+    "explanation": "D is correct because Security Command Center (SCC) has built-in detectors for publicly accessible Cloud Storage buckets and can scan across the entire organization automatically. B is also valid and technically correct but D is more purpose-built for security posture assessment at scale. A is wrong because manual checking doesn't scale. C is wrong because audit logs show access events, not current configuration state. Both B and D are valid approaches, but SCC is the most purpose-built for this security use case.",
+    "topic": "Cloud Asset Inventory",
+    "section": 1
+  },
+  {
+    "id": "s1_q35",
+    "question": "A developer gets a 403 PERMISSION_DENIED error when calling the Pub/Sub API from their application. The Pub/Sub API is enabled in the project. What is the most likely cause?",
+    "options": {
+      "A": "The Pub/Sub API quota has been exceeded",
+      "B": "The service account or user making the API call does not have sufficient IAM permissions for Pub/Sub",
+      "C": "The Pub/Sub API is not available in the current region",
+      "D": "The billing account is not linked to the project"
+    },
+    "correct": "B",
+    "explanation": "B is correct because a 403 PERMISSION_DENIED error specifically indicates an IAM authorization failure — the caller's identity lacks the required IAM role (e.g., roles/pubsub.publisher or roles/pubsub.subscriber) to perform the requested operation. A is wrong because quota exhaustion returns a 429 RESOURCE_EXHAUSTED error, not 403. C is wrong because Pub/Sub is a global service and not region-specific. D is wrong because missing billing returns a different error related to billing not being enabled, not a permission denied on an API call.",
+    "topic": "IAM Roles",
+    "section": 1
+  },
+  {
+    "id": "s1_q36",
+    "question": "A company wants to set up a custom dashboard in Cloud Monitoring that shows key metrics from multiple Google Cloud services in one view. What is the correct approach?",
+    "options": {
+      "A": "Use Cloud Logging to create a log-based dashboard",
+      "B": "Create a custom dashboard in Cloud Monitoring and add charts for each metric",
+      "C": "Export all metrics to BigQuery and build a Data Studio dashboard",
+      "D": "Use Gemini Cloud Assist to auto-generate dashboards"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Monitoring supports custom dashboards where you can add multiple chart widgets, each displaying different metrics from any Google Cloud service. A is wrong because Cloud Logging dashboards are for log-based metrics and log analysis, not general resource metrics. C is wrong because exporting to BigQuery and building a separate dashboard is an indirect and more complex approach when Cloud Monitoring natively supports this. D is wrong because Gemini Cloud Assist provides recommendations and explanations, not dashboard auto-generation.",
+    "topic": "Cloud Observability",
+    "section": 1
+  },
+  {
+    "id": "s1_q37",
+    "question": "An organization needs to enforce that all new projects created under a specific folder automatically inherit a set of default IAM bindings. What is the recommended approach?",
+    "options": {
+      "A": "Manually add IAM bindings to each new project after creation",
+      "B": "Set IAM policies at the folder level — they are inherited by all projects created within that folder",
+      "C": "Use a script that runs daily to sync IAM policies to all projects",
+      "D": "Create a project template with pre-configured IAM policies"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google Cloud IAM follows a hierarchical inheritance model — IAM bindings set at the folder level are automatically inherited by all projects within that folder without any additional action. A is wrong because manual configuration doesn't scale and is error-prone. C is wrong because a daily sync script is operationally complex and creates a window of non-compliance for new projects. D is wrong because project templates don't exist as a native Google Cloud feature for automated IAM inheritance.",
+    "topic": "IAM Roles",
+    "section": 1
+  },
+  {
+    "id": "s1_q38",
+    "question": "You need to check whether a specific Google Cloud service is available in the northamerica-northeast1 region before committing to an architecture decision. What is the most reliable way to verify this?",
+    "options": {
+      "A": "Attempt to create a resource in that region and see if it succeeds",
+      "B": "Check the Google Cloud Products Available by Region documentation page",
+      "C": "Ask in the Google Cloud Community forums",
+      "D": "Check the gcloud compute zones list output for the region"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google Cloud maintains an official Products Available by Region page that is kept up to date with the availability of all services across all regions. A is wrong because attempting to create resources for testing purposes wastes time and may incur costs. C is wrong because community forums may have outdated information. D is wrong because gcloud compute zones list only shows Compute Engine zone availability, not the availability of other services like BigQuery, Spanner, etc.",
+    "topic": "Cloud Networking",
+    "section": 1
+  },
+  {
+    "id": "s1_q39",
+    "question": "Your organization wants to use Workforce Identity Federation with an OIDC provider. What is the first resource you must create in Google Cloud to configure this?",
+    "options": {
+      "A": "A service account for the external users",
+      "B": "A Workforce Identity Pool",
+      "C": "A Cloud Identity domain",
+      "D": "An OAuth 2.0 client ID in the project"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Workforce Identity Federation requires first creating a Workforce Identity Pool at the organization level, then adding the external identity provider (OIDC or SAML) as a pool provider. A is wrong because service accounts are for applications, not for external human users via federation. C is wrong because Cloud Identity is not required for Workforce Identity Federation — that's the whole point of federation. D is wrong because OAuth 2.0 client IDs in projects are for Workload Identity Federation (apps), not Workforce Identity Federation (humans).",
+    "topic": "Workforce Identity Federation",
+    "section": 1
+  },
+  {
+    "id": "s1_q40",
+    "question": "A security team wants to receive an alert whenever a new IAM role is granted at the organization level. What is the best way to implement this?",
+    "options": {
+      "A": "Configure a Cloud Monitoring alerting policy on IAM metrics",
+      "B": "Create a log-based metric on Admin Activity audit logs filtering for SetIamPolicy events, then create an alerting policy on that metric",
+      "C": "Use Cloud Asset Inventory to schedule daily reports on IAM changes",
+      "D": "Enable Data Access audit logs for the IAM service"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Admin Activity audit logs capture all SetIamPolicy calls, and you can create a log-based metric to count these events, then build a Cloud Monitoring alerting policy to notify on any new IAM grant. A is wrong because Cloud Monitoring does not have native metrics for IAM role grants — you need a log-based metric. C is wrong because daily reports introduce a delay — real-time alerting requires log-based metrics. D is wrong because Data Access audit logs capture data reads/writes, not IAM configuration changes — Admin Activity logs capture those.",
+    "topic": "Cloud Observability",
+    "section": 1
+  },
+  {
+    "id": "s1_q41",
+    "question": "An administrator wants to export a complete inventory of all Compute Engine instances across the organization in JSON format for an audit. Which command achieves this?",
+    "options": {
+      "A": "gcloud compute instances list --all-projects",
+      "B": "gcloud asset search-all-resources --scope=organizations/ORG_ID --asset-types=compute.googleapis.com/Instance --format=json",
+      "C": "gcloud projects list --format=json | grep instance",
+      "D": "gcloud compute instances describe --all"
+    },
+    "correct": "B",
+    "explanation": "B is correct because gcloud asset search-all-resources uses Cloud Asset Inventory to search across an entire organization scope, filtering by asset type and outputting in JSON format. A is wrong because gcloud compute instances list does not support an --all-projects flag across an organization. C is wrong because listing projects and grepping is not a valid approach for instance inventory. D is wrong because gcloud compute instances describe requires a specific instance name and cannot list all instances.",
+    "topic": "Cloud Asset Inventory",
+    "section": 1
+  },
+  {
+    "id": "s1_q42",
+    "question": "A project has exceeded its Cloud Functions invocation quota. The team needs more capacity immediately but the quota increase request will take 2 business days. What is a viable short-term workaround?",
+    "options": {
+      "A": "Migrate functions to Cloud Run, which has a separate and higher default quota",
+      "B": "Delete existing functions to free up quota",
+      "C": "Duplicate the project to distribute invocations",
+      "D": "Enable billing — paid projects have unlimited invocations"
+    },
+    "correct": "A",
+    "explanation": "A is correct because Cloud Run has separate quotas from Cloud Functions and can run containerized workloads similarly — it's a viable short-term alternative while awaiting a quota increase. B is wrong because deleting functions removes functionality. C is wrong because distributing invocations across duplicate projects adds operational complexity and the quota limit applies per project. D is wrong because billing does not grant unlimited invocations — each service has its own quota regardless of billing status.",
+    "topic": "Quotas",
+    "section": 1
+  },
+  {
+    "id": "s1_q43",
+    "question": "You are setting up Google Cloud Observability for a new project. Which products should you provision to get full observability coverage (metrics, logs, and traces)?",
+    "options": {
+      "A": "Cloud Monitoring only — it handles all observability signals",
+      "B": "Cloud Monitoring for metrics and alerting, Cloud Logging for log management, and Cloud Trace for distributed tracing",
+      "C": "Cloud Logging and BigQuery — export logs to BigQuery for analysis",
+      "D": "Cloud Monitoring and Pub/Sub — publish metrics to Pub/Sub for downstream processing"
+    },
+    "correct": "B",
+    "explanation": "B is correct because full observability requires three signal types: metrics (Cloud Monitoring), logs (Cloud Logging), and traces (Cloud Trace). Together they provide a complete picture of system health and behavior. A is wrong because Cloud Monitoring handles metrics and alerting but not log management or distributed tracing. C is wrong because while BigQuery can analyze logs, it's not a real-time observability tool and doesn't provide metrics or tracing. D is wrong because Pub/Sub is a messaging service, not an observability tool.",
+    "topic": "Cloud Observability",
+    "section": 1
+  },
+  {
+    "id": "s1_q44",
+    "question": "A company wants to prevent users from creating external IP addresses on Compute Engine instances across the entire organization. Which org policy constraint achieves this?",
+    "options": {
+      "A": "constraints/compute.disableInternetGatewayAccess",
+      "B": "constraints/compute.vmExternalIpAccess",
+      "C": "constraints/compute.requireShieldedVm",
+      "D": "constraints/networking.disableExternalIpv6"
+    },
+    "correct": "B",
+    "explanation": "B is correct because constraints/compute.vmExternalIpAccess controls which VM instances can have external IP addresses — when set to deny all, it prevents any VM from having an external IP. A is wrong because there is no such constraint as disableInternetGatewayAccess. C is wrong because requireShieldedVm enforces Shielded VM security features, not IP access. D is wrong because disableExternalIpv6 is specific to IPv6 external addresses and doesn't cover IPv4.",
+    "topic": "Org Policies",
+    "section": 1
+  },
+  {
+    "id": "s1_q45",
+    "question": "You need to grant a group of data scientists read access to all BigQuery datasets in a project without granting them access to any other services. Which role should you assign at the project level?",
+    "options": {
+      "A": "roles/viewer",
+      "B": "roles/bigquery.dataViewer",
+      "C": "roles/bigquery.user",
+      "D": "roles/bigquery.jobUser"
+    },
+    "correct": "B",
+    "explanation": "B is correct because roles/bigquery.dataViewer grants read access to all datasets and tables in a project without granting access to other services. A is wrong because roles/viewer is a primitive role granting read access across all services in the project, violating least privilege. C is wrong because roles/bigquery.user grants the ability to run jobs (queries) but not necessarily read all datasets. D is wrong because roles/bigquery.jobUser only allows running BigQuery jobs, not reading data.",
+    "topic": "IAM Roles",
+    "section": 1
+  },
+  {
+    "id": "s1_q46",
+    "question": "A compliance officer needs to verify that all projects in the organization have billing export enabled to BigQuery. What is the most efficient way to audit this?",
+    "options": {
+      "A": "Manually check each project's billing settings in the Console",
+      "B": "Use Cloud Asset Inventory to query billing configurations across all projects",
+      "C": "Review Cloud Audit Logs for billing export configuration events",
+      "D": "Check the BigQuery datasets in each project for billing export tables"
+    },
+    "correct": "C",
+    "explanation": "C is correct because Admin Activity audit logs capture configuration changes to billing settings, and you can search for billing export configuration events across projects. B is a reasonable approach as Cloud Asset Inventory can show billing account configurations, but audit logs specifically track when export was enabled or disabled. A is wrong because manual checking doesn't scale. D is wrong because checking BigQuery datasets only tells you if export is working, not whether it's configured.",
+    "topic": "Billing Configuration",
+    "section": 1
+  },
+  {
+    "id": "s1_q47",
+    "question": "Your organization uses a hierarchical structure with folders for each department. A new department folder needs to automatically apply a specific set of org policies that differ from the parent organization's policies. What is the correct approach?",
+    "options": {
+      "A": "Org policies cannot be customized at the folder level — they only apply org-wide",
+      "B": "Set org policies directly on the new folder — they will override or extend the parent policy for resources in that folder",
+      "C": "Create a separate Google Cloud organization for the new department",
+      "D": "Apply org policies at the project level within the folder instead"
+    },
+    "correct": "B",
+    "explanation": "B is correct because organization policies can be set at any level of the hierarchy (organization, folder, or project). Policies set at a folder level apply to all resources within that folder and can override or extend parent policies, depending on the constraint type. A is wrong because org policies are explicitly designed to be customizable at each hierarchy level. C is wrong because creating a separate organization adds unnecessary complexity. D is wrong because applying at the project level requires setting the policy on each project individually rather than managing it centrally at the folder.",
+    "topic": "Org Policies",
+    "section": 1
+  },
+  {
+    "id": "s1_q48",
+    "question": "A team member asks you to explain the difference between Cloud Identity Free and Cloud Identity Premium. Which statement is accurate?",
+    "options": {
+      "A": "Cloud Identity Free does not allow creating an organization node in Google Cloud",
+      "B": "Cloud Identity Premium adds endpoint management, security investigations, and additional admin features beyond the free tier",
+      "C": "Cloud Identity Premium is required to use IAM and org policies",
+      "D": "Cloud Identity Free only supports up to 10 users"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Identity Premium adds features like mobile device management, app management, security investigations, and audit reporting on top of the core identity management available in the free tier. A is wrong because both Free and Premium tiers allow creating a Google Cloud organization node. C is wrong because IAM and org policies are available with any Cloud Identity tier. D is wrong because Cloud Identity Free does not have a 10-user limit.",
+    "topic": "Cloud Identity",
+    "section": 1
+  },
+  {
+    "id": "s1_q49",
+    "question": "You want to use Gemini Cloud Assist to ask questions about your current VPC configuration in natural language. Where in the Google Cloud Console do you access Gemini Cloud Assist?",
+    "options": {
+      "A": "Navigate to Networking > VPC Networks > Gemini tab",
+      "B": "Click the Gemini Cloud Assist icon (sparkle icon) available in the Console toolbar, or access it contextually within supported services",
+      "C": "Go to AI & Machine Learning > Gemini Cloud Assist",
+      "D": "Open Cloud Shell and run the gemini assist command"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Gemini Cloud Assist is accessible via the Gemini icon in the Google Cloud Console toolbar and is also available contextually within supported services (like showing relevant suggestions when viewing a VPC). A is wrong because there is no separate Gemini tab within the VPC Networks page as a primary access point. C is wrong because Gemini Cloud Assist is not found under AI & Machine Learning — it's a console-wide assistant. D is wrong because gemini assist is not a valid Cloud Shell command.",
+    "topic": "Gemini Cloud Assist",
+    "section": 1
+  },
+  {
+    "id": "s1_q50",
+    "question": "A project is consuming more than its allocated quota for Compute Engine CPUs, causing new VM creation to fail. You need to immediately understand the current quota state. What command shows the current CPU quota and usage for a specific region?",
+    "options": {
+      "A": "gcloud compute instances list --filter=status:RUNNING | wc -l",
+      "B": "gcloud compute regions describe REGION --format='table(quotas)'",
+      "C": "gcloud quotas list --service=compute.googleapis.com",
+      "D": "gcloud billing quotas describe --region=REGION"
+    },
+    "correct": "B",
+    "explanation": "B is correct because gcloud compute regions describe REGION with the --format='table(quotas)' flag outputs all Compute Engine quotas for that region including current usage and limits, making it easy to identify which quota is exhausted. A is wrong because counting running instances shows VM count but not quota limits. C is wrong because gcloud quotas list is for the newer Cloud Quotas API and may not show Compute Engine regional quotas in the same format. D is wrong because there is no gcloud billing quotas command.",
+    "topic": "Quotas",
+    "section": 1
+  }
+]
