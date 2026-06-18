@@ -1,0 +1,702 @@
+[
+  {
+    "id": "s3_q01",
+    "question": "You need to SSH into a Compute Engine instance that has no external IP address. Which method allows secure remote access without exposing the instance to the internet?",
+    "options": {
+      "A": "Assign a temporary external IP and SSH using the instance's public key",
+      "B": "Use Identity-Aware Proxy (IAP) TCP forwarding to tunnel SSH through Google's infrastructure",
+      "C": "Use Cloud VPN to connect your laptop directly to the VPC",
+      "D": "Enable SSH in the VPC firewall rules for 0.0.0.0/0"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Identity-Aware Proxy (IAP) TCP forwarding creates an encrypted tunnel from your local machine to the VM through Google's network, requiring no external IP and authenticating via IAM rather than firewall rules. A is wrong because assigning an external IP exposes the instance to the internet. C is wrong because setting up Cloud VPN for individual SSH access is overly complex. D is wrong because opening SSH to 0.0.0.0/0 exposes port 22 to the entire internet.",
+    "topic": "Compute Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q02",
+    "question": "You need to view all currently running Compute Engine instances across all zones in a project. Which gcloud command achieves this?",
+    "options": {
+      "A": "gcloud compute instances list",
+      "B": "gcloud compute instances describe --all-zones",
+      "C": "gcloud compute zones list --filter=status:UP",
+      "D": "gcloud compute instances status --project=PROJECT_ID"
+    },
+    "correct": "A",
+    "explanation": "A is correct because gcloud compute instances list returns all VM instances across all zones in the current project, including their status, zone, machine type, and IP addresses. B is wrong because describe requires a specific instance name and doesn't list all instances. C is wrong because zones list shows available zones, not running instances. D is wrong because there is no gcloud compute instances status command.",
+    "topic": "Compute Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q03",
+    "question": "You need to create a consistent backup of a Compute Engine persistent disk without stopping the VM. Which approach is correct?",
+    "options": {
+      "A": "Stop the VM, create an image, restart the VM",
+      "B": "Create a snapshot of the persistent disk — snapshots can be taken of running disks",
+      "C": "Copy the disk data to Cloud Storage using gsutil",
+      "D": "Detach the disk and attach it to another VM for backup"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Persistent Disk snapshots can be created while the VM is running — they are incremental, application-consistent (with agent), and do not require downtime. A is wrong because stopping the VM is unnecessary and causes downtime, which is avoidable with snapshots. C is wrong because copying disk data to Cloud Storage using gsutil requires the filesystem to be unmounted or the application quiesced to ensure consistency. D is wrong because detaching a disk from a running VM can cause data corruption.",
+    "topic": "Compute Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q04",
+    "question": "You need to schedule automatic daily snapshots of all Compute Engine persistent disks in a project. What is the most efficient approach?",
+    "options": {
+      "A": "Write a cron job that runs gcloud compute disks snapshot for each disk",
+      "B": "Create a snapshot schedule resource and attach it to each persistent disk",
+      "C": "Enable automatic backup in the VM settings",
+      "D": "Use Cloud Scheduler to trigger a Cloud Function that creates snapshots"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Compute Engine natively supports snapshot schedules — you create a schedule resource with the desired frequency and retention policy, then attach it to disks. This is the managed, built-in approach. A is wrong because cron jobs require infrastructure to run and are operationally more complex. C is wrong because there is no automatic backup toggle in VM settings — snapshot schedules are separate resources. D is wrong because using Cloud Scheduler + Cloud Function is a valid but overly complex approach when native snapshot schedules exist.",
+    "topic": "Compute Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q05",
+    "question": "You need to view all nodes, Pods, and Services currently running in a GKE cluster. What command shows a summary of running Pods across all namespaces?",
+    "options": {
+      "A": "gcloud container clusters describe CLUSTER_NAME",
+      "B": "kubectl get pods --all-namespaces",
+      "C": "gcloud compute instances list --filter=gke",
+      "D": "kubectl describe cluster CLUSTER_NAME"
+    },
+    "correct": "B",
+    "explanation": "B is correct because kubectl get pods --all-namespaces lists all Pods in all namespaces in the current cluster context, showing their status, node assignment, and restart count. A is wrong because gcloud container clusters describe shows cluster configuration metadata, not running workload inventory. C is wrong because listing Compute Engine instances filters for GKE node VMs but doesn't show Kubernetes Pods or Services. D is wrong because kubectl describe cluster is not a valid kubectl command.",
+    "topic": "GKE Operations",
+    "section": 3
+  },
+  {
+    "id": "s3_q06",
+    "question": "Your GKE cluster needs to pull container images from a private Artifact Registry repository. What is the recommended way to configure this access?",
+    "options": {
+      "A": "Hardcode registry credentials in the Kubernetes Pod spec",
+      "B": "Configure the GKE node service account with the roles/artifactregistry.reader IAM role and ensure Artifact Registry is in the same region",
+      "C": "Make the Artifact Registry repository public",
+      "D": "Create a Kubernetes Secret with Docker credentials and reference it in the Pod spec"
+    },
+    "correct": "B",
+    "explanation": "B is correct because GKE nodes use a node service account (typically the Compute Engine default service account) to authenticate to Google services. Granting roles/artifactregistry.reader to this service account enables nodes to pull images from Artifact Registry without managing credentials. A is wrong because hardcoding credentials in Pod specs is a security anti-pattern. C is wrong because making repositories public eliminates access control. D is wrong because while Kubernetes image pull secrets work, using the node service account IAM integration is the recommended, credential-free approach for GKE to Artifact Registry.",
+    "topic": "GKE Operations",
+    "section": 3
+  },
+  {
+    "id": "s3_q07",
+    "question": "You need to add a new node pool to an existing GKE cluster with different machine types for memory-intensive workloads. What command creates a new node pool?",
+    "options": {
+      "A": "kubectl create nodepool POOL_NAME --machine-type=n2-highmem-8",
+      "B": "gcloud container node-pools create POOL_NAME --cluster=CLUSTER_NAME --machine-type=n2-highmem-8",
+      "C": "gcloud compute instance-groups create POOL_NAME --cluster=CLUSTER_NAME",
+      "D": "kubectl scale deployment --replicas=10 --machine-type=n2-highmem-8"
+    },
+    "correct": "B",
+    "explanation": "B is correct because gcloud container node-pools create creates a new node pool in an existing GKE cluster with the specified machine type and other configuration options. A is wrong because kubectl does not have a create nodepool command — node pools are managed via the GKE API/gcloud. C is wrong because gcloud compute instance-groups manages Compute Engine instance groups directly, not GKE node pools. D is wrong because kubectl scale changes the number of Pod replicas, not node types.",
+    "topic": "GKE Operations",
+    "section": 3
+  },
+  {
+    "id": "s3_q08",
+    "question": "You need to configure Horizontal Pod Autoscaler (HPA) for a GKE deployment to scale based on CPU utilization. What kubectl command creates an HPA targeting 50% CPU utilization?",
+    "options": {
+      "A": "kubectl scale deployment myapp --cpu-percent=50 --min=2 --max=10",
+      "B": "kubectl autoscale deployment myapp --cpu-percent=50 --min=2 --max=10",
+      "C": "gcloud container clusters update --enable-hpa --cpu-percent=50",
+      "D": "kubectl create hpa myapp --target-cpu=50 --replicas=2:10"
+    },
+    "correct": "B",
+    "explanation": "B is correct because kubectl autoscale deployment creates an HPA resource targeting the specified deployment with CPU utilization threshold, minimum, and maximum replica counts. A is wrong because kubectl scale sets a fixed replica count, not an autoscaler with CPU targets. C is wrong because gcloud container clusters update configures cluster-level settings, not application-level HPA. D is wrong because there is no kubectl create hpa command with those flags.",
+    "topic": "GKE Operations",
+    "section": 3
+  },
+  {
+    "id": "s3_q09",
+    "question": "You need to deploy a new version of a Cloud Run application while maintaining zero downtime. The new version should initially receive 10% of traffic for canary testing. How do you configure this?",
+    "options": {
+      "A": "Delete the old revision and deploy a new one — Cloud Run handles the transition",
+      "B": "Deploy a new revision and configure traffic splitting to send 10% to the new revision and 90% to the current revision",
+      "C": "Create a separate Cloud Run service for the canary version",
+      "D": "Use a Cloud Load Balancer to split traffic between two Cloud Run services"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Run natively supports traffic splitting between revisions, allowing you to deploy a new revision and direct a percentage of traffic to it for canary testing while the remainder continues to the stable revision. A is wrong because deleting the old revision removes the ability to roll back and causes downtime during the transition. C is wrong because a separate service adds operational complexity and doesn't leverage Cloud Run's built-in traffic management. D is wrong because an external load balancer adds unnecessary complexity when Cloud Run has native traffic splitting.",
+    "topic": "Cloud Run Ops",
+    "section": 3
+  },
+  {
+    "id": "s3_q10",
+    "question": "You need to set up lifecycle management for Cloud Storage objects so that files in a bucket are automatically moved to Coldline storage after 30 days and deleted after 365 days. What is the correct approach?",
+    "options": {
+      "A": "Write a Cloud Function that runs daily and checks object creation dates",
+      "B": "Configure an Object Lifecycle Management policy on the bucket with two rules: one to transition to Coldline after 30 days and one to delete after 365 days",
+      "C": "Use Cloud Scheduler to trigger gsutil commands to move and delete objects",
+      "D": "Set object expiration manually when uploading each file"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Storage Object Lifecycle Management allows you to define rules based on object age (and other conditions) that automatically transition objects to different storage classes or delete them — no additional compute or orchestration needed. A is wrong because using Cloud Functions adds operational complexity when native lifecycle management achieves the same result. C is wrong because Cloud Scheduler with gsutil is an operationally complex custom solution. D is wrong because setting expiration per object manually is unscalable and error-prone.",
+    "topic": "Cloud Storage Mgmt",
+    "section": 3
+  },
+  {
+    "id": "s3_q11",
+    "question": "You need to query data from a Cloud SQL instance using BigQuery without copying the data. Which feature enables this?",
+    "options": {
+      "A": "Cloud SQL federated queries from BigQuery using BigQuery Omni",
+      "B": "BigQuery federated queries using Cloud SQL connections",
+      "C": "Export Cloud SQL data to Cloud Storage, then load into BigQuery",
+      "D": "Create a BigQuery view that reads from Cloud SQL directly"
+    },
+    "correct": "B",
+    "explanation": "B is correct because BigQuery supports federated queries that connect to Cloud SQL (MySQL and PostgreSQL) via a Cloud SQL connection, allowing you to query Cloud SQL data from BigQuery without copying it. A is wrong because BigQuery Omni is for querying data in AWS S3 or Azure Blob Storage, not Cloud SQL. C is wrong because exporting and loading creates a data copy and doesn't provide live query access. D is wrong because BigQuery views cannot directly read from external databases — federated queries require a connection resource.",
+    "topic": "Database Backup",
+    "section": 3
+  },
+  {
+    "id": "s3_q12",
+    "question": "You need to restore a Cloud SQL instance to a specific point in time after accidental data deletion. What feature allows this?",
+    "options": {
+      "A": "Create a new instance from the most recent automated backup",
+      "B": "Use point-in-time recovery (PITR) to restore to a specific timestamp",
+      "C": "Manually replay transaction logs from Cloud Logging",
+      "D": "Restore from a Cloud Storage export created the previous day"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud SQL supports Point-in-Time Recovery (PITR) using transaction logs, allowing you to restore a database to any second within the log retention window (typically 7 days), which is more precise than restoring from a daily backup. A is wrong because restoring from the most recent automated backup restores to the backup time, which may be hours before the deletion and loses more recent data. C is wrong because manually replaying logs from Cloud Logging is not supported — PITR handles this automatically. D is wrong because Cloud Storage export restoration would lose all data since the export time.",
+    "topic": "Database Backup",
+    "section": 3
+  },
+  {
+    "id": "s3_q13",
+    "question": "You need to resize a VPC subnet's IPv4 address range because the original /24 range is running out of IP addresses. What is a key constraint when resizing a subnet?",
+    "options": {
+      "A": "You must delete all VMs in the subnet before resizing",
+      "B": "You can only expand a subnet's range, not shrink it, and the new range must contain the existing range",
+      "C": "Subnet resizing requires creating a new VPC and migrating resources",
+      "D": "You can resize the subnet freely up or down with no constraints"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google Cloud only allows expanding (not shrinking) a subnet's IP range, and the new range must be a superset of the existing range to avoid conflicting with existing IP allocations. A is wrong because subnet expansion does not require stopping or deleting VMs. C is wrong because subnet resizing is done in place without needing a new VPC. D is wrong because there are constraints — you cannot shrink a subnet, only expand it.",
+    "topic": "VPC Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q14",
+    "question": "A Compute Engine VM needs a static internal IP address so that other services can reliably connect to it using a consistent address. How do you reserve a static internal IP?",
+    "options": {
+      "A": "Static internal IPs are automatically assigned and cannot be reserved",
+      "B": "Reserve a static internal IP address in the VPC network for the region, then assign it to the VM at creation or update time",
+      "C": "Assign an external static IP and use NAT to translate to internal",
+      "D": "Use Cloud DNS to map a hostname to the ephemeral internal IP"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google Cloud supports reserving static internal IP addresses within a VPC subnet, ensuring the IP persists and can be assigned to a specific VM reliably. A is wrong because static internal IPs can be reserved and assigned — they are not exclusively dynamic. C is wrong because using an external IP for internal reliability is wasteful and adds unnecessary complexity. D is wrong because while Cloud DNS can map hostnames to IPs, ephemeral internal IPs can change if the VM is stopped and restarted, making DNS with ephemeral IPs unreliable.",
+    "topic": "VPC Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q15",
+    "question": "You need to enable Compute Engine VMs without external IP addresses to access the internet for software updates. Which service provides this capability?",
+    "options": {
+      "A": "Private Google Access",
+      "B": "Cloud NAT",
+      "C": "Cloud VPN",
+      "D": "Cloud Interconnect"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud NAT allows VM instances without external IP addresses to initiate outbound connections to the internet (for updates, downloads, etc.) while blocking inbound connections from the internet. A is wrong because Private Google Access allows VMs to reach Google APIs and services without external IPs, but not arbitrary internet endpoints. C is wrong because Cloud VPN is for private connectivity to on-premises networks, not internet access for VMs. D is wrong because Cloud Interconnect is a dedicated connection to on-premises data centers, not internet access for VMs.",
+    "topic": "VPC Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q16",
+    "question": "You need to create a Cloud Monitoring alerting policy that triggers a notification when a Compute Engine instance's memory utilization exceeds 85% for more than 5 minutes. What is a prerequisite for memory utilization metrics to appear in Cloud Monitoring?",
+    "options": {
+      "A": "Enable Data Access audit logs for Compute Engine",
+      "B": "Install and configure the Ops Agent on the VM instances",
+      "C": "Enable Enhanced Monitoring in the VM settings",
+      "D": "Grant the VM's service account roles/monitoring.metricWriter"
+    },
+    "correct": "B",
+    "explanation": "B is correct because memory utilization is not a metric available from the hypervisor — the Ops Agent must be installed inside the VM to collect and export memory metrics (and other guest-level metrics) to Cloud Monitoring. A is wrong because audit logs capture API activity, not VM memory metrics. C is wrong because there is no Enhanced Monitoring setting in GCP (that's an AWS feature). D is wrong because while the metricWriter role is needed for custom metrics, installing the Ops Agent is the prerequisite for the metric to exist at all.",
+    "topic": "Cloud Monitoring",
+    "section": 3
+  },
+  {
+    "id": "s3_q17",
+    "question": "You need to view the logs from a specific Cloud Run service revision to troubleshoot a startup failure. Where should you look first?",
+    "options": {
+      "A": "Cloud Trace — it captures all request traces including startup",
+      "B": "Cloud Logging — filter by resource type cloudrun_revision and the specific revision name",
+      "C": "Cloud Monitoring — check the container startup latency metric",
+      "D": "Cloud Profiler — view the startup CPU profile"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Logging collects stdout/stderr output from Cloud Run revisions, and filtering by resource type cloudrun_revision with the specific revision name shows all logs including startup errors and application output. A is wrong because Cloud Trace captures request tracing data, not application logs or startup errors. C is wrong because Cloud Monitoring metrics show performance data, not log messages or error details. D is wrong because Cloud Profiler captures CPU/memory profiles of running applications, not startup failures.",
+    "topic": "Cloud Logging",
+    "section": 3
+  },
+  {
+    "id": "s3_q18",
+    "question": "You need to export all Cloud Logging logs from your project to BigQuery for long-term retention and custom analysis. What should you create?",
+    "options": {
+      "A": "A Cloud Monitoring metrics export policy",
+      "B": "A log sink in Cloud Logging with BigQuery as the destination",
+      "C": "A Dataflow pipeline that reads from Cloud Logging and writes to BigQuery",
+      "D": "A BigQuery Data Transfer Service job for Cloud Logging"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Logging supports log sinks (also called log routers) that continuously export matching log entries to destination services including BigQuery, Cloud Storage, and Pub/Sub — this is the native, managed way to export logs. A is wrong because Cloud Monitoring metrics exports work with metrics data, not logs. C is wrong because while a Dataflow pipeline could work, it adds operational complexity when log sinks provide this functionality natively. D is wrong because BigQuery Data Transfer Service is for importing data from SaaS applications, not for Cloud Logging exports.",
+    "topic": "Cloud Logging",
+    "section": 3
+  },
+  {
+    "id": "s3_q19",
+    "question": "A team needs to configure VPC Flow Logs to capture network traffic metadata for security analysis. Where do VPC Flow Logs appear after being enabled?",
+    "options": {
+      "A": "Cloud Monitoring as network traffic metrics",
+      "B": "Cloud Logging under the compute.googleapis.com/vpc_flows log name",
+      "C": "A separate VPC Flow Logs console in the Security section",
+      "D": "BigQuery automatically — flow logs bypass Cloud Logging"
+    },
+    "correct": "B",
+    "explanation": "B is correct because VPC Flow Logs are written to Cloud Logging and can be queried, filtered, and exported from there. They appear under the compute.googleapis.com/vpc_flows resource type. A is wrong because VPC Flow Logs appear as log entries, not as Cloud Monitoring time-series metrics. C is wrong because there is no separate VPC Flow Logs console — they are accessed through Cloud Logging. D is wrong because VPC Flow Logs go to Cloud Logging first, and you can create a log sink from there to export to BigQuery.",
+    "topic": "Cloud Logging",
+    "section": 3
+  },
+  {
+    "id": "s3_q20",
+    "question": "You need to use Cloud Trace to investigate why certain API requests from your application are experiencing high latency. What does Cloud Trace provide?",
+    "options": {
+      "A": "Cloud Trace shows CPU and memory usage during requests",
+      "B": "Cloud Trace shows distributed request traces with timing breakdowns across services and components",
+      "C": "Cloud Trace shows error logs for failed requests",
+      "D": "Cloud Trace shows network packet traces for debugging connectivity"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Trace collects distributed request traces showing the time spent in each component of your application (e.g., database calls, external API calls, processing), helping identify latency bottlenecks across services. A is wrong because CPU and memory usage are shown in Cloud Monitoring, not Cloud Trace. C is wrong because error logs are in Cloud Logging, not Cloud Trace (though traces can be correlated with logs). D is wrong because network packet traces are captured by tools like tcpdump or VPC Flow Logs, not Cloud Trace.",
+    "topic": "Cloud Monitoring",
+    "section": 3
+  },
+  {
+    "id": "s3_q21",
+    "question": "You need to configure customer-managed encryption keys (CMEK) for a new Cloud Storage bucket. What must be set up before creating the bucket with CMEK?",
+    "options": {
+      "A": "Enable the Cloud Storage API — CMEK is automatically configured",
+      "B": "Create a Cloud KMS key ring and key, then grant the Cloud Storage service account the roles/cloudkms.cryptoKeyEncrypterDecrypter role on the key",
+      "C": "Upload the encryption key to Cloud Storage as a secret",
+      "D": "Enable data encryption at rest in the project settings"
+    },
+    "correct": "B",
+    "explanation": "B is correct because CMEK requires a Cloud KMS key ring and key to exist first, and the Cloud Storage service agent must have the CryptoKeyEncrypterDecrypter role on the key so it can encrypt and decrypt objects. A is wrong because CMEK is not automatic — it requires explicit key creation and IAM configuration. C is wrong because encryption keys should never be stored in Cloud Storage — they are managed by Cloud KMS. D is wrong because data at rest is always encrypted by Google by default — CMEK is about controlling the encryption key, not enabling encryption.",
+    "topic": "CMEK",
+    "section": 3
+  },
+  {
+    "id": "s3_q22",
+    "question": "You want to use Active Assist to optimize your Google Cloud resource utilization. What type of recommendations does Active Assist provide?",
+    "options": {
+      "A": "Active Assist provides real-time alerts when resources fail",
+      "B": "Active Assist provides AI-powered recommendations for rightsizing, cost savings, security improvements, and performance optimization",
+      "C": "Active Assist automatically applies optimizations without human review",
+      "D": "Active Assist only provides recommendations for Compute Engine"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Active Assist uses machine learning to analyze your resource usage and provides recommendations across multiple dimensions including VM rightsizing, idle resource cleanup, security policy improvements, and cost optimization. A is wrong because real-time failure alerts are handled by Cloud Monitoring alerting, not Active Assist. C is wrong because Active Assist provides recommendations for human review — it does not automatically apply changes. D is wrong because Active Assist provides recommendations across many services including IAM, GKE, Cloud SQL, and more.",
+    "topic": "Active Assist",
+    "section": 3
+  },
+  {
+    "id": "s3_q23",
+    "question": "Your GKE Autopilot cluster is running a workload but Pods are being rejected with an error about insufficient resources. How does GKE Autopilot handle resource requests differently from GKE Standard?",
+    "options": {
+      "A": "GKE Autopilot ignores resource requests and allocates resources automatically",
+      "B": "GKE Autopilot requires Pods to specify resource requests (CPU and memory) and provisions nodes automatically to fulfill them — insufficient requests cause scheduling failures",
+      "C": "GKE Autopilot uses fixed node sizes that cannot be adjusted",
+      "D": "GKE Autopilot only supports the n1-standard-2 machine type"
+    },
+    "correct": "B",
+    "explanation": "B is correct because GKE Autopilot manages node provisioning based on Pod resource requests — Pods must specify CPU and memory requests so Autopilot knows how to right-size nodes. If requests don't meet minimum requirements or exceed limits, Pods may be rejected. A is wrong because Autopilot does not ignore resource requests — they are required and drive node provisioning. C is wrong because Autopilot dynamically provisions nodes of varying sizes based on workload requirements. D is wrong because Autopilot supports various compute classes, not just n1-standard-2.",
+    "topic": "GKE Operations",
+    "section": 3
+  },
+  {
+    "id": "s3_q24",
+    "question": "You need to use Cloud Hub to monitor your organization's application health. What does Cloud Hub provide?",
+    "options": {
+      "A": "Cloud Hub is a code repository hosting service",
+      "B": "Cloud Hub provides a unified view of active incidents, service health events, and application health data across your Google Cloud environment",
+      "C": "Cloud Hub is Google Cloud's container image registry",
+      "D": "Cloud Hub provides network performance monitoring between VPCs"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Hub is Google Cloud's operational command center that aggregates active incidents, Google service health events, and application health data into a single unified view, helping operations teams track and respond to issues. A is wrong because Cloud Hub is not a code repository — that would be Cloud Source Repositories or GitHub. C is wrong because Artifact Registry is the container image registry. D is wrong because network performance monitoring is handled by Network Intelligence Center, not Cloud Hub.",
+    "topic": "Cloud Hub",
+    "section": 3
+  },
+  {
+    "id": "s3_q25",
+    "question": "A Cloud SQL instance is consuming too much CPU during peak hours. You review the query patterns. Which tool helps identify slow queries and provides index recommendations?",
+    "options": {
+      "A": "Cloud Profiler",
+      "B": "Cloud Trace",
+      "C": "Query Insights for Cloud SQL",
+      "D": "Cloud Monitoring with SQL metrics"
+    },
+    "correct": "C",
+    "explanation": "C is correct because Query Insights for Cloud SQL provides detailed analysis of query performance including slow query identification, execution plans, and index recommendations specifically for Cloud SQL instances. A is wrong because Cloud Profiler analyzes application code CPU and memory profiles, not SQL query performance. B is wrong because Cloud Trace captures distributed request traces but doesn't provide SQL query analysis. D is wrong because Cloud Monitoring shows CPU and connection metrics for Cloud SQL but doesn't analyze individual queries.",
+    "topic": "Cloud Monitoring",
+    "section": 3
+  },
+  {
+    "id": "s3_q26",
+    "question": "You need to add a custom static route in a VPC to direct traffic destined for 192.168.10.0/24 through a specific VM acting as a network appliance. What should you configure?",
+    "options": {
+      "A": "A VPC firewall rule that redirects traffic to the appliance VM",
+      "B": "A custom static route with destination 192.168.10.0/24 and next hop set to the appliance VM instance",
+      "C": "A Cloud Router BGP route advertisement for 192.168.10.0/24",
+      "D": "A Cloud DNS private zone for 192.168.10.0/24"
+    },
+    "correct": "B",
+    "explanation": "B is correct because custom static routes allow you to define specific destination CIDR ranges and a next hop (VM instance, IP address, VPN tunnel, etc.) to control how traffic is routed through the VPC. A is wrong because firewall rules control whether traffic is allowed, not how it's routed. C is wrong because Cloud Router BGP is for dynamic routing with VPN or Interconnect, not for internal VPC routing through VM appliances. D is wrong because Cloud DNS is for name resolution, not IP routing.",
+    "topic": "VPC Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q27",
+    "question": "You need to deploy the Ops Agent on a fleet of 50 Compute Engine VMs. Which approach is most scalable?",
+    "options": {
+      "A": "SSH into each VM individually and run the installation script",
+      "B": "Use VM Manager (OS Config) to create a policy that automatically installs the Ops Agent on all matching VMs",
+      "C": "Include the Ops Agent installation in a startup script on each VM",
+      "D": "Create a custom image with the Ops Agent pre-installed and use it for all VMs"
+    },
+    "correct": "B",
+    "explanation": "B is correct because VM Manager's OS Config allows you to create agent policies that automatically deploy and maintain the Ops Agent across all VMs matching specified criteria (e.g., all VMs in a project or with a specific label), without manual intervention. A is wrong because SSHing into 50 VMs individually is operationally inefficient. C is wrong because startup scripts install the agent on first boot but don't manage ongoing updates or apply to existing VMs. D is wrong because custom images require rebuilding and replacing all instances to update the agent version.",
+    "topic": "Cloud Monitoring",
+    "section": 3
+  },
+  {
+    "id": "s3_q28",
+    "question": "You need to back up a Spanner database to protect against accidental data deletion. What is the recommended backup approach for Cloud Spanner?",
+    "options": {
+      "A": "Export Spanner data to BigQuery using a scheduled Dataflow job",
+      "B": "Use Spanner's built-in managed backups — create a backup of the database directly",
+      "C": "Use Cloud Storage to store Spanner export files",
+      "D": "Enable Spanner versioning to keep previous row versions"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Spanner supports managed backups natively — you can create a backup of a database with a specified expiry time, and Spanner manages the backup lifecycle. Backups can be restored to a new or existing database. A is wrong because while exporting to BigQuery creates an external copy, it is not a backup mechanism that supports point-in-time restore — Spanner backups are the correct approach. C is wrong because Cloud Storage exports are possible but Spanner's built-in backup is simpler and more tightly integrated. D is wrong because Spanner does not have a row versioning feature for backup purposes.",
+    "topic": "Database Backup",
+    "section": 3
+  },
+  {
+    "id": "s3_q29",
+    "question": "You need to configure Cloud DNS to resolve internal hostnames for resources within a VPC. Which Cloud DNS zone type should you create?",
+    "options": {
+      "A": "Public zone — accessible from the internet",
+      "B": "Private zone — accessible only from within specified VPC networks",
+      "C": "Forwarding zone — forwards queries to an external resolver",
+      "D": "Peering zone — for DNS resolution across peered VPCs"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud DNS private zones are visible only to the VPC networks you specify, making them ideal for internal hostname resolution for resources within a VPC (e.g., resolving internal service names). A is wrong because public zones are for internet-facing DNS resolution, not internal VPC hostname resolution. C is wrong because forwarding zones forward DNS queries to external resolvers — they don't host internal records. D is wrong because peering zones forward DNS queries from one VPC to another zone's VPC but don't host records directly.",
+    "topic": "Cloud DNS & NAT",
+    "section": 3
+  },
+  {
+    "id": "s3_q30",
+    "question": "You need to estimate the cost of storing 10TB of data in Cloud SQL for MySQL for one month, including storage and backups. Which tool should you use?",
+    "options": {
+      "A": "Review your current billing statement and extrapolate",
+      "B": "Use the Google Cloud Pricing Calculator",
+      "C": "Ask your Google Cloud sales representative",
+      "D": "Create a test Cloud SQL instance and measure costs for one week"
+    },
+    "correct": "B",
+    "explanation": "B is correct because the Google Cloud Pricing Calculator provides accurate cost estimates for all Google Cloud services including Cloud SQL storage, compute, and backup costs before actually provisioning resources. A is wrong because extrapolating from existing bills assumes identical configurations. C is wrong because a sales representative conversation is slower and less precise than the self-service calculator. D is wrong because running a test instance for a week to measure costs wastes money when the pricing calculator can provide estimates for free.",
+    "topic": "Database Backup",
+    "section": 3
+  },
+  {
+    "id": "s3_q31",
+    "question": "You need to deploy Google Cloud Managed Service for Prometheus to monitor a GKE cluster. What is the primary benefit of using managed Prometheus over self-hosted Prometheus?",
+    "options": {
+      "A": "Managed Prometheus supports more metrics than open-source Prometheus",
+      "B": "Managed Prometheus eliminates the operational burden of running and scaling Prometheus infrastructure while maintaining compatibility with the Prometheus ecosystem",
+      "C": "Managed Prometheus is free while self-hosted Prometheus incurs licensing costs",
+      "D": "Managed Prometheus only works with GKE and not other compute platforms"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google Cloud Managed Service for Prometheus provides a fully managed, globally scalable backend for Prometheus metrics that is compatible with existing PromQL queries, Grafana dashboards, and Prometheus exporters — without requiring you to operate Prometheus servers. A is wrong because the metrics available depend on exporters, not the hosting model. C is wrong because self-hosted Prometheus is open-source and free — the cost difference is operational (Managed Prometheus vs. managing your own). D is wrong because Managed Prometheus can also collect metrics from Compute Engine and other compute platforms.",
+    "topic": "Cloud Monitoring",
+    "section": 3
+  },
+  {
+    "id": "s3_q32",
+    "question": "A developer reports that a Cloud Run application is returning 500 errors intermittently. You need to check the error logs to understand the root cause. What is the most direct path to view these logs?",
+    "options": {
+      "A": "Go to the Cloud Run service in Console > Logs tab",
+      "B": "Check Cloud Monitoring for error rate metrics",
+      "C": "Enable Cloud Trace and review failed request spans",
+      "D": "Review the Cloud Build history for the service"
+    },
+    "correct": "A",
+    "explanation": "A is correct because the Cloud Run service page in the Google Cloud Console has a Logs tab that shows all log entries from the service directly, making it the fastest path to view application logs and errors. B is wrong because Cloud Monitoring shows the error rate metric but not the log messages explaining why errors occurred. C is wrong because Cloud Trace shows request timing and span data — while it can indicate failures, the detailed error message is in the logs. D is wrong because Cloud Build history shows build and deployment logs, not runtime application errors.",
+    "topic": "Cloud Logging",
+    "section": 3
+  },
+  {
+    "id": "s3_q33",
+    "question": "You need to review the status of Dataflow jobs that were run in the past 7 days. Where do you check job status?",
+    "options": {
+      "A": "Cloud Monitoring > Dataflow metrics dashboard",
+      "B": "Dataflow in the Google Cloud Console — the Jobs list shows historical and current job status",
+      "C": "Cloud Logging — filter for Dataflow job completion events",
+      "D": "BigQuery — check the INFORMATION_SCHEMA.JOBS view"
+    },
+    "correct": "B",
+    "explanation": "B is correct because the Dataflow section of the Google Cloud Console shows a list of all jobs including their status (succeeded, failed, running, cancelled), duration, and resource usage for recent jobs. A is wrong because Cloud Monitoring shows performance metrics, not job execution status history. C is wrong because while Cloud Logging captures Dataflow job logs, it's not the primary interface for checking job status — the Dataflow Console is. D is wrong because INFORMATION_SCHEMA.JOBS in BigQuery is for BigQuery job history, not Dataflow job status.",
+    "topic": "Cloud Logging",
+    "section": 3
+  },
+  {
+    "id": "s3_q34",
+    "question": "You need to manage your Google Cloud databases (Cloud SQL, Spanner, AlloyDB) from a centralized interface. Which service provides this capability?",
+    "options": {
+      "A": "Cloud Monitoring with a custom database dashboard",
+      "B": "Database Center",
+      "C": "Google Cloud Console with each database opened separately",
+      "D": "BigQuery Admin console"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Database Center provides a unified view to manage, monitor, and govern the entire Google Cloud database fleet — including Cloud SQL, Spanner, AlloyDB, and Bigtable — from a single interface. A is wrong because Cloud Monitoring can show database metrics but doesn't provide database management capabilities. C is wrong because opening each database service separately lacks the unified cross-database governance that Database Center provides. D is wrong because BigQuery Admin console manages BigQuery specifically, not the entire database fleet.",
+    "topic": "Database Backup",
+    "section": 3
+  },
+  {
+    "id": "s3_q35",
+    "question": "You need to configure an alerting policy in Cloud Monitoring that fires when an error rate exceeds 1% of total requests for a Cloud Run service. What type of alert condition should you use?",
+    "options": {
+      "A": "Threshold alert on absolute error count per minute",
+      "B": "Ratio-based alert using a metric-to-metric condition comparing error count to request count",
+      "C": "Log-based alert that counts error log entries",
+      "D": "Uptime check alert that fails on HTTP 500 responses"
+    },
+    "correct": "B",
+    "explanation": "B is correct because a ratio-based (metric-to-metric) alerting condition in Cloud Monitoring allows you to calculate error rate as a percentage of total requests, which correctly accounts for traffic volume variations — high absolute error counts at high traffic may be fine, but a consistent 1%+ error rate is the real signal. A is wrong because absolute error count doesn't account for traffic volume — more traffic naturally generates more errors. C is wrong because log-based alerts can count errors but can't easily compute a ratio against total requests. D is wrong because uptime checks test endpoint availability, not error rates from internal services.",
+    "topic": "Cloud Monitoring",
+    "section": 3
+  },
+  {
+    "id": "s3_q36",
+    "question": "You need to view the Personalized Service Health dashboard for your Google Cloud projects. What does this dashboard show?",
+    "options": {
+      "A": "The health of all Google Cloud services globally, unrelated to your usage",
+      "B": "Service health incidents and disruptions that are relevant to the specific Google Cloud services and regions your organization uses",
+      "C": "The health of your application's VMs and Cloud Run services",
+      "D": "Network latency between your VPC and Google's data centers"
+    },
+    "correct": "B",
+    "explanation": "B is correct because the Personalized Service Health dashboard (formerly known as Google Cloud Service Health) shows only the service incidents and disruptions relevant to the services and regions your organization actively uses, filtering out noise from unrelated regions or services. A is wrong because it is personalized to your usage, not a generic global status page. C is wrong because your application's VM and service health is shown in Cloud Monitoring, not the Service Health dashboard. D is wrong because network latency monitoring is handled by Network Intelligence Center.",
+    "topic": "Cloud Monitoring",
+    "section": 3
+  },
+  {
+    "id": "s3_q37",
+    "question": "You need to configure log-based metrics in Cloud Logging to track the number of 4xx HTTP errors returned by a Cloud Run service. What is the correct sequence of steps?",
+    "options": {
+      "A": "Enable error reporting > create a custom metric > add to dashboard",
+      "B": "Create a log-based metric with a filter for httpRequest.status >= 400 AND httpRequest.status < 500, then create a Cloud Monitoring alerting policy on that metric",
+      "C": "Create a Cloud Monitoring alerting policy directly on the http_request_count metric with a 4xx filter",
+      "D": "Export logs to BigQuery and query the 4xx error count"
+    },
+    "correct": "B",
+    "explanation": "B is correct because log-based metrics allow you to extract quantitative data from log entries using filters, and the resulting metric can be used in Cloud Monitoring dashboards and alerting policies. A is wrong because Error Reporting is for application exception tracking, not HTTP status code counting from logs. C is wrong because Cloud Monitoring does have http request count metrics for Cloud Run, but log-based metrics provide the specific 4xx filtering as described. D is wrong because BigQuery export enables analysis but doesn't provide real-time alerting.",
+    "topic": "Cloud Logging",
+    "section": 3
+  },
+  {
+    "id": "s3_q38",
+    "question": "An AlloyDB instance needs to be backed up before a major schema migration. What backup options does AlloyDB provide?",
+    "options": {
+      "A": "AlloyDB only supports manual exports to Cloud Storage",
+      "B": "AlloyDB supports both automated continuous backups (WAL-based) and on-demand backups that can be used for point-in-time recovery",
+      "C": "AlloyDB backups must be managed using pg_dump on the client",
+      "D": "AlloyDB uses the same backup mechanism as Cloud SQL and shares the backup console"
+    },
+    "correct": "B",
+    "explanation": "B is correct because AlloyDB provides continuous WAL (Write-Ahead Log) based backups that enable point-in-time recovery, plus on-demand backups that can be triggered before maintenance operations like schema migrations. A is wrong because AlloyDB has built-in backup capabilities beyond just Cloud Storage exports. C is wrong because pg_dump is a client-side tool — AlloyDB provides managed backup without requiring manual pg_dump operations. D is wrong because AlloyDB has its own backup system separate from Cloud SQL, though both are managed services.",
+    "topic": "Database Backup",
+    "section": 3
+  },
+  {
+    "id": "s3_q39",
+    "question": "You need to manage Kubernetes deployments, services, and stateful sets in a GKE cluster. A team member updates a deployment image. What kubectl command applies a new container image to an existing deployment?",
+    "options": {
+      "A": "kubectl apply -f deployment.yaml",
+      "B": "kubectl set image deployment/myapp container-name=new-image:tag",
+      "C": "kubectl update deployment myapp --image=new-image:tag",
+      "D": "kubectl replace deployment myapp --image=new-image:tag"
+    },
+    "correct": "B",
+    "explanation": "B is correct because kubectl set image allows you to update a specific container's image in an existing deployment without needing to modify and reapply a YAML file, triggering a rolling update automatically. A is valid if you update the YAML file first, but the question asks about a specific container image update without YAML modification. C is wrong because kubectl update is not a valid kubectl command. D is wrong because kubectl replace recreates a resource from a file, not from a flag argument.",
+    "topic": "GKE Operations",
+    "section": 3
+  },
+  {
+    "id": "s3_q40",
+    "question": "You need to configure Cloud Monitoring to use Gemini Cloud Assist for analyzing metrics and getting recommendations. What is a capability of Gemini Cloud Assist within Cloud Monitoring?",
+    "options": {
+      "A": "Gemini Cloud Assist automatically creates alerting policies based on your metrics",
+      "B": "Gemini Cloud Assist can explain metric trends, help you write MQL queries, and suggest relevant dashboards in natural language",
+      "C": "Gemini Cloud Assist replaces the need for Cloud Monitoring dashboards",
+      "D": "Gemini Cloud Assist sends alerts directly to PagerDuty"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Gemini Cloud Assist within Cloud Monitoring provides AI-powered assistance for understanding metric behavior, writing Monitoring Query Language (MQL) expressions, and getting recommendations — all through natural language interaction. A is wrong because Gemini Cloud Assist provides recommendations but doesn't autonomously create alerting policies. C is wrong because it supplements dashboards but doesn't replace them. D is wrong because alerting integrations with external tools like PagerDuty are configured through notification channels, not Gemini.",
+    "topic": "Cloud Monitoring",
+    "section": 3
+  },
+  {
+    "id": "s3_q41",
+    "question": "You need to manage Cloud NGFW policies at the organization level so they apply to all VPCs across all projects. Which policy type supports this?",
+    "options": {
+      "A": "VPC firewall rules applied to each VPC individually",
+      "B": "Cloud NGFW hierarchical firewall policies applied at the organization or folder level",
+      "C": "Network tags applied to all VMs in the organization",
+      "D": "Cloud Armor security policies at the organization level"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud NGFW hierarchical firewall policies can be applied at the organization or folder level and are inherited by all VPCs in the hierarchy below, enabling centralized security rule management without configuring each VPC individually. A is wrong because VPC firewall rules are per-VPC and don't provide hierarchical inheritance. C is wrong because network tags are applied to individual VMs, not policies applied at organizational scale. D is wrong because Cloud Armor is for protecting load balancers from DDoS and web attacks, not for network-level firewall policy management.",
+    "topic": "VPC Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q42",
+    "question": "A team needs to configure autoscaling for a Cloud Run application so it scales based on the number of unprocessed Pub/Sub messages rather than HTTP request count. How is this achieved?",
+    "options": {
+      "A": "Cloud Run autoscaling is based only on HTTP concurrency and cannot use Pub/Sub queue depth",
+      "B": "Configure Cloud Run to pull from Pub/Sub directly — Cloud Run scales based on the number of pending messages via Pub/Sub push",
+      "C": "Use Cloud Run with CPU-based autoscaling and publish messages faster when more instances are needed",
+      "D": "Deploy the service on GKE instead and use KEDA (Kubernetes Event-Driven Autoscaling) with a Pub/Sub scaler"
+    },
+    "correct": "D",
+    "explanation": "D is correct because Cloud Run's native autoscaling for pull-based Pub/Sub scaling based on queue depth requires KEDA on GKE. For Cloud Run with Pub/Sub, the recommended approach is to use Pub/Sub push subscriptions (which scale based on HTTP concurrency) or move to GKE with KEDA for queue-depth-based scaling. B is partially correct — Cloud Run can process Pub/Sub messages via push, and the concurrency-based scaling will handle load, but true queue-depth-based autoscaling requires KEDA on GKE. A is wrong because Cloud Run does scale on HTTP concurrency from push subscriptions.",
+    "topic": "Cloud Run Ops",
+    "section": 3
+  },
+  {
+    "id": "s3_q43",
+    "question": "You need to attach a GPU to an existing Compute Engine instance for a machine learning inference workload. What is a requirement for attaching GPUs to VMs?",
+    "options": {
+      "A": "GPUs can be attached to any running VM at any time",
+      "B": "The VM must use a specific GPU-compatible machine type (e.g., a2-highgpu or n1 series) and the VM must be stopped before attaching a GPU",
+      "C": "GPUs can only be attached at VM creation time and cannot be added later",
+      "D": "GPUs require a dedicated host project and cannot be used in shared projects"
+    },
+    "correct": "B",
+    "explanation": "B is correct because GPUs can be added to compatible machine types (a2-highgpu, g2-standard, n1 series) but the VM must be in a stopped state to modify GPU attachments — you cannot hot-attach GPUs to running instances. A is wrong because you cannot attach a GPU to a running VM. C is wrong because GPUs can be added to existing VMs, but the VM must be stopped. D is wrong because GPUs are available in standard projects without requiring dedicated host projects.",
+    "topic": "Compute Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q44",
+    "question": "You need to deploy an AI agent to Agent Runtime on Gemini Enterprise Agent Platform. What is Agent Runtime designed to handle that a standard Cloud Run deployment does not natively provide?",
+    "options": {
+      "A": "Agent Runtime provides a custom VPC for agent workloads",
+      "B": "Agent Runtime provides managed session state, tool execution orchestration, and long-running agent task management for conversational AI agents",
+      "C": "Agent Runtime provides lower costs for AI inference compared to Cloud Run",
+      "D": "Agent Runtime provides automatic model fine-tuning based on agent interactions"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Agent Runtime on Gemini Enterprise Agent Platform is specifically designed for AI agents and provides managed infrastructure for session state persistence, tool calling orchestration, and long-running multi-turn interactions — capabilities not natively built into standard Cloud Run. A is wrong because VPC configuration is standard across Google Cloud services. C is wrong because Agent Runtime is a specialized service and not necessarily cheaper than Cloud Run for generic workloads. D is wrong because Agent Runtime does not provide automatic model fine-tuning.",
+    "topic": "Compute Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q45",
+    "question": "You need to configure a log bucket with a 1-year retention period in Cloud Logging. What is the consequence of setting a retention policy on a log bucket?",
+    "options": {
+      "A": "Log entries older than the retention period are moved to Cloud Storage automatically",
+      "B": "Log entries older than the retention period are permanently deleted and cannot be recovered",
+      "C": "Log entries older than the retention period are archived to BigQuery",
+      "D": "The retention policy prevents any modification to log entries within the retention window"
+    },
+    "correct": "B",
+    "explanation": "B is correct because when the log bucket retention period expires, log entries are permanently deleted from Cloud Logging — they are not moved elsewhere. This is why it's important to set up log sinks to export logs to long-term storage if needed. A is wrong because logs are not automatically moved to Cloud Storage — you must configure a log sink for that. C is wrong because logs are not automatically archived to BigQuery — again, a log sink is required. D is wrong because a retention policy controls how long logs are kept, not whether they can be modified (logs are immutable by default).",
+    "topic": "Cloud Logging",
+    "section": 3
+  },
+  {
+    "id": "s3_q46",
+    "question": "A team needs to manage Cloud Workstations for developers in their organization. What is Cloud Workstations?",
+    "options": {
+      "A": "Cloud Workstations is a physical workstation rental service from Google",
+      "B": "Cloud Workstations provides fully managed, browser-accessible development environments hosted in Google Cloud with consistent configurations",
+      "C": "Cloud Workstations is a remote desktop protocol (RDP) service for Compute Engine VMs",
+      "D": "Cloud Workstations is a code review tool integrated with Cloud Source Repositories"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Workstations provides fully managed, customizable development environments accessible through a browser — administrators can define standard workstation configurations, and developers get consistent, pre-configured environments without managing local setups. A is wrong because Cloud Workstations are virtual, cloud-hosted development environments, not physical hardware. C is wrong because while Cloud Workstations can be accessed remotely, they are not just an RDP wrapper — they are fully managed development environments. D is wrong because Cloud Workstations is a development environment service, not a code review tool.",
+    "topic": "Compute Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q47",
+    "question": "You need to configure Cloud Monitoring to ingest custom metrics from a Compute Engine application. What is the recommended approach for sending custom metrics?",
+    "options": {
+      "A": "Write custom metrics directly to Cloud Logging and use log-based metrics",
+      "B": "Use the Cloud Monitoring API or a client library to write custom metric time-series data to the custom.googleapis.com namespace",
+      "C": "Create a Cloud Scheduler job that polls the application and writes to Monitoring",
+      "D": "Use Pub/Sub to publish metrics and have Cloud Monitoring subscribe"
+    },
+    "correct": "B",
+    "explanation": "B is correct because the Cloud Monitoring API (and official client libraries for Python, Java, Go, etc.) allow applications to write custom metric data to the custom.googleapis.com metric namespace, making it available for dashboards and alerting. A is wrong because while log-based metrics work, they derive metrics from log entries rather than directly from application metric instruments — writing directly via the Monitoring API is cleaner for true application metrics. C is wrong because polling adds latency and external complexity. D is wrong because Pub/Sub is a messaging service, not a metrics ingestion pathway for Cloud Monitoring.",
+    "topic": "Cloud Monitoring",
+    "section": 3
+  },
+  {
+    "id": "s3_q48",
+    "question": "You need to manage notebooks in Gemini Enterprise Agent Platform Workbench. What type of workloads are Workbench notebooks designed for?",
+    "options": {
+      "A": "Web application development and deployment",
+      "B": "Data science, machine learning model development, and exploratory data analysis using Jupyter notebooks in a managed environment",
+      "C": "Infrastructure automation and Terraform development",
+      "D": "Database administration and SQL query execution"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Gemini Enterprise Agent Platform Workbench (formerly Vertex AI Workbench) provides managed Jupyter notebook instances specifically designed for data scientists and ML engineers to develop, train, and experiment with machine learning models. A is wrong because web application development uses other compute services. C is wrong because IaC development typically uses local environments or Cloud Shell/Cloud Workstations. D is wrong because database administration uses tools like Cloud SQL Studio or BigQuery Studio.",
+    "topic": "Compute Management",
+    "section": 3
+  },
+  {
+    "id": "s3_q49",
+    "question": "You are configuring audit logs for a project and need to enable Data Access audit logs for Cloud Storage to capture who is reading objects. What is the default behavior of Data Access audit logs?",
+    "options": {
+      "A": "Data Access audit logs are enabled by default for all services",
+      "B": "Data Access audit logs are disabled by default and must be explicitly enabled per service",
+      "C": "Data Access audit logs are automatically enabled when billing is enabled",
+      "D": "Data Access audit logs are only available for BigQuery, not Cloud Storage"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Data Access audit logs (which capture data reads and writes) are disabled by default because they can generate very high log volumes and associated costs. They must be explicitly enabled per service in the IAM audit log configuration. A is wrong because Admin Activity audit logs are enabled by default, but Data Access logs are not. C is wrong because audit log configuration is independent of billing status. D is wrong because Data Access audit logs are available for many services including Cloud Storage, BigQuery, Cloud SQL, and more.",
+    "topic": "Cloud Logging",
+    "section": 3
+  },
+  {
+    "id": "s3_q50",
+    "question": "You need to configure autoscaling for the node pools in a GKE Standard cluster so nodes are added when resource utilization is high and removed when underutilized. What should you enable?",
+    "options": {
+      "A": "Horizontal Pod Autoscaler (HPA) on the node pool",
+      "B": "Cluster Autoscaler on the node pool by enabling autoscaling with min and max node counts",
+      "C": "Vertical Pod Autoscaler (VPA) at the cluster level",
+      "D": "Node auto-provisioning without specifying min/max counts"
+    },
+    "correct": "B",
+    "explanation": "B is correct because GKE Cluster Autoscaler scales the number of nodes in a node pool up when Pods cannot be scheduled due to resource constraints and down when nodes are underutilized — you configure it by enabling autoscaling on the node pool with minimum and maximum node counts. A is wrong because HPA scales Pods, not nodes. C is wrong because VPA adjusts Pod resource requests, not node counts. D is wrong because node auto-provisioning automatically creates and deletes node pools based on workload requirements — it's a different feature from node pool autoscaling and requires a different configuration approach.",
+    "topic": "GKE Operations",
+    "section": 3
+  }
+]

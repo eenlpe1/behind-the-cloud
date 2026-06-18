@@ -1,0 +1,702 @@
+[
+  {
+    "id": "s4_q01",
+    "question": "A developer needs to understand what permissions are granted by a specific IAM role before assigning it. How do you view the permissions included in a predefined IAM role?",
+    "options": {
+      "A": "gcloud iam roles describe ROLE_NAME",
+      "B": "gcloud iam policies list --role=ROLE_NAME",
+      "C": "gcloud projects get-iam-policy PROJECT_ID --filter=role=ROLE_NAME",
+      "D": "gcloud iam permissions list --role=ROLE_NAME"
+    },
+    "correct": "A",
+    "explanation": "A is correct because gcloud iam roles describe ROLE_NAME shows the full description of a role including all included permissions, the role stage, and the description. B is wrong because gcloud iam policies list does not accept a role filter and lists IAM policies differently. C is wrong because gcloud projects get-iam-policy shows which roles are bound to which members in a project, not the permissions within a role. D is wrong because gcloud iam permissions list is not a valid command.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q02",
+    "question": "Your organization has a policy that all production workloads must use service accounts with only the minimum permissions required. A Cloud Run service needs to write to Cloud Storage and publish to Pub/Sub. Which approach best implements least privilege?",
+    "options": {
+      "A": "Use the default Compute Engine service account which has broad project access",
+      "B": "Create a dedicated service account and grant only roles/storage.objectCreator and roles/pubsub.publisher",
+      "C": "Grant roles/editor to the service account for full project access",
+      "D": "Use the App Engine default service account"
+    },
+    "correct": "B",
+    "explanation": "B is correct because creating a dedicated service account with only the specific roles needed (storage.objectCreator for writing to GCS, pubsub.publisher for publishing messages) implements the principle of least privilege. A is wrong because the default Compute Engine service account has broad permissions across all compute services. C is wrong because roles/editor grants write access to almost all Google Cloud services, far exceeding what's needed. D is wrong because the App Engine default service account is not appropriate for Cloud Run and may have permissions that don't match the workload's needs.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q03",
+    "question": "A team member needs to grant a new hire the ability to view IAM policies across the organization without being able to modify them. Which role is appropriate?",
+    "options": {
+      "A": "roles/iam.securityAdmin",
+      "B": "roles/iam.securityReviewer",
+      "C": "roles/owner",
+      "D": "roles/iam.roleAdmin"
+    },
+    "correct": "B",
+    "explanation": "B is correct because roles/iam.securityReviewer grants read-only access to IAM policies and security-related configurations across the organization, allowing the new hire to review policies without modifying them. A is wrong because roles/iam.securityAdmin allows modifying security settings including IAM policies — it's not read-only. C is wrong because roles/owner grants full administrative access. D is wrong because roles/iam.roleAdmin allows creating and updating custom IAM roles, which is broader than just viewing policies.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q04",
+    "question": "You need to create a service account for a GKE workload. The application should access Cloud SQL without storing credentials or service account keys. What is the recommended approach?",
+    "options": {
+      "A": "Download the service account key JSON and mount it as a Kubernetes secret",
+      "B": "Use Workload Identity Federation to bind the Kubernetes service account to a Google Cloud service account",
+      "C": "Use the node service account for all pods on the node",
+      "D": "Hardcode the service account credentials in the container image"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Workload Identity for GKE allows Pods to impersonate a Google Cloud service account using the Kubernetes service account, eliminating the need for service account key files. This is Google's recommended approach for GKE workloads needing Google Cloud service access. A is wrong because downloading and mounting key JSON files is a security risk — keys can be stolen from Kubernetes secrets. C is wrong because using the node service account gives all Pods on the node the same permissions, violating least privilege. D is wrong because hardcoding credentials in images is a critical security vulnerability.",
+    "topic": "Workload Identity Federation",
+    "section": 4
+  },
+  {
+    "id": "s4_q05",
+    "question": "An IAM policy is set at the organization level granting a user roles/storage.admin. The same user is denied roles/storage.admin at a specific project through an IAM deny policy. What is the effective access for the user in that project?",
+    "options": {
+      "A": "The user has roles/storage.admin because organization-level grants override project-level denies",
+      "B": "The user is denied roles/storage.admin in that project because deny policies take precedence over allow policies",
+      "C": "The policies conflict and the user has no access to any Google Cloud resources",
+      "D": "The user must re-authenticate to determine which policy applies"
+    },
+    "correct": "B",
+    "explanation": "B is correct because IAM deny policies explicitly deny specific permissions regardless of any allow policies — deny always overrides allow. Even though the organization-level grant would normally be inherited, the project-level deny policy prevents the user from exercising those permissions in that project. A is wrong because deny policies specifically override allow grants — this is their purpose. C is wrong because the conflict is resolved by the deny taking precedence — it doesn't remove access to other services. D is wrong because IAM policy evaluation is deterministic, not dependent on re-authentication.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q06",
+    "question": "You need to create a custom IAM role that grants only the ability to list and describe Compute Engine instances (not start, stop, or delete them). What is the minimum set of permissions for this custom role?",
+    "options": {
+      "A": "compute.instances.get, compute.instances.list",
+      "B": "compute.instances.get, compute.instances.list, compute.instances.describe",
+      "C": "roles/compute.viewer",
+      "D": "compute.instances.get, compute.instances.list, compute.projects.get"
+    },
+    "correct": "A",
+    "explanation": "A is correct because compute.instances.get retrieves details of a single instance and compute.instances.list lists all instances — together they provide the minimum permissions for read-only access to instance inventory. B is wrong because compute.instances.describe is not a distinct permission from compute.instances.get — get is used for both single-resource retrieval and describe operations. C is wrong because roles/compute.viewer is a predefined role containing many more permissions than needed, violating least privilege for a custom role. D is wrong because compute.projects.get grants access to project metadata which is beyond the stated requirement.",
+    "topic": "Role Types",
+    "section": 4
+  },
+  {
+    "id": "s4_q07",
+    "question": "A CI/CD pipeline running outside of Google Cloud needs to deploy container images to Artifact Registry. The pipeline runs in GitHub Actions. What is the most secure way to authenticate?",
+    "options": {
+      "A": "Create a service account, download a JSON key, and store it as a GitHub secret",
+      "B": "Use Workload Identity Federation to allow GitHub Actions OIDC tokens to impersonate a Google Cloud service account",
+      "C": "Use the gcloud auth login command in the pipeline with a developer's personal credentials",
+      "D": "Use the default service account that Google provisions for external systems"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Workload Identity Federation allows GitHub Actions to exchange its OIDC token for short-lived Google Cloud credentials without storing any long-lived keys, eliminating key management risks. A is wrong because service account key JSON files are long-lived credentials that represent a security risk if leaked — Google's recommended approach is keyless authentication via Workload Identity Federation. C is wrong because using personal credentials in a CI/CD pipeline is a security anti-pattern and creates key management issues. D is wrong because there is no default Google-provisioned service account for external systems.",
+    "topic": "Workload Identity Federation",
+    "section": 4
+  },
+  {
+    "id": "s4_q08",
+    "question": "A service account has been compromised. You need to immediately revoke its access to all Google Cloud resources. What is the fastest approach?",
+    "options": {
+      "A": "Delete all IAM bindings that reference the service account one by one",
+      "B": "Disable the service account — disabling prevents it from being used for authentication immediately across all resources",
+      "C": "Rotate the service account keys",
+      "D": "Remove the service account from all project IAM policies"
+    },
+    "correct": "B",
+    "explanation": "B is correct because disabling a service account immediately prevents it from being used for authentication anywhere in Google Cloud, regardless of what IAM roles it has — it's a single action that takes effect globally and instantly. A is wrong because removing IAM bindings one by one is slow and may miss bindings in some projects. C is wrong because rotating keys only addresses key-based authentication — if the service account itself is compromised in other ways, rotating keys may not fully address the threat. D is wrong because the service account may have bindings across many projects — finding and removing all of them is slower than simply disabling the account.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q09",
+    "question": "You need to allow a service account in Project A to access resources in Project B. What is the correct approach?",
+    "options": {
+      "A": "Move the service account to Project B",
+      "B": "Grant the service account from Project A the required IAM role on the specific resource or project in Project B",
+      "C": "Create an identical service account in Project B with the same email",
+      "D": "Enable VPC Peering between Project A and Project B"
+    },
+    "correct": "B",
+    "explanation": "B is correct because IAM roles can be granted to any principal (including service accounts from other projects) on any resource — you simply add the Project A service account as a member in Project B's IAM policy with the appropriate role. A is wrong because service accounts are owned by a project and cannot be moved to another project. C is wrong because service account emails are unique per project — you cannot create identical service accounts, and this doesn't share the identity. D is wrong because VPC Peering is a networking feature and doesn't affect IAM authorization.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q10",
+    "question": "You need to manage the IAM permissions of a service account itself — specifically, control who can use (act as) this service account. What IAM role grants the ability to impersonate a service account?",
+    "options": {
+      "A": "roles/iam.serviceAccountAdmin",
+      "B": "roles/iam.serviceAccountUser",
+      "C": "roles/iam.serviceAccountTokenCreator",
+      "D": "roles/iam.serviceAccountKeyAdmin"
+    },
+    "correct": "B",
+    "explanation": "B is correct because roles/iam.serviceAccountUser grants the ability to attach a service account to resources and impersonate it for running workloads (e.g., attaching to a VM or Cloud Function). A is wrong because roles/iam.serviceAccountAdmin allows creating, updating, and deleting service accounts — not impersonating them. C is wrong because roles/iam.serviceAccountTokenCreator allows creating OAuth tokens and identity tokens for a service account, which is a form of impersonation for programmatic use cases. D is wrong because roles/iam.serviceAccountKeyAdmin manages service account keys but doesn't grant impersonation rights.",
+    "topic": "SA Impersonation",
+    "section": 4
+  },
+  {
+    "id": "s4_q11",
+    "question": "A security audit identifies that several service account keys are more than 90 days old. What is the recommended remediation?",
+    "options": {
+      "A": "Rotate the keys immediately and update all applications using the old keys",
+      "B": "Migrate to keyless authentication using Workload Identity Federation or workload identity, eliminating the need for service account keys entirely",
+      "C": "Encrypt the existing keys with an additional layer and continue using them",
+      "D": "Move the keys to Secret Manager for secure storage"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google's best practice recommendation is to avoid using service account keys entirely by migrating to Workload Identity Federation (for external workloads) or workload identity for GKE, eliminating the key management problem. A is a valid short-term fix but still leaves the organization with the operational burden of key rotation and the security risk of long-lived credentials. C is wrong because adding encryption doesn't address the key age problem or reduce the attack surface. D is wrong because moving keys to Secret Manager is better than leaving them exposed but doesn't address the fundamental issue of long-lived credentials.",
+    "topic": "Short-lived Credentials",
+    "section": 4
+  },
+  {
+    "id": "s4_q12",
+    "question": "You need to allow an on-premises application to access Google Cloud APIs without creating a Cloud Identity account. The on-premises environment uses an enterprise OIDC provider. What should you configure?",
+    "options": {
+      "A": "Create a service account and download a JSON key for the on-premises application",
+      "B": "Configure Workload Identity Federation with the OIDC provider to exchange tokens for short-lived Google credentials",
+      "C": "Create a Cloud Identity account for the application",
+      "D": "Use OAuth 2.0 three-legged flow with a user account"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Workload Identity Federation allows external workloads (including on-premises applications with OIDC tokens) to exchange their identity provider tokens for short-lived Google credentials without needing service account keys. A is wrong because JSON keys are long-lived credentials that are difficult to manage securely for on-premises systems. C is wrong because Cloud Identity accounts are for human users, not for applications. D is wrong because three-legged OAuth requires user interaction, which is not suitable for an application-to-service authentication flow.",
+    "topic": "Workload Identity Federation",
+    "section": 4
+  },
+  {
+    "id": "s4_q13",
+    "question": "You need to view the current IAM policy for a specific Cloud Storage bucket. Which command shows the bucket's IAM policy?",
+    "options": {
+      "A": "gcloud storage buckets describe gs://my-bucket",
+      "B": "gcloud storage buckets get-iam-policy gs://my-bucket",
+      "C": "gcloud projects get-iam-policy PROJECT_ID --filter=resource=my-bucket",
+      "D": "gcloud iam policies list --resource=gs://my-bucket"
+    },
+    "correct": "B",
+    "explanation": "B is correct because gcloud storage buckets get-iam-policy retrieves the IAM policy (including all member-role bindings) for the specified Cloud Storage bucket. A is wrong because gcloud storage buckets describe shows bucket metadata (location, storage class, etc.) but not the IAM policy. C is wrong because gcloud projects get-iam-policy shows the project-level IAM policy and doesn't filter to a specific resource. D is wrong because gcloud iam policies list is not a valid command for retrieving resource IAM policies.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q14",
+    "question": "Your organization's compliance team requires that service account keys cannot be created for any service account in the organization. Which org policy constraint enforces this?",
+    "options": {
+      "A": "constraints/iam.disableServiceAccountCreation",
+      "B": "constraints/iam.disableServiceAccountKeyCreation",
+      "C": "constraints/iam.disableServiceAccountKeyUpload",
+      "D": "Both B and C together"
+    },
+    "correct": "D",
+    "explanation": "D is correct because to fully prevent service account key usage, you should apply both constraints/iam.disableServiceAccountKeyCreation (prevents creating new keys via the API) AND constraints/iam.disableServiceAccountKeyUpload (prevents uploading external keys). Using both together ensures no new keys can be created or added. B alone prevents creating keys via the Google Cloud API but doesn't prevent uploading externally generated keys. C alone prevents uploading external keys but not creating via the API. A is wrong because it prevents service account creation entirely, which is too broad.",
+    "topic": "Short-lived Credentials",
+    "section": 4
+  },
+  {
+    "id": "s4_q15",
+    "question": "A Cloud Function needs to call the Cloud Translation API. The function is running with a minimal service account. After deployment, the function fails with a 403 error when calling the Translation API. What is the most likely fix?",
+    "options": {
+      "A": "Enable the Cloud Translation API in the project",
+      "B": "Grant the Cloud Function's service account the roles/cloudtranslate.user role",
+      "C": "Assign roles/owner to the Cloud Function's service account",
+      "D": "Create a new service account with admin permissions for the Cloud Function"
+    },
+    "correct": "B",
+    "explanation": "B is correct because a 403 error indicates a permission denied — the service account running the Cloud Function lacks the IAM role needed to call the Translation API. Granting roles/cloudtranslate.user provides the minimum required permission. A is wrong because API enablement is a prerequisite but would cause a different error (API not enabled) — the question states the function was previously working and fails with 403, indicating an IAM issue. C is wrong because roles/owner vastly exceeds the permissions needed, violating least privilege. D is wrong because creating a new service account with admin permissions also violates least privilege.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q16",
+    "question": "You need to create a short-lived credential for a service account that a human administrator will use temporarily for an emergency operation. Which command generates a short-lived access token for a service account?",
+    "options": {
+      "A": "gcloud iam service-accounts keys create --expiration=1h",
+      "B": "gcloud auth print-access-token --impersonate-service-account=SA_EMAIL",
+      "C": "gcloud iam service-accounts create --temporary",
+      "D": "gcloud auth service-account login SA_EMAIL --duration=1h"
+    },
+    "correct": "B",
+    "explanation": "B is correct because gcloud auth print-access-token --impersonate-service-account generates a short-lived OAuth access token by impersonating the specified service account. The token has a limited lifetime (typically 1 hour) and doesn't create a persistent key. A is wrong because gcloud iam service-accounts keys create generates a long-lived JSON key file, not a short-lived token, and the --expiration flag refers to key expiry on creation, not a short-lived session token. C is wrong because gcloud iam service-accounts create creates a new service account, not a temporary credential. D is wrong because gcloud auth service-account login is not a valid gcloud command.",
+    "topic": "Short-lived Credentials",
+    "section": 4
+  },
+  {
+    "id": "s4_q17",
+    "question": "An organization wants to enforce that only specific Google Cloud services can access data in a Cloud Storage bucket, preventing access from outside a defined VPC Service Controls perimeter. What should you configure?",
+    "options": {
+      "A": "Cloud Armor security policy on the bucket",
+      "B": "VPC Service Controls perimeter with Cloud Storage inside it",
+      "C": "Private Google Access on the VPC subnet",
+      "D": "IAM conditions restricting access by VPC network"
+    },
+    "correct": "B",
+    "explanation": "B is correct because VPC Service Controls creates a security perimeter around Google Cloud services (like Cloud Storage) that restricts access to only requests originating from within the defined perimeter (specific VPCs, service accounts, or access levels), preventing data exfiltration. A is wrong because Cloud Armor protects load balancers from DDoS and web attacks, not service-to-service access for storage. C is wrong because Private Google Access allows VMs to reach Google APIs without external IPs but doesn't enforce a security perimeter. D is wrong because IAM conditions can restrict by VPC network but are less comprehensive than VPC Service Controls for defining full perimeters.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q18",
+    "question": "You are defining custom IAM roles for your organization. Which statement correctly describes the difference between predefined roles and custom roles?",
+    "options": {
+      "A": "Custom roles can include any permissions from any Google Cloud service without restriction",
+      "B": "Predefined roles are managed by Google and updated automatically; custom roles are defined by users and must be manually maintained as APIs evolve",
+      "C": "Custom roles can only be created at the project level, not the organization level",
+      "D": "Predefined roles can only be applied at the organization level"
+    },
+    "correct": "B",
+    "explanation": "B is correct because predefined roles are managed and updated by Google when new features or APIs are released, while custom roles require manual maintenance — if a new permission is needed for a feature you use, you must update the custom role manually. A is wrong because custom roles have restrictions — some permissions are not available for custom roles (e.g., some owner-level permissions). C is wrong because custom roles can be created at both the organization level (available to all projects) and the project level. D is wrong because predefined roles can be applied at any level of the resource hierarchy.",
+    "topic": "Role Types",
+    "section": 4
+  },
+  {
+    "id": "s4_q19",
+    "question": "You need to assign a service account to a Compute Engine instance at creation time so the instance can access Google Cloud APIs. Which gcloud command parameter achieves this?",
+    "options": {
+      "A": "--service-account=SA_EMAIL",
+      "B": "--identity=SA_EMAIL",
+      "C": "--run-as=SA_EMAIL",
+      "D": "--iam-role=SA_EMAIL"
+    },
+    "correct": "A",
+    "explanation": "A is correct because the --service-account flag in gcloud compute instances create specifies which service account the instance should use for API authentication. B is wrong because --identity is not a valid flag for gcloud compute instances create. C is wrong because --run-as is not a valid gcloud flag. D is wrong because --iam-role is not a valid flag for this command.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q20",
+    "question": "Your security team wants to understand the three types of IAM roles. Which statement correctly categorizes them?",
+    "options": {
+      "A": "Basic roles (Owner/Editor/Viewer), Predefined roles (service-specific), Custom roles (user-defined)",
+      "B": "Admin roles, User roles, and Viewer roles",
+      "C": "Organization roles, Folder roles, and Project roles",
+      "D": "Read roles, Write roles, and Admin roles"
+    },
+    "correct": "A",
+    "explanation": "A is correct because IAM has three categories: Basic (primitive) roles (Owner, Editor, Viewer) which are coarse-grained; Predefined roles which are service-specific and maintained by Google; and Custom roles which are user-defined collections of specific permissions. B is wrong because Admin/User/Viewer is not the Google Cloud IAM taxonomy. C is wrong because Organization/Folder/Project describes the resource hierarchy levels where roles can be applied, not the role types. D is wrong because Read/Write/Admin is not the IAM role category terminology.",
+    "topic": "Role Types",
+    "section": 4
+  },
+  {
+    "id": "s4_q21",
+    "question": "A team needs a service account to impersonate another service account to access resources. The caller has the roles/iam.serviceAccountTokenCreator role. What can they do with this role?",
+    "options": {
+      "A": "Create new service accounts",
+      "B": "Generate OAuth 2.0 access tokens and identity tokens for the target service account",
+      "C": "Modify IAM policies on behalf of the service account",
+      "D": "Delete service account keys"
+    },
+    "correct": "B",
+    "explanation": "B is correct because roles/iam.serviceAccountTokenCreator allows a principal to generate short-lived OAuth 2.0 access tokens and OpenID Connect identity tokens for the target service account, enabling service account impersonation for programmatic access. A is wrong because creating service accounts requires roles/iam.serviceAccountAdmin, not tokenCreator. C is wrong because modifying IAM policies requires IAM admin roles on the target resource. D is wrong because managing service account keys requires roles/iam.serviceAccountKeyAdmin.",
+    "topic": "SA Impersonation",
+    "section": 4
+  },
+  {
+    "id": "s4_q22",
+    "question": "You need to create an IAM policy binding that grants the group engineering@example.com the roles/bigquery.dataEditor role on a specific BigQuery dataset. Which command achieves this?",
+    "options": {
+      "A": "gcloud projects add-iam-policy-binding PROJECT_ID --member=group:engineering@example.com --role=roles/bigquery.dataEditor",
+      "B": "bq set-iam-policy DATASET --member=group:engineering@example.com --role=roles/bigquery.dataEditor",
+      "C": "gcloud iam roles add-binding DATASET --member=group:engineering@example.com --role=roles/bigquery.dataEditor",
+      "D": "gcloud bigquery datasets add-iam-policy-binding DATASET_ID --member=group:engineering@example.com --role=roles/bigquery.dataEditor"
+    },
+    "correct": "A",
+    "explanation": "A is correct — while option D looks appealing, BigQuery dataset IAM policies are most commonly managed via gcloud projects add-iam-policy-binding (project-level) or via the bq CLI. For fine-grained dataset-level IAM, gcloud projects add-iam-policy-binding at the project level is valid. D uses a gcloud bigquery datasets command structure that doesn't exist. B uses the bq CLI but the syntax is for setting a full policy, not adding a binding. A is the correct command that matches standard IAM binding syntax.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q23",
+    "question": "You need to use service account impersonation to run a gcloud command as a different service account without downloading a key. Which gcloud flag enables this?",
+    "options": {
+      "A": "--account=SA_EMAIL",
+      "B": "--impersonate-service-account=SA_EMAIL",
+      "C": "--service-account=SA_EMAIL",
+      "D": "--identity=SA_EMAIL"
+    },
+    "correct": "B",
+    "explanation": "B is correct because the --impersonate-service-account flag tells gcloud to use short-lived credentials generated by impersonating the specified service account rather than the currently authenticated user's credentials. The caller must have roles/iam.serviceAccountTokenCreator on the target service account. A is wrong because --account sets the active gcloud account (a user or service account you're authenticated as), not impersonation. C is wrong because --service-account is used for resource creation (e.g., assigning a SA to a VM), not command impersonation. D is wrong because --identity is not a valid gcloud flag.",
+    "topic": "SA Impersonation",
+    "section": 4
+  },
+  {
+    "id": "s4_q24",
+    "question": "A GKE application is using Workload Identity. The Kubernetes service account (KSA) needs to be bound to a Google service account (GSA). What configuration is required on the GSA?",
+    "options": {
+      "A": "Grant the KSA the roles/iam.workloadIdentityUser role on the GSA",
+      "B": "Download the GSA key and create a Kubernetes secret",
+      "C": "Set the GSA as the node service account for the cluster",
+      "D": "Grant the GSA the roles/iam.serviceAccountUser role on the KSA"
+    },
+    "correct": "A",
+    "explanation": "A is correct because to bind a KSA to a GSA using Workload Identity, you must grant the KSA (identified by its Workload Identity member format: serviceAccount:PROJECT_ID.svc.id.goog[NAMESPACE/KSA_NAME]) the roles/iam.workloadIdentityUser role on the GSA. This allows the KSA to impersonate the GSA. B is wrong because Workload Identity eliminates the need for key downloads — that's the whole point. C is wrong because setting the node service account applies to all Pods on the node, not just specific workloads. D is wrong because the binding direction is reversed — the KSA needs permission on the GSA, not the other way around.",
+    "topic": "Workload Identity Federation",
+    "section": 4
+  },
+  {
+    "id": "s4_q25",
+    "question": "You are designing IAM policies for a multi-tier application. The web tier service account needs to access the database tier, and the database tier should not be accessible to the public internet. What is the recommended approach for service-to-service authentication within Google Cloud?",
+    "options": {
+      "A": "Use API keys for service-to-service authentication",
+      "B": "Use Google-managed service accounts with IAM roles — services running with appropriate service accounts can call other Google Cloud services directly",
+      "C": "Store shared credentials in Firestore for services to retrieve at runtime",
+      "D": "Use mutual TLS (mTLS) with manually managed certificates"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google-managed service accounts with IAM roles provide secure, credential-free service-to-service authentication within Google Cloud — each service runs with its own service account identity and IAM grants control what it can access. A is wrong because API keys are for application identity and don't provide the granular IAM control that service accounts do. C is wrong because storing shared credentials in a database creates a secret management problem and is a security anti-pattern. D is wrong because while mTLS is secure, managing certificates manually adds significant operational overhead when IAM-based service account authentication already provides strong security.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q26",
+    "question": "A developer accidentally granted roles/owner to an external user on a production project. You need to remove this binding immediately. Which command removes the IAM binding?",
+    "options": {
+      "A": "gcloud projects delete-iam-policy-binding PROJECT_ID --member=user:EMAIL --role=roles/owner",
+      "B": "gcloud projects remove-iam-policy-binding PROJECT_ID --member=user:EMAIL --role=roles/owner",
+      "C": "gcloud iam policies revoke --project=PROJECT_ID --member=user:EMAIL --role=roles/owner",
+      "D": "gcloud projects update-iam-policy PROJECT_ID --remove-member=user:EMAIL"
+    },
+    "correct": "B",
+    "explanation": "B is correct because gcloud projects remove-iam-policy-binding is the correct command to remove a specific member-role binding from a project's IAM policy. A is wrong because delete-iam-policy-binding is not a valid gcloud subcommand. C is wrong because gcloud iam policies revoke is not a valid command. D is wrong because gcloud projects update-iam-policy with --remove-member is not the correct syntax.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q27",
+    "question": "You need to understand IAM policy inheritance in the resource hierarchy. An IAM binding granting roles/storage.admin is set at the folder level. Which resources inherit this binding?",
+    "options": {
+      "A": "Only resources directly in the folder, not in sub-folders",
+      "B": "All projects, resources, and sub-folders within the folder hierarchy below where the binding is set",
+      "C": "Only projects in the folder, not individual resources like buckets",
+      "D": "The binding applies to the folder but is blocked at the project level"
+    },
+    "correct": "B",
+    "explanation": "B is correct because IAM bindings set at a higher level in the resource hierarchy (organization > folder > project > resource) are inherited by all resources at lower levels — a folder-level binding applies to all projects in the folder, all sub-folders, and all resources within those projects. A is wrong because inheritance goes through all levels, not just the immediate children. C is wrong because inheritance propagates through all levels including individual resources. D is wrong because IAM inheritance is additive — lower-level policies cannot block inherited grants (only deny policies can override grants).",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q28",
+    "question": "A team needs to create a Google-managed service account for a specific Google Cloud service (e.g., the Pub/Sub service agent). What is a Google-managed service account?",
+    "options": {
+      "A": "A service account created by users but managed by a Google Cloud service",
+      "B": "A service account automatically created and managed by Google to allow Google Cloud services to act on your behalf",
+      "C": "A service account shared across multiple customers' projects",
+      "D": "A service account that cannot be modified by users"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google-managed service accounts (also called Google service agents) are automatically created when you enable certain Google Cloud APIs, and they allow Google Cloud services (like Pub/Sub, Cloud Build, etc.) to perform actions in your project on your behalf. A is wrong because Google-managed service accounts are created and managed by Google, not by users. C is wrong because each project has its own Google-managed service accounts, not shared across customers. D is wrong because while Google manages these accounts, users can grant them additional IAM roles if needed.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q29",
+    "question": "You need to give a third-party auditor read-only access to audit logs in your Google Cloud organization without granting them access to any operational resources. Which role is most appropriate?",
+    "options": {
+      "A": "roles/viewer at the organization level",
+      "B": "roles/logging.viewer or roles/logging.privateLogViewer at the organization level",
+      "C": "roles/iam.securityAdmin at the project level",
+      "D": "roles/editor with a custom IAM condition restricting writes"
+    },
+    "correct": "B",
+    "explanation": "B is correct because roles/logging.viewer grants read-only access to logs in Cloud Logging, and roles/logging.privateLogViewer additionally provides access to private log entries. Granting this at the organization level allows the auditor to view logs across all projects. A is wrong because roles/viewer grants read access to all Google Cloud services, not just logs — this violates least privilege. C is wrong because roles/iam.securityAdmin grants write access to security settings, which is beyond what's needed. D is wrong because roles/editor with conditions is complex to configure and still grants broader write access than needed.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q30",
+    "question": "You need to provision Workload Identity Federation for an Azure AD application to access Google Cloud. What is the correct sequence of steps?",
+    "options": {
+      "A": "Create a service account key > configure Azure to use the key > grant IAM roles to the key",
+      "B": "Create a Workload Identity Pool > add Azure AD as a provider > create/grant IAM roles to the external identity via the pool",
+      "C": "Create a Cloud Identity account for the Azure application > grant IAM roles",
+      "D": "Enable the Identity Federation API > configure Azure AD as the default IdP for the organization"
+    },
+    "correct": "B",
+    "explanation": "B is correct because provisioning Workload Identity Federation requires: (1) creating a Workload Identity Pool in Google Cloud, (2) adding the external provider (Azure AD, in OIDC or SAML format), and (3) granting IAM roles to the external identity using the pool's principal format so it can access Google Cloud resources. A is wrong because service account keys are what Workload Identity Federation is designed to replace — no keys are needed. C is wrong because Cloud Identity is for human users, not for external application workloads. D is wrong because there is no 'default IdP' configuration for an organization in this context.",
+    "topic": "Workload Identity Federation",
+    "section": 4
+  },
+  {
+    "id": "s4_q31",
+    "question": "You need to define an IAM allow policy that grants a user access only on weekdays between 9am and 5pm UTC. Which IAM feature supports time-based access restrictions?",
+    "options": {
+      "A": "IAM deny policies with a time condition",
+      "B": "IAM Conditions with a request.time expression using date/time attributes",
+      "C": "Cloud Scheduler that modifies IAM policies on a schedule",
+      "D": "Time-bound IAM roles that expire after 8 hours automatically"
+    },
+    "correct": "B",
+    "explanation": "B is correct because IAM Conditions support time-based expressions using the request.time attribute, allowing you to write CEL (Common Expression Language) conditions like 'request.time.getDayOfWeek() >= 1 && request.time.getDayOfWeek() <= 5 && request.time.getHours() >= 9 && request.time.getHours() < 17' to restrict access to specific time windows. A is wrong because deny policies can have conditions but the right tool here is allow policy conditions. C is wrong because using Cloud Scheduler to modify IAM policies creates gaps and is operationally risky. D is wrong because IAM roles don't have built-in expiration — that's what Conditions are for.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q32",
+    "question": "A service account has accumulated IAM role bindings across multiple projects over time. You need to audit what resources this service account can access organization-wide. What is the most efficient approach?",
+    "options": {
+      "A": "Check each project's IAM page manually",
+      "B": "Use Cloud Asset Inventory to search for IAM policy bindings that include the service account as a member",
+      "C": "Review Admin Activity audit logs for all SetIamPolicy events involving the service account",
+      "D": "Run gcloud projects get-iam-policy for each project and grep for the service account email"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Cloud Asset Inventory provides a searchable, organization-wide view of all IAM policy bindings, allowing you to find all bindings that reference a specific service account across all projects and resources in a single query. A is wrong because manual project-by-project checking is not scalable. C is wrong because audit logs show historical changes to IAM policies, not the current state of all bindings. D is wrong because manually running commands for each project is operationally inefficient at organization scale.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q33",
+    "question": "You are implementing a zero-trust security model for a GKE application. Each microservice should only be able to call the specific Google Cloud APIs it needs. What is the recommended implementation?",
+    "options": {
+      "A": "Use a single service account for all microservices with all required permissions",
+      "B": "Create a dedicated service account per microservice with only the IAM roles that microservice needs, and use Workload Identity to bind each Kubernetes service account to its GSA",
+      "C": "Use the default Compute Engine service account with broad permissions",
+      "D": "Store API credentials in environment variables for each microservice"
+    },
+    "correct": "B",
+    "explanation": "B is correct because zero-trust for microservices means each service has its own identity with minimum permissions — a dedicated GSA per microservice with specific IAM roles, bound to its KSA via Workload Identity, ensures that a compromised service can only access its own resources. A is wrong because a shared service account means all microservices have all permissions — a breach of one compromises all. C is wrong because the default service account has broad access, violating least privilege. D is wrong because environment variables expose credentials in plaintext, which is a security risk.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q34",
+    "question": "You need to understand when to use roles/iam.serviceAccountUser versus roles/iam.serviceAccountTokenCreator. What is the key difference?",
+    "options": {
+      "A": "They are identical roles with different names",
+      "B": "roles/iam.serviceAccountUser allows attaching a SA to resources and running workloads as the SA; roles/iam.serviceAccountTokenCreator allows generating tokens to impersonate the SA programmatically",
+      "C": "roles/iam.serviceAccountTokenCreator is for GKE only; roles/iam.serviceAccountUser is for Compute Engine",
+      "D": "roles/iam.serviceAccountUser creates short-lived credentials; roles/iam.serviceAccountTokenCreator creates long-lived keys"
+    },
+    "correct": "B",
+    "explanation": "B is correct because the key distinction is: serviceAccountUser is for deploying/running resources as the SA (e.g., attaching a SA to a VM or Cloud Function), while serviceAccountTokenCreator is for generating OAuth tokens to programmatically impersonate the SA in API calls. A is wrong because they are distinct roles with different permission sets. C is wrong because both roles work across services, not just GKE or Compute Engine. D is wrong because serviceAccountTokenCreator generates short-lived tokens, not long-lived keys (that's serviceAccountKeyAdmin).",
+    "topic": "SA Impersonation",
+    "section": 4
+  },
+  {
+    "id": "s4_q35",
+    "question": "A developer accidentally ran gcloud projects set-iam-policy and overwrote the entire project IAM policy, removing all admin access. How can an organization admin restore access?",
+    "options": {
+      "A": "Contact Google Cloud support — IAM policies cannot be recovered once overwritten",
+      "B": "An organization admin can use organization-level IAM to grant project access, since org-level permissions apply to all projects",
+      "C": "Create a new project and migrate all resources",
+      "D": "Restore the project IAM policy from a Cloud Storage backup"
+    },
+    "correct": "B",
+    "explanation": "B is correct because organization-level IAM bindings are inherited by all projects — an organization admin can add IAM bindings at the organization node that grant access to the affected project, restoring the ability to manage it. A is wrong because organization-level recovery is possible without Google support. C is wrong because migrating resources is unnecessary and operationally destructive. D is wrong because IAM policies are not automatically backed up to Cloud Storage — although Cloud Asset Inventory can provide history.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q36",
+    "question": "You are reviewing IAM best practices for a production Google Cloud environment. Which of the following represents a security anti-pattern that should be avoided?",
+    "options": {
+      "A": "Creating separate service accounts for different workloads",
+      "B": "Assigning roles at the most specific resource level possible",
+      "C": "Granting roles/owner to a service account used by an automated pipeline",
+      "D": "Using Google Groups to manage IAM role assignments for teams"
+    },
+    "correct": "C",
+    "explanation": "C is correct because granting roles/owner to a service account is a significant security anti-pattern — service accounts should have only the minimum required permissions. A compromised service account with owner-level access can take full control of a project. A is correct practice — separate service accounts enforce least privilege. B is correct practice — granular resource-level bindings reduce blast radius. D is correct practice — using Groups makes IAM management scalable and auditable.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q37",
+    "question": "You need to create a custom role at the organization level that is available to all projects. What is the primary advantage of creating the custom role at the organization level versus the project level?",
+    "options": {
+      "A": "Organization-level custom roles can include more permissions than project-level custom roles",
+      "B": "Organization-level custom roles can be assigned in any project within the organization, while project-level custom roles can only be used within that specific project",
+      "C": "Organization-level custom roles are automatically applied to all new projects",
+      "D": "Organization-level custom roles have higher priority than predefined roles"
+    },
+    "correct": "B",
+    "explanation": "B is correct because the key difference is scope — organization-level custom roles can be assigned to principals in any project across the organization, making them reusable. Project-level custom roles are only available for assignment within their specific project. A is wrong because the permission set available for custom roles is the same regardless of whether the role is created at the org or project level. C is wrong because custom roles are not automatically applied anywhere — they must be explicitly assigned. D is wrong because there is no priority difference between custom roles and predefined roles — deny policies > allow policies, not custom vs predefined.",
+    "topic": "Custom IAM Roles",
+    "section": 4
+  },
+  {
+    "id": "s4_q38",
+    "question": "A security review finds that several developers have direct IAM role bindings on production projects. The security team wants to enforce that access is granted only through Google Groups, not individual user accounts. How can this be enforced as a policy?",
+    "options": {
+      "A": "Create an org policy constraint that restricts IAM members to group: type only",
+      "B": "Use IAM Conditions to deny access for user: type principals",
+      "C": "Manually audit and remove individual user bindings periodically",
+      "D": "Enable Essential Contacts requiring group email addresses only"
+    },
+    "correct": "A",
+    "explanation": "A is correct because there is an organization policy configuration capability to restrict IAM policy members to specific domains and types — enforcing group-based access through organizational policy controls can be achieved through domain restriction policies. B is wrong because IAM conditions can restrict attributes but cannot easily target 'user: type' as a condition to deny. C is wrong because periodic manual audits don't prevent the anti-pattern from recurring. D is wrong because Essential Contacts is for operational notifications, not IAM policy enforcement.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q39",
+    "question": "You need to rotate a service account key because it may have been exposed. What steps ensure a smooth rotation without service disruption?",
+    "options": {
+      "A": "Delete the old key immediately and create a new key",
+      "B": "Create a new key first, update all applications to use the new key, verify they work, then delete the old key",
+      "C": "Disable the service account, create a new one, and migrate all resources",
+      "D": "Change the service account email address to invalidate old keys"
+    },
+    "correct": "B",
+    "explanation": "B is correct because a zero-disruption key rotation requires: (1) creating the new key first, (2) deploying the new key to all consuming applications, (3) verifying everything works with the new key, then (4) deleting the old key. This ensures no downtime during the transition. A is wrong because deleting the old key before applications have switched to the new one causes service disruption. C is wrong because migrating to a new service account is operationally complex and potentially disruptive to all resources using the current account. D is wrong because service account email addresses cannot be changed.",
+    "topic": "Short-lived Credentials",
+    "section": 4
+  },
+  {
+    "id": "s4_q40",
+    "question": "A GKE cluster needs to pull images from Artifact Registry in a different project. What is required for the GKE node service account to authenticate to the cross-project registry?",
+    "options": {
+      "A": "Nothing — GKE can automatically access any Artifact Registry in the same organization",
+      "B": "Grant the GKE node service account the roles/artifactregistry.reader role in the project that owns the Artifact Registry repository",
+      "C": "Create a service account key and configure it as a Kubernetes imagePullSecret",
+      "D": "Enable VPC Peering between the two projects"
+    },
+    "correct": "B",
+    "explanation": "B is correct because cross-project Artifact Registry access requires explicitly granting the GKE node service account (or Workload Identity-bound service account) the roles/artifactregistry.reader role on the Artifact Registry repository or project where the images are stored. A is wrong because cross-project access is not automatic — explicit IAM bindings are required. C is wrong because using key-based imagePullSecrets is the legacy approach — IAM-based authentication via service accounts is preferred and more secure. D is wrong because VPC Peering is a networking feature and doesn't affect IAM authentication for Artifact Registry.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q41",
+    "question": "You need to implement a Google-recommended pattern for a Cloud Run service to access Secret Manager secrets without hardcoding credentials. What is the recommended approach?",
+    "options": {
+      "A": "Mount the secrets as environment variables at deployment time using gcloud CLI",
+      "B": "Assign the Cloud Run service's service account the roles/secretmanager.secretAccessor role and access secrets via the Secret Manager API at runtime",
+      "C": "Hardcode secrets in the container image for simplicity",
+      "D": "Use a Kubernetes Secret mounted as a volume (for Cloud Run)"
+    },
+    "correct": "B",
+    "explanation": "B is correct because the recommended pattern is for Cloud Run services to use their service account identity with roles/secretmanager.secretAccessor to fetch secrets from Secret Manager at runtime via the API or SDK — no hardcoded credentials needed. Cloud Run also supports mounting secrets directly, which is valid. A is wrong because while Cloud Run can inject Secret Manager values as environment variables at deployment, this is not the fully dynamic runtime approach. C is wrong because hardcoding secrets in images is a critical security vulnerability. D is wrong because Kubernetes Secrets are a GKE concept — Cloud Run doesn't use Kubernetes Secrets volumes.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q42",
+    "question": "You need to understand the difference between Workforce Identity Federation and Workload Identity Federation. When should you use Workforce Identity Federation?",
+    "options": {
+      "A": "When a Kubernetes workload needs to access Google Cloud APIs",
+      "B": "When human users from an external IdP (e.g., Okta, Azure AD) need to access Google Cloud Console or APIs",
+      "C": "When a GitHub Actions pipeline needs to deploy to Google Cloud",
+      "D": "When a GKE Pod needs to authenticate to Cloud SQL"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Workforce Identity Federation is for human users — it allows employees authenticated through external identity providers (Okta, Azure AD, SAML/OIDC providers) to access Google Cloud without Google accounts. Workload Identity Federation is for non-human workloads. A is wrong because Kubernetes workloads use Workload Identity (GKE) or Workload Identity Federation (external Kubernetes). C is wrong because GitHub Actions uses Workload Identity Federation, not Workforce. D is wrong because GKE Pod to Cloud SQL authentication uses Workload Identity.",
+    "topic": "Workload Identity Federation",
+    "section": 4
+  },
+  {
+    "id": "s4_q43",
+    "question": "A team is setting up a new project and wants to follow the principle of least privilege for initial project access. Which approach aligns with this principle for the project creator?",
+    "options": {
+      "A": "Grant roles/owner to the entire engineering team",
+      "B": "Grant roles/owner to a project admin group, roles/editor to developers, and roles/viewer to stakeholders based on their actual needs",
+      "C": "Grant roles/editor to everyone to ensure they can perform their tasks",
+      "D": "Use one admin account with roles/owner and share the credentials"
+    },
+    "correct": "B",
+    "explanation": "B is correct because assigning roles based on actual needs (owner for admins who manage the project, editor for developers who create resources, viewer for stakeholders who only observe) implements least privilege by giving each person only what they need. A is wrong because giving owner to the entire engineering team grants excessive permissions. C is wrong because roles/editor for everyone gives all users write access to all services, violating least privilege. D is wrong because sharing credentials is a critical security anti-pattern that makes accountability and auditing impossible.",
+    "topic": "IAM Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q44",
+    "question": "You are creating a custom IAM role and want to include the permission to create Cloud Storage buckets. What is the correct permission string for creating buckets?",
+    "options": {
+      "A": "storage.create",
+      "B": "storage.buckets.create",
+      "C": "cloudstorage.buckets.create",
+      "D": "gcs.buckets.create"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Google Cloud IAM permissions follow the format service.resource.verb — for Cloud Storage (service: storage), creating buckets (resource: buckets, verb: create) gives storage.buckets.create. A is wrong because storage.create is incomplete and not a valid permission. C is wrong because the service identifier is storage, not cloudstorage. D is wrong because gcs is not the IAM service identifier — the correct identifier is storage.",
+    "topic": "Custom IAM Roles",
+    "section": 4
+  },
+  {
+    "id": "s4_q45",
+    "question": "A team needs to use service account impersonation in their local development environment to test how their application behaves with production service account permissions. What is required?",
+    "options": {
+      "A": "Download the production service account key to the local machine",
+      "B": "The developer's user account must have roles/iam.serviceAccountTokenCreator on the target service account, then use gcloud --impersonate-service-account",
+      "C": "Use the gcloud auth login with the service account email",
+      "D": "Create a copy of the service account in the development project"
+    },
+    "correct": "B",
+    "explanation": "B is correct because service account impersonation allows developers to temporarily act as a service account using their own credentials — the developer must have roles/iam.serviceAccountTokenCreator on the target service account, and then use --impersonate-service-account in gcloud or the auth library. No keys are required. A is wrong because downloading production keys to developer machines is a security risk — impersonation solves this without keys. C is wrong because gcloud auth login is for authenticating as a user or using application default credentials, not for impersonating a specific service account. D is wrong because copying service accounts doesn't grant the same permissions in the production environment.",
+    "topic": "SA Impersonation",
+    "section": 4
+  },
+  {
+    "id": "s4_q46",
+    "question": "You need to ensure that a service account used by a data pipeline is automatically rotated to use short-lived credentials rather than static keys. What is the Google Cloud mechanism for this?",
+    "options": {
+      "A": "Set a key expiry date when creating service account keys",
+      "B": "Use Application Default Credentials (ADC) with the service account attached to the Compute Engine instance or Cloud Run service — credentials are managed automatically",
+      "C": "Use a cron job to rotate keys every 24 hours",
+      "D": "Enable key rotation in the IAM settings"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Application Default Credentials (ADC) automatically use the service account attached to the compute resource (VM, Cloud Run, Cloud Function, etc.) to obtain short-lived tokens via the metadata server — no keys needed, and tokens are refreshed automatically. A is wrong because while key expiry provides a safety net, it still uses long-lived keys that must be managed. C is wrong because a cron-based rotation is operationally complex and still requires a key rotation period window. D is wrong because there is no automatic key rotation setting in IAM — that's why the recommended approach is to avoid keys entirely.",
+    "topic": "Short-lived Credentials",
+    "section": 4
+  },
+  {
+    "id": "s4_q47",
+    "question": "You need to assign a service account to a Cloud Run service (not just a VM). How does assigning a service account to a Cloud Run service affect its behavior?",
+    "options": {
+      "A": "It only affects which billing account is charged for the Cloud Run service",
+      "B": "The Cloud Run service runs as the specified service account identity, and all calls to Google Cloud APIs from the service are authenticated as that service account",
+      "C": "It determines which region the Cloud Run service can be deployed in",
+      "D": "It allows the Cloud Run service to access the internet without Cloud NAT"
+    },
+    "correct": "B",
+    "explanation": "B is correct because the service account assigned to a Cloud Run service becomes the identity of that service — when the service calls Google Cloud APIs (Cloud Storage, Pub/Sub, Cloud SQL, etc.), the request is authenticated and authorized as that service account, enabling IAM-based access control. A is wrong because billing is associated with the project, not the service account. C is wrong because the service account identity has no bearing on which region a service can be deployed in. D is wrong because the service account affects API authentication, not network connectivity — Cloud NAT or external IPs control outbound internet access.",
+    "topic": "Service Accounts",
+    "section": 4
+  },
+  {
+    "id": "s4_q48",
+    "question": "You need to implement a policy that prevents any project in your organization from having IAM bindings for principals outside of your organization's domain (e.g., preventing gmail.com personal accounts). Which org policy constraint achieves this?",
+    "options": {
+      "A": "constraints/iam.disableServiceAccountCreation",
+      "B": "constraints/iam.allowedPolicyMemberDomains",
+      "C": "constraints/gcp.resourceLocations",
+      "D": "constraints/iam.restrictCrossProjectServiceAccountLienRemoval"
+    },
+    "correct": "B",
+    "explanation": "B is correct because constraints/iam.allowedPolicyMemberDomains (also known as Domain Restricted Sharing) restricts which customer or domain identities can be added to IAM policies in the organization, effectively preventing external gmail.com or other domain accounts from being granted access. A is wrong because it controls service account creation, not IAM member domains. C is wrong because it controls resource locations, not IAM member types. D is wrong because it controls service account liens, not IAM member domains.",
+    "topic": "Org Policies",
+    "section": 4
+  },
+  {
+    "id": "s4_q49",
+    "question": "Your team uses a CI/CD pipeline that creates Terraform plans and applies infrastructure changes. The pipeline should have permissions to create VMs, Cloud Storage buckets, and networking resources but NOT to modify IAM policies. How do you implement this?",
+    "options": {
+      "A": "Grant roles/editor to the pipeline service account — it includes all needed permissions",
+      "B": "Create a custom role with specific compute, storage, and networking permissions but excluding resourcemanager.projects.setIamPolicy and iam.* permissions",
+      "C": "Grant roles/owner but add an IAM condition excluding IAM modification actions",
+      "D": "Use the default App Engine service account for the CI/CD pipeline"
+    },
+    "correct": "B",
+    "explanation": "B is correct because a custom role allows precise permission selection — you include compute, storage, and networking creation permissions while explicitly excluding IAM-related permissions (resourcemanager.projects.setIamPolicy, iam.roles.*, etc.), preventing the pipeline from escalating privileges or modifying access controls. A is wrong because roles/editor includes the ability to modify some IAM resources and is broader than needed. C is wrong because IAM conditions cannot easily exclude specific permission types like IAM modifications — custom roles are the right tool. D is wrong because the App Engine default service account is project-specific and not appropriate for a Terraform pipeline.",
+    "topic": "Custom IAM Roles",
+    "section": 4
+  },
+  {
+    "id": "s4_q50",
+    "question": "A security team wants to audit all service account key creations and deletions across the organization over the past 30 days. Where should they look?",
+    "options": {
+      "A": "The IAM service accounts page in the Console shows key creation history",
+      "B": "Admin Activity audit logs in Cloud Logging — filter for iam.googleapis.com resource type and CreateServiceAccountKey / DeleteServiceAccountKey method names",
+      "C": "Cloud Monitoring metrics for service account key events",
+      "D": "The Security Command Center findings dashboard"
+    },
+    "correct": "B",
+    "explanation": "B is correct because Admin Activity audit logs automatically capture all service account key management operations (CreateServiceAccountKey, DeleteServiceAccountKey) as iam.googleapis.com log entries — this is the authoritative, queryable source for key management history. A is wrong because the IAM Console shows current keys but not historical creation/deletion events. C is wrong because Cloud Monitoring does not have metrics for IAM service account key operations — audit logs are the right signal. D is wrong because Security Command Center shows security findings and vulnerabilities, not a historical log of specific API operations.",
+    "topic": "Service Accounts",
+    "section": 4
+  }
+]
