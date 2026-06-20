@@ -1,16 +1,22 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HelpCircle, Layers, Target, ClipboardList, ChevronRight } from "lucide-react";
+import {
+  HelpCircle,
+  Layers,
+  Target,
+  ClipboardList,
+  ChevronRight,
+} from "lucide-react";
 import { ThemeToggle } from "@/components/themeToggle";
 import { useCert } from "@/components/certProvider";
 import { cn } from "@/lib/utils";
 
 const MODE_ITEMS = [
-  { id: "quiz",      icon: HelpCircle,    label: "Quiz" },
-  { id: "flashcard", icon: Layers,        label: "Flashcards" },
-  { id: "drill",     icon: Target,        label: "Drill" },
-  { id: "exam",      icon: ClipboardList, label: "Exam Sim" },
+  { id: "quiz", icon: HelpCircle, label: "Quiz" },
+  { id: "flashcard", icon: Layers, label: "Flashcards" },
+  { id: "drill", icon: Target, label: "Drill" },
+  { id: "exam", icon: ClipboardList, label: "Exam Sim" },
 ];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
@@ -25,17 +31,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
       <h2 className="sr-only">
-        Vexamy — {cert ? `${cert.provider} ${cert.name}` : "Certification Practice"}
+        Behind the Cloud —{" "}
+        {cert ? `${cert.provider} ${cert.name}` : "Certification Practice"}
       </h2>
 
       {/* ── N1b Nav ─────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
-        <div className="max-w-[940px] mx-auto px-6 h-14 flex items-center justify-between gap-6">
-
+        <div className="max-w-235 mx-auto px-6 h-14 flex items-center justify-between gap-6">
           {/* Left: wordmark → home, then cert name if in cert context */}
           <div className="flex items-center gap-2 shrink-0 min-w-0">
             <Link href="/" className="flex items-center shrink-0">
-              <span className="font-semibold text-sm tracking-tight">Vexamy</span>
+              <span className="font-semibold text-sm tracking-tight">
+                Behind the Cloud
+              </span>
             </Link>
             {cert && (
               <>
@@ -65,7 +73,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                       "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
                       active
                         ? "text-foreground bg-muted"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/60",
                     )}
                   >
                     <Icon className="size-3.5 shrink-0" />
@@ -99,7 +107,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                     "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap",
                     active
                       ? "text-foreground bg-muted"
-                      : "text-muted-foreground hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   <Icon className="size-3 shrink-0" />
@@ -115,9 +123,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {cert && activeMode && (
         <div className="max-w-[940px] mx-auto px-6 pt-4 pb-0">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+            <Link href="/" className="hover:text-foreground transition-colors">
+              Home
+            </Link>
             <span>/</span>
-            <Link href={`/${certSlug}`} className="hover:text-foreground transition-colors">
+            <Link
+              href={`/${certSlug}`}
+              className="hover:text-foreground transition-colors"
+            >
               {cert.shortName}
             </Link>
             <span>/</span>
@@ -126,9 +139,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      <main className="max-w-[940px] mx-auto px-6 py-6 pb-16">
-        {children}
-      </main>
+      <main className="max-w-[940px] mx-auto px-6 py-6 pb-16">{children}</main>
 
       <footer className="max-w-[940px] mx-auto px-6 pb-8 border-t border-border pt-6 mt-2">
         <p className="text-xs text-muted-foreground text-center tracking-wide">

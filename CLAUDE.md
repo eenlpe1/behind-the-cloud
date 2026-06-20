@@ -1,8 +1,6 @@
-@AGENTS.md
-
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for architecture, project structure, component conventions, and how to add new certifications.
 
 ## Commands
 
@@ -13,36 +11,29 @@ pnpm start       # serve production build
 pnpm lint        # eslint
 ```
 
-No test suite yet. Add one when logic complexity warrants it.
+## Before writing any code
 
-## Purpose
+- Read `CONTRIBUTING.md` for architecture, project structure, and conventions.
+- Read `src/data/types.ts` before touching any data — it defines `CertConfig`, `Question`, `Flashcard`, and `makeCertAccessors()`.
+- Read `src/data/certs.ts` before touching cert registration — it holds `CERT_REGISTRY`, `ALL_CERTS`, and `UPCOMING_CERTS`.
 
-Vexamy — certification practice app. Currently ships the GCP Associate Cloud Engineer track. Source of truth for exam topics: `docs/gcp-latest-exam-guide.md` (4 sections: cloud setup ~20%, planning/implementing ~30%, operations ~30%, access/security ~20%).
+## Hard rules
 
-## Stack
+- **No raw Tailwind color values.** Use semantic tokens only: `bg-card`, `text-muted-foreground`, `border-border`, etc.
+- **Never hand-edit `src/components/ui/`.** These are managed by shadcn. Add new primitives with `pnpm dlx shadcn@latest add <name>`.
+- **No `space-x-*` / `space-y-*`.** Use `gap-*` for all spacing.
+- **Always use `cn()`** from `@/lib/utils` for conditional class merging.
+- **No external state management libraries and no database.** All data is static JSON.
 
-- Next.js 16 App Router, React 19, TypeScript, Tailwind CSS v4
-- shadcn/ui (base-nova preset, base-ui primitives) — component library
-- Lucide React — icons
-- No external state management lib, no DB — static question bank only
-- Fonts: Inter + Fraunces (display) + Geist Mono via `next/font/google`
+## Architecture patterns to follow
 
-## Architecture
+- New certifications go in `src/data/<slug>/` with JSON files + an `index.ts` that calls `makeCertAccessors()`. Register in `CERT_REGISTRY`. See `src/data/ace/` as the reference implementation.
+- Section colors come from CSS variables (`--sec-1-bar`, `--sec-2-bg`, etc.) defined in `tokens.css`. Do not hardcode colors for sections.
+- Dynamic route is `[cert]`. The slug resolves in `src/app/[cert]/layout.tsx` via `getCert(slug)` and is passed to children through `CertProvider`. Mode components access cert data via the `CertProvider` context — not via props or direct imports.
+- The home page uses ISR (`revalidate = 3600`) for the GitHub star count. Do not remove or change this.
 
-App Router structure under `src/app/`. Layout wraps all pages with font vars and full-height flex body. No API routes.
+## Source of truth
 
-### Component conventions
-- All UI primitives live in `src/components/ui/` — added via `pnpm dlx shadcn@latest add <name>`
-- Page-level components live in `src/components/` and use shadcn primitives
-- Question/topic data lives in `src/data/` as TypeScript objects (no DB needed)
-- Shared constants (section colors, mode list) live in `src/lib/reviewer.ts`
-
-### shadcn/ui rules
-- Use semantic color tokens (`bg-card`, `text-muted-foreground`) — never raw Tailwind color values
-- Use `cn()` from `@/lib/utils` for conditional class merging
-- Use `gap-*` for spacing, never `space-x-*` / `space-y-*`
-- Icons inside `Button` use the `data-icon` prop, not manual sizing classes
-- The flashcard 3D flip (`.flip-scene`, `.flip-inner`, `.flip-face`) and quiz option states (`.opt-btn`, `.opt-btn--correct/wrong/dimmed`) are kept as custom CSS in `globals.css` — no shadcn equivalent
-
-### Route structure
-Route per exam section makes sense: `/section/[id]` or `/quiz` if adding routing later.
+- GCP ACE exam topics → `docs/gcp-latest-exam-guide.md`
+- Developer setup and conventions → `CONTRIBUTING.md`
+- User-facing product info → `README.md`

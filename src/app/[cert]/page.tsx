@@ -44,13 +44,8 @@ export default async function CertPage({
               {cert.provider} Certification
             </p>
             <h1
-              className="leading-tight text-foreground"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(1.875rem, 5vw, 2.75rem)",
-                fontWeight: 300,
-                letterSpacing: "-0.02em",
-              }}
+              className="leading-tight text-foreground font-semibold tracking-tight"
+              style={{ fontSize: "clamp(1.875rem, 5vw, 2.75rem)" }}
             >
               {cert.name}
             </h1>
