@@ -68,13 +68,8 @@ export default function FlashcardMode({ section, topic }: { section: number; top
                 <SecBadge section={card.section} topic={card.term} />
 
                 <p
-                  className="text-center leading-snug text-foreground"
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "clamp(1.25rem, 3vw, 1.75rem)",
-                    fontWeight: 300,
-                    letterSpacing: "-0.02em",
-                  }}
+                  className="text-center leading-snug text-foreground font-semibold tracking-tight"
+                  style={{ fontSize: "clamp(1.25rem, 3vw, 1.75rem)" }}
                 >
                   {card.term}
                 </p>

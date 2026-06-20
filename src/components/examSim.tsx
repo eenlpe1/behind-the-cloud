@@ -95,7 +95,7 @@ export default function ExamSim() {
     <div className="flex flex-col gap-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-xl" style={{ fontFamily: "var(--font-display)", fontWeight: 300, letterSpacing: "-0.02em" }}>
+          <CardTitle className="text-xl font-semibold tracking-tight">
             Mock Exam
           </CardTitle>
           <CardDescription>

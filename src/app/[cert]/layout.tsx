@@ -16,7 +16,7 @@ export async function generateMetadata({
   const cert = getCert(slug);
   if (!cert) return { title: "Not Found" };
   return {
-    title: `${cert.provider} ${cert.shortName} — Vexamy`,
+    title: `${cert.provider} ${cert.shortName} — Behind the Cloud`,
     description: `Scenario-based practice questions, flashcards, and a full mock exam for the ${cert.provider} ${cert.name}. Aligned to the ${cert.guideDate} exam guide.`,
   };
 }

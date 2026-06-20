@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 // Re-fetch star count from GitHub API at most once per hour (ISR).
 export const revalidate = 3600;
 
-const REPO = "eenlpe1/vexamy";
+const REPO = "eenlpe1/behind-the-cloud";
 
 const MODE_ICONS = {
   quiz: BookOpen,
@@ -56,12 +56,16 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <h2 className="sr-only">Vexamy — Choose a certification to begin</h2>
+      <h2 className="sr-only">
+        Behind the Cloud — Choose a certification to begin
+      </h2>
 
       {/* Header */}
       <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-[940px] mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="font-semibold text-sm tracking-tight">Vexamy</span>
+        <div className="max-w-235 mx-auto px-6 h-14 flex items-center justify-between">
+          <span className="font-semibold text-sm tracking-tight">
+            Behind the Cloud
+          </span>
           <div className="flex items-center gap-2">
             {stars !== null && (
               <Link
@@ -100,15 +104,10 @@ export default async function Home() {
               Study System
             </p>
             <h1
-              className="leading-tight text-foreground"
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(1.75rem, 5vw, 2.5rem)",
-                fontWeight: 300,
-                letterSpacing: "-0.02em",
-              }}
+              className="leading-tight text-foreground font-semibold tracking-tight"
+              style={{ fontSize: "clamp(1.75rem, 5vw, 2.5rem)" }}
             >
-              Vexamy
+              Behind the Cloud
             </h1>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
               Official exam guides turned into scenario-based questions, instant
@@ -117,7 +116,7 @@ export default async function Home() {
           </div>
 
           {/* Mode pills — anchored right on sm+ */}
-          <div className="flex flex-wrap gap-2 sm:justify-end sm:max-w-[280px] shrink-0">
+          <div className="flex flex-wrap gap-2 sm:justify-end sm:max-w-70 shrink-0">
             {MODES.map((mode) => {
               const Icon = MODE_ICONS[mode.id as keyof typeof MODE_ICONS];
               return (
@@ -252,7 +251,8 @@ export default async function Home() {
 
       <footer className="max-w-235 mx-auto px-6 pb-8 border-t border-border pt-5 mt-4 w-full">
         <p className="text-xs text-muted-foreground text-center tracking-wide">
-          AI-generated content — verify with official Cloud provider documentation
+          AI-generated content — verify with official Cloud provider
+          documentation
         </p>
       </footer>
     </div>

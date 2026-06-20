@@ -1,28 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono, Fraunces } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/themeProvider";
 
-const inter = Inter({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-});
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  axes: ["opsz", "SOFT", "WONK"],
-  variable: "--font-fraunces",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-space-grotesk",
 });
 
 export const metadata: Metadata = {
-  title: "Vexamy",
-  description: "Pass your next certification with confidence. Vexamy turns official exam guides into scenario-based practice questions, instant feedback, and realistic mock exams, one track at a time.",
+  title: "Behind the Cloud",
+  description: "Official cloud exam guides turned into scenario-based practice questions, instant feedback, and realistic mock exams — one certification track at a time.",
 };
 
 export default function RootLayout({
@@ -35,9 +25,7 @@ export default function RootLayout({
       lang="en"
       className={cn(
         "h-full antialiased",
-        inter.variable,
-        geistMono.variable,
-        fraunces.variable,
+        spaceGrotesk.variable,
       )}
       suppressHydrationWarning
     >
