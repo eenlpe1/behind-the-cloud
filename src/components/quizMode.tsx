@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import type { Question } from "@/data/types";
 import { useCert } from "@/components/certProvider";
 import { AceCert } from "@/data/ace";
@@ -8,21 +8,27 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export default function QuizMode({ section, topic }: { section: number; topic: string | null }) {
+export default function QuizMode({ section, topic }: Readonly<{ section: number; topic: string | null }>) {
   const cert = useCert() ?? AceCert;
-  const [q, setQ] = useState<Question | null>(null);
+  const [q, setQ] = useState<Question | null>(() => cert.getRandomQuestion(section, topic, null));
   const [sel, setSel] = useState<string | null>(null);
   const [score, setScore] = useState({ c: 0, t: 0 });
   const [dots, setDots] = useState<boolean[]>([]);
+  const [prevSection, setPrevSection] = useState(section);
+  const [prevTopic, setPrevTopic] = useState(topic);
+
+  if (prevSection !== section || prevTopic !== topic) {
+    setPrevSection(section);
+    setPrevTopic(topic);
+    setSel(null);
+    setQ(cert.getRandomQuestion(section, topic, null));
+  }
 
   const load = useCallback(() => {
     setSel(null);
     setQ(cert.getRandomQuestion(section, topic, q?.id ?? null));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [section, topic]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { load(); }, [section, topic]);
 
   const pick = (opt: string) => {
     if (sel || !q) return;

@@ -66,7 +66,7 @@ export default function ExamSim() {
     try {
       sessionStorage.setItem(
         `exam-review-${slug}`,
-        JSON.stringify({ questions, answers: currentAns })
+        JSON.stringify({ questionIds: questions.map((q) => q.id), answers: currentAns })
       );
     } catch {}
 
