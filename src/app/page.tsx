@@ -195,7 +195,7 @@ export default async function Home() {
                           className="font-mono text-[10px] font-semibold px-1.5 py-0.5 rounded shrink-0"
                           style={{ background: col.bg, color: col.text }}
                         >
-                          S{sec.id}
+                          Section {sec.id}
                         </span>
                         <span className="text-xs text-foreground truncate">
                           {sec.short}

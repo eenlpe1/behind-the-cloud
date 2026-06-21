@@ -143,7 +143,7 @@ export default function ExamSim() {
       <Card>
         <CardContent className="flex flex-col gap-2.5 py-3.5 px-5">
           <div className="flex justify-between text-sm items-center">
-            <span className="text-muted-foreground text-xs">Q {cur + 1} / {qs.length}</span>
+            <span className="text-muted-foreground text-xs">Question {cur + 1} / {qs.length}</span>
             <span
               className={cn(
                 "font-mono font-bold text-lg",
