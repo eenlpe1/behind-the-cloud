@@ -1,5 +1,7 @@
 # Contributing to Behind the Cloud
 
+## Test Vercel CI/CD
+
 ## Prerequisites
 
 Node.js 18+ and [pnpm](https://pnpm.io).
