@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import SecBadge from "@/components/secBadge";
 import { cn } from "@/lib/utils";
 import type { Question } from "@/data/types";
+import { useCert } from "@/components/certProvider";
+import { AceCert } from "@/data/ace";
 
 type Filter = "all" | "correct" | "incorrect";
 
@@ -18,24 +20,25 @@ interface ReviewEntry {
 
 export default function ExamReviewPage() {
   const { cert: slug } = useParams<{ cert: string }>();
+  const cert = useCert() ?? AceCert;
   const router = useRouter();
   const [filter, setFilter] = useState<Filter>("all");
 
   const [entries] = useState<ReviewEntry[]>(() => {
-    if (typeof window === "undefined") return [];
+    if (typeof globalThis.window === "undefined") return [];
     try {
       const raw = sessionStorage.getItem(`exam-review-${slug}`);
       if (!raw) return [];
-      const { questions, answers } = JSON.parse(raw) as {
-        questions: Question[];
+      const { questionIds, answers } = JSON.parse(raw) as {
+        questionIds: string[];
         answers: Record<number, string>;
       };
-      return questions.map((q, i) => ({
-        question: q,
-        picked: answers[i],
-        isCorrect: answers[i] === q.correct,
-        index: i,
-      }));
+      const byId = new Map(cert.allQuestions.map((q) => [q.id, q]));
+      return questionIds.flatMap((id, i) => {
+        const q = byId.get(id);
+        if (!q) return [];
+        return [{ question: q, picked: answers[i], isCorrect: answers[i] === q.correct, index: i }];
+      });
     } catch {
       return [];
     }

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import type { Flashcard } from "@/data/types";
 import { useCert } from "@/components/certProvider";
 import { AceCert } from "@/data/ace";
@@ -11,10 +11,19 @@ import { cn } from "@/lib/utils";
 
 export default function FlashcardMode({ section, topic }: { section: number; topic: string | null }) {
   const cert = useCert() ?? AceCert;
-  const [card, setCard] = useState<Flashcard | null>(null);
+  const [card, setCard] = useState<Flashcard | null>(() => cert.getRandomFlashcard(section, topic, null));
   const [flipped, setFlipped] = useState(false);
   const [count, setCount] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [prevSection, setPrevSection] = useState(section);
+  const [prevTopic, setPrevTopic] = useState(topic);
+
+  if (prevSection !== section || prevTopic !== topic) {
+    setPrevSection(section);
+    setPrevTopic(topic);
+    setFlipped(false);
+    setCard(cert.getRandomFlashcard(section, topic, null));
+  }
 
   const load = useCallback(() => {
     setVisible(false);
@@ -25,9 +34,6 @@ export default function FlashcardMode({ section, topic }: { section: number; top
     }, 150);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [section, topic]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { load(); }, [section, topic]);
 
   if (!card) return (
     <Card>
