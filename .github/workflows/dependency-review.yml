@@ -3,6 +3,9 @@ name: Dependency Review
 on:
   pull_request:
     branches: [develop]
+    paths:
+      - 'package.json'
+      - 'pnpm-lock.yaml'
 
 permissions:
   contents: read
