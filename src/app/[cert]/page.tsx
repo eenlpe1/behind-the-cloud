@@ -71,7 +71,7 @@ export default async function CertPage({
                 <div className="flex flex-col gap-1 flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs text-muted-foreground shrink-0">
-                      {s.weight} · {s.examCount} Qs
+                      {s.weight} · {s.examCount} Questions
                     </span>
                   </div>
                   <p className="text-sm font-medium text-foreground leading-snug">{s.short}</p>
