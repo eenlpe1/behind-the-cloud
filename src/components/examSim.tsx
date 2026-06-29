@@ -66,7 +66,7 @@ export default function ExamSim() {
     try {
       sessionStorage.setItem(
         `exam-review-${slug}`,
-        JSON.stringify({ questionIds: questions.map((q) => q.id) })
+        JSON.stringify({ questionIds: questions.map((q) => q.id), answers: currentAns })
       );
     } catch {}
 
@@ -179,15 +179,21 @@ export default function ExamSim() {
               return (
                 <button
                   key={opt}
-                  disabled={!!selected}
-                  onClick={() => setAns((a) => ({ ...a, [cur]: opt }))}
+                  onClick={() =>
+                    setAns((a) => {
+                      if (a[cur] === opt) {
+                        const next = { ...a };
+                        delete next[cur];
+                        return next;
+                      }
+                      return { ...a, [cur]: opt };
+                    })
+                  }
                   className={cn(
-                    "w-full text-left px-4 py-3.5 rounded-xl flex items-start gap-3 text-sm leading-snug border transition-all",
-                    !selected
-                      ? "bg-card border-border hover:bg-muted/50 hover:border-border-strong cursor-pointer"
-                      : selected === opt
-                      ? "cursor-default"
-                      : "bg-card border-border text-muted-foreground opacity-50 cursor-default"
+                    "w-full text-left px-4 py-3.5 rounded-xl flex items-start gap-3 text-sm leading-snug border transition-all cursor-pointer",
+                    selected === opt
+                      ? ""
+                      : "bg-card border-border hover:bg-muted/50 hover:border-border-strong"
                   )}
                   style={
                     selected === opt
