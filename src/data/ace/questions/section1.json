@@ -108,7 +108,7 @@
     },
     "correct": "B",
     "explanation": "B is correct because creating a Cloud Identity domain automatically provisions a Google Cloud organization node, which enables centralized IAM, org policies, and resource hierarchy management. A is wrong because project-level-only IAM prevents centralized governance. C is wrong because personal Gmail accounts cannot create organization nodes and are not suitable for enterprise administration. D is wrong because a billing account does not create an organization — an organization requires a Cloud Identity or Google Workspace domain.",
-    "topic": "Cloud Networking",
+    "topic": "Cloud Identity",
     "section": 1
   },
   {
@@ -234,7 +234,7 @@
     },
     "correct": "B",
     "explanation": "B is correct because Google Cloud provides an official products-by-region availability page and the gcloud CLI can describe region capabilities before any deployment attempt. A is wrong because trial-and-error deployment is wasteful and could leave orphaned resources. C is wrong because support tickets are unnecessary for publicly available region information. D is wrong because billing accounts do not contain regional availability information.",
-    "topic": "Cloud Networking",
+    "topic": "Product Availability",
     "section": 1
   },
   {
@@ -253,29 +253,29 @@
   },
   {
     "id": "s1_q19",
-    "question": "Your organization wants to link multiple projects to a single billing account for consolidated invoicing. What is the correct relationship between projects and billing accounts?",
+    "question": "Your organization wants to link multiple projects to a single billing account for consolidated invoicing. Which two statements about the relationship between projects and billing accounts are correct? (Choose two.)",
     "options": {
-      "A": "Each project must have its own billing account — one-to-one relationship only",
-      "B": "A billing account can be linked to multiple projects, but each project can only be linked to one billing account at a time",
+      "A": "A single billing account can be linked to multiple projects",
+      "B": "Each project can only be linked to one billing account at a time",
       "C": "A project can be linked to multiple billing accounts simultaneously for cost splitting",
       "D": "Billing accounts are automatically created for each project and cannot be shared"
     },
-    "correct": "B",
-    "explanation": "B is correct because one billing account can fund many projects (one-to-many), but each project can only be associated with a single billing account at any given time. A is wrong because multiple projects can share one billing account. C is wrong because a project cannot split billing across multiple accounts simultaneously. D is wrong because billing accounts are not auto-created per project — they must be explicitly created and linked.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because one billing account can fund many projects (one-to-many). B is correct because each project can only be associated with a single billing account at any given time. C is wrong because a project cannot split billing across multiple accounts simultaneously. D is wrong because billing accounts are not auto-created per project — they must be explicitly created and linked, and one billing account can be shared across many projects.",
     "topic": "Billing Configuration",
     "section": 1
   },
   {
     "id": "s1_q20",
-    "question": "A security audit reveals that several projects have APIs enabled that are not being used. What is the risk, and what should you do?",
+    "question": "A security audit reveals that several projects have APIs enabled that are not being used. Which two statements about this situation are correct? (Choose two.)",
     "options": {
-      "A": "There is no risk — enabled but unused APIs have no security implications",
-      "B": "Unused APIs increase the attack surface; disable APIs that are not in use to reduce risk",
-      "C": "Unused APIs automatically disable themselves after 30 days",
-      "D": "Unused APIs should be kept enabled to avoid downtime if needed in the future"
+      "A": "Unused enabled APIs increase the attack surface and should be disabled if they are not required",
+      "B": "Disabling unused APIs follows the principle of least privilege and reduces what a compromised credential could call",
+      "C": "Unused APIs automatically disable themselves after 30 days of inactivity",
+      "D": "Enabled but unused APIs pose no security risk since they are not actively being called"
     },
-    "correct": "B",
-    "explanation": "B is correct because each enabled API represents a potential attack surface — if an API is compromised or misconfigured but enabled, it could be exploited. Best practice is to disable APIs that are not required. A is wrong because unused enabled APIs can be exploited if a service account has permissions to call them. C is wrong because APIs do not auto-disable. D is wrong because keeping unnecessary APIs enabled violates the principle of least privilege and increases exposure.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because each enabled API is a potential attack surface — if a service account or credential is compromised, any enabled API becomes a usable path. B is correct because removing unnecessary enabled APIs is a direct application of least privilege. C is wrong because APIs do not auto-disable after any period of inactivity. D is wrong because an enabled API can still be invoked by anyone or anything with sufficient IAM permissions, regardless of current usage.",
     "topic": "API Management",
     "section": 1
   },
@@ -323,15 +323,15 @@
   },
   {
     "id": "s1_q24",
-    "question": "An enterprise wants to use their existing Okta identity provider for employees to access Google Cloud Console using SSO. What feature should they configure?",
+    "question": "An enterprise wants to use their existing Okta identity provider for employees to access Google Cloud Console using SSO. Which two statements accurately describe how to accomplish this? (Choose two.)",
     "options": {
-      "A": "Google Cloud Directory Sync (GCDS)",
-      "B": "Workforce Identity Federation with Okta as the OIDC/SAML provider",
-      "C": "Cloud Identity with manual account creation",
-      "D": "Service account impersonation for each employee"
+      "A": "Configure Workforce Identity Federation with Okta as a SAML or OIDC provider so employees authenticate with their existing Okta credentials",
+      "B": "Workforce Identity Federation lets employees access Google Cloud resources without creating an individual Cloud Identity account for each one",
+      "C": "Google Cloud Directory Sync (GCDS) must be used to enable SSO with Okta",
+      "D": "Each employee must have an individual service account created and shared for Okta-based access"
     },
-    "correct": "B",
-    "explanation": "B is correct because Workforce Identity Federation supports SAML 2.0 and OIDC providers like Okta, allowing employees to authenticate with their existing Okta credentials to access Google Cloud resources. A is wrong because GCDS synchronizes user accounts (provisioning) but does not handle SSO authentication. C is wrong because manual account creation is not SSO and doesn't leverage the existing Okta IdP. D is wrong because service account impersonation is for application-to-application access, not human user SSO.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because Workforce Identity Federation supports SAML 2.0 and OIDC providers like Okta, letting employees authenticate with their existing Okta credentials. B is correct because federation grants access via short-lived credentials mapped from the external identity, avoiding the need for separate Cloud Identity accounts. C is wrong because GCDS synchronizes user accounts (provisioning), not SSO authentication — it is unrelated to Workforce Identity Federation. D is wrong because service accounts are for application-to-application access, not human user SSO, and sharing them is a security anti-pattern.",
     "topic": "Workforce Identity Federation",
     "section": 1
   },
@@ -379,15 +379,15 @@
   },
   {
     "id": "s1_q28",
-    "question": "Your company's security team requires that all Google Cloud API calls from within the organization use private connectivity and never traverse the public internet. What networking feature enables this?",
+    "question": "Your company's security team requires that all Google Cloud API calls from within the organization use private connectivity and never traverse the public internet. Which two features should you configure to achieve this? (Choose two.)",
     "options": {
-      "A": "Cloud Armor",
-      "B": "Private Google Access and VPC Service Controls",
-      "C": "Cloud NAT",
-      "D": "Premium Network Service Tier"
+      "A": "Private Google Access, so VM instances without external IPs can reach Google APIs over Google's internal network",
+      "B": "VPC Service Controls, to establish a service perimeter that helps prevent data exfiltration to the public internet",
+      "C": "Cloud NAT, so instances without external IPs can reach Google APIs privately",
+      "D": "Cloud Armor, to encrypt all API traffic so it never traverses the public internet"
     },
-    "correct": "B",
-    "explanation": "B is correct because Private Google Access allows VM instances without external IPs to reach Google APIs over Google's internal network, and VPC Service Controls creates a security perimeter around Google Cloud services to prevent data exfiltration via the public internet. A is wrong because Cloud Armor is a DDoS and WAF protection service, not a private connectivity feature. C is wrong because Cloud NAT provides outbound internet access for instances without external IPs — it still routes through the internet. D is wrong because Network Service Tiers affect performance routing, not whether traffic uses the public internet.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because Private Google Access lets VM instances without external IPs reach Google APIs over Google's internal network instead of the public internet. B is correct because VPC Service Controls creates a security perimeter around Google Cloud services to prevent data exfiltration. C is wrong because Cloud NAT provides outbound internet access for instances without external IPs — it still routes traffic to the public internet, not privately to Google APIs. D is wrong because Cloud Armor is a DDoS and WAF protection service; it does not control whether traffic uses private connectivity.",
     "topic": "Cloud Networking",
     "section": 1
   },
@@ -416,7 +416,7 @@
     },
     "correct": "C",
     "explanation": "C is correct because a Google Cloud organization node is automatically provisioned when a Google Workspace or Cloud Identity account is created for a domain — the organization is tied to that domain. A is wrong because support plans do not create organization nodes. B is wrong because any domain can be used with Google Workspace/Cloud Identity, not just those registered with Google Domains. D is wrong because billing accounts are separate from the organization structure — the organization node is created by the Workspace/Cloud Identity domain, not by billing.",
-    "topic": "Cloud Networking",
+    "topic": "Cloud Identity",
     "section": 1
   },
   {
@@ -471,7 +471,7 @@
       "D": "Use Security Command Center to scan for public buckets"
     },
     "correct": "D",
-    "explanation": "D is correct because Security Command Center (SCC) has built-in detectors for publicly accessible Cloud Storage buckets and can scan across the entire organization automatically. B is also valid and technically correct but D is more purpose-built for security posture assessment at scale. A is wrong because manual checking doesn't scale. C is wrong because audit logs show access events, not current configuration state. Both B and D are valid approaches, but SCC is the most purpose-built for this security use case.",
+    "explanation": "D is correct because Security Command Center (SCC) has a built-in detector that automatically flags publicly accessible Cloud Storage buckets across the entire organization, with no manual policy inspection required. B is a workable but more manual alternative — it would require pulling IAM policies for every bucket and checking each one for allUsers/allAuthenticatedUsers bindings yourself, whereas SCC surfaces the finding directly. A is wrong because manual checking doesn't scale. C is wrong because audit logs show access events, not current configuration state.",
     "topic": "Cloud Asset Inventory",
     "section": 1
   },
@@ -491,15 +491,15 @@
   },
   {
     "id": "s1_q36",
-    "question": "A company wants to set up a custom dashboard in Cloud Monitoring that shows key metrics from multiple Google Cloud services in one view. What is the correct approach?",
+    "question": "A company wants to set up a custom dashboard in Cloud Monitoring that shows key metrics from multiple Google Cloud services in one view. Which two statements about this capability are correct? (Choose two.)",
     "options": {
-      "A": "Use Cloud Logging to create a log-based dashboard",
-      "B": "Create a custom dashboard in Cloud Monitoring and add charts for each metric",
-      "C": "Export all metrics to BigQuery and build a Data Studio dashboard",
-      "D": "Use Gemini Cloud Assist to auto-generate dashboards"
+      "A": "Cloud Monitoring lets you build a custom dashboard with multiple chart widgets, each displaying metrics from a different Google Cloud service",
+      "B": "Cloud Monitoring dashboards can show metrics from multiple projects using a metrics scope",
+      "C": "Cloud Logging log-based dashboards are the recommended way to visualize resource metrics from multiple services",
+      "D": "Gemini Cloud Assist automatically generates full custom dashboards with no configuration needed from the user"
     },
-    "correct": "B",
-    "explanation": "B is correct because Cloud Monitoring supports custom dashboards where you can add multiple chart widgets, each displaying different metrics from any Google Cloud service. A is wrong because Cloud Logging dashboards are for log-based metrics and log analysis, not general resource metrics. C is wrong because exporting to BigQuery and building a separate dashboard is an indirect and more complex approach when Cloud Monitoring natively supports this. D is wrong because Gemini Cloud Assist provides recommendations and explanations, not dashboard auto-generation.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because Cloud Monitoring supports custom dashboards where you add multiple chart widgets, each displaying different metrics from any Google Cloud service. B is correct because a project's Cloud Monitoring metrics scope can include other projects, letting a single dashboard show metrics across them. C is wrong because Cloud Logging dashboards are built for log-based metrics and log analysis, not general cross-service resource metrics. D is wrong because Gemini Cloud Assist provides recommendations and natural-language explanations, not full automatic dashboard generation.",
     "topic": "Cloud Observability",
     "section": 1
   },
@@ -528,7 +528,7 @@
     },
     "correct": "B",
     "explanation": "B is correct because Google Cloud maintains an official Products Available by Region page that is kept up to date with the availability of all services across all regions. A is wrong because attempting to create resources for testing purposes wastes time and may incur costs. C is wrong because community forums may have outdated information. D is wrong because gcloud compute zones list only shows Compute Engine zone availability, not the availability of other services like BigQuery, Spanner, etc.",
-    "topic": "Cloud Networking",
+    "topic": "Product Availability",
     "section": 1
   },
   {
@@ -603,43 +603,43 @@
   },
   {
     "id": "s1_q44",
-    "question": "A company wants to prevent users from creating external IP addresses on Compute Engine instances across the entire organization. Which org policy constraint achieves this?",
+    "question": "A company wants to enforce Compute Engine security constraints across the entire organization using organization policies. Which two of the following are valid, existing Compute Engine organization policy constraints? (Choose two.)",
     "options": {
-      "A": "constraints/compute.disableInternetGatewayAccess",
-      "B": "constraints/compute.vmExternalIpAccess",
-      "C": "constraints/compute.requireShieldedVm",
+      "A": "constraints/compute.vmExternalIpAccess — restricts which VM instances may be assigned external IP addresses",
+      "B": "constraints/compute.requireShieldedVm — requires that new VM instances use Shielded VM",
+      "C": "constraints/compute.disableInternetGatewayAccess",
       "D": "constraints/networking.disableExternalIpv6"
     },
-    "correct": "B",
-    "explanation": "B is correct because constraints/compute.vmExternalIpAccess controls which VM instances can have external IP addresses — when set to deny all, it prevents any VM from having an external IP. A is wrong because there is no such constraint as disableInternetGatewayAccess. C is wrong because requireShieldedVm enforces Shielded VM security features, not IP access. D is wrong because disableExternalIpv6 is specific to IPv6 external addresses and doesn't cover IPv4.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because constraints/compute.vmExternalIpAccess is a real constraint that controls which VM instances can have external IP addresses. B is correct because constraints/compute.requireShieldedVm is a real constraint that enforces Shielded VM on new instances. C is wrong because disableInternetGatewayAccess is not a valid Google Cloud organization policy constraint. D is wrong because disableExternalIpv6 under a networking namespace is not a valid organization policy constraint.",
     "topic": "Org Policies",
     "section": 1
   },
   {
     "id": "s1_q45",
-    "question": "You need to grant a group of data scientists read access to all BigQuery datasets in a project without granting them access to any other services. Which role should you assign at the project level?",
+    "question": "You need to grant a group of data scientists the ability to read all BigQuery datasets in a project and run queries against them, without granting access to any other Google Cloud services. Which two IAM roles should you assign together at the project level? (Choose two.)",
     "options": {
-      "A": "roles/viewer",
-      "B": "roles/bigquery.dataViewer",
-      "C": "roles/bigquery.user",
-      "D": "roles/bigquery.jobUser"
+      "A": "roles/bigquery.dataViewer",
+      "B": "roles/bigquery.jobUser",
+      "C": "roles/viewer",
+      "D": "roles/bigquery.admin"
     },
-    "correct": "B",
-    "explanation": "B is correct because roles/bigquery.dataViewer grants read access to all datasets and tables in a project without granting access to other services. A is wrong because roles/viewer is a primitive role granting read access across all services in the project, violating least privilege. C is wrong because roles/bigquery.user grants the ability to run jobs (queries) but not necessarily read all datasets. D is wrong because roles/bigquery.jobUser only allows running BigQuery jobs, not reading data.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because roles/bigquery.dataViewer grants read access to all datasets and tables in the project without granting access to other services. B is correct because running a query requires the ability to create a job, which roles/bigquery.jobUser provides — without it, a dataViewer-only principal can see metadata but cannot execute queries. C is wrong because roles/viewer is a primitive role granting read access across all services in the project, violating least privilege. D is wrong because roles/bigquery.admin grants full control including deleting datasets, far beyond the read/query requirement.",
     "topic": "IAM Roles",
     "section": 1
   },
   {
     "id": "s1_q46",
-    "question": "A compliance officer needs to verify that all projects in the organization have billing export enabled to BigQuery. What is the most efficient way to audit this?",
+    "question": "A compliance officer needs to verify that billing export to BigQuery is configured and working for the organization's billing account. Which two approaches provide valid evidence of this? (Choose two.)",
     "options": {
       "A": "Manually check each project's billing settings in the Console",
-      "B": "Use Cloud Asset Inventory to query billing configurations across all projects",
-      "C": "Review Cloud Audit Logs for billing export configuration events",
-      "D": "Check the BigQuery datasets in each project for billing export tables"
+      "B": "Use Cloud Asset Inventory to search for a billingExportConfig asset type across all projects",
+      "C": "Review Admin Activity audit logs for the billing export configuration change event, which records when export was enabled or modified",
+      "D": "Check the configured BigQuery dataset for billing export tables and confirm they contain recent cost data"
     },
-    "correct": "C",
-    "explanation": "C is correct because Admin Activity audit logs capture configuration changes to billing settings, and you can search for billing export configuration events across projects. B is a reasonable approach as Cloud Asset Inventory can show billing account configurations, but audit logs specifically track when export was enabled or disabled. A is wrong because manual checking doesn't scale. D is wrong because checking BigQuery datasets only tells you if export is working, not whether it's configured.",
+    "correct": ["C", "D"],
+    "explanation": "C is correct because Admin Activity audit logs capture configuration changes to billing settings, including when export to BigQuery was enabled or modified. D is correct because directly inspecting the export dataset for recent rows is empirical proof that export is actively working. A is wrong because checking each project individually in the Console doesn't scale and billing export is configured on the billing account, not per project. B is wrong because Cloud Asset Inventory has no billingExportConfig asset type — billing export configuration is not tracked as a Cloud Asset Inventory resource.",
     "topic": "Billing Configuration",
     "section": 1
   },

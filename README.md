@@ -1,3 +1,5 @@
+![Behind the Cloud](public/images/readme-header.png)
+
 # Behind the Cloud
 
 Official cloud exam guides turned into scenario-based practice questions, instant feedback, and realistic mock exams — one certification track at a time.
