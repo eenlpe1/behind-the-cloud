@@ -2,7 +2,9 @@
 
 # Behind the Cloud
 
-Official cloud exam guides turned into scenario-based practice questions, instant feedback, and realistic mock exams — one certification track at a time.
+Official cloud exam guides turned into scenario-based practice questions, instant feedback, and realistic mock exams — one certification track at a time. 
+
+Interactive learning platform designed to help aspiring and experienced cloud professionals build real-world skills with confidence. Through scenario-based practice, certification-focused content, and hands-on challenges, we bridge the gap between theory and practical application—empowering learners to prepare for cloud certifications and succeed in real-world cloud environments.
 
 ## Study Modes
 
