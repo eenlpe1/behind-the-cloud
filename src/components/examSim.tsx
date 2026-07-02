@@ -196,6 +196,7 @@ export default function ExamSim() {
                     setAns((a) => {
                       const prev = a[cur] ?? [];
                       if (prev.includes(opt)) {
+                        if (!multi) return a;
                         return { ...a, [cur]: prev.filter((o) => o !== opt) };
                       }
                       if (!multi) return { ...a, [cur]: [opt] };
