@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import type { Question } from "@/data/types";
+import { correctSet, isAnswerCorrect, isMultiAnswer, type Question } from "@/data/types";
 import { useCert } from "@/components/certProvider";
 import { AceCert } from "@/data/ace";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -21,7 +21,7 @@ export default function ExamSim() {
   const router = useRouter();
   const [phase, setPhase] = useState<Phase>("intro");
   const [qs, setQs] = useState<Question[]>([]);
-  const [ans, setAns] = useState<Record<number, string>>({});
+  const [ans, setAns] = useState<Record<number, string[]>>({});
   const [cur, setCur] = useState(0);
   const [visited, setVisited] = useState<Set<number>>(new Set());
   const [t, setT] = useState(cert.examDuration);
@@ -42,10 +42,10 @@ export default function ExamSim() {
     setCur(next);
   };
 
-  const submitExam = (currentAns: Record<number, string>, questions: Question[]) => {
+  const submitExam = (currentAns: Record<number, string[]>, questions: Question[]) => {
     if (timer.current) clearInterval(timer.current);
     const total = questions.length;
-    const correct = questions.filter((q, i) => currentAns[i] === q.correct).length;
+    const correct = questions.filter((q, i) => isAnswerCorrect(q, currentAns[i])).length;
     const pct = Math.round((correct / total) * 100);
 
     const params = new URLSearchParams({
@@ -56,7 +56,7 @@ export default function ExamSim() {
 
     SECTIONS.forEach((s) => {
       const idxs = questions.map((q, i) => ({ q, i })).filter(({ q }) => q.section === s.id);
-      const sc = idxs.filter(({ q, i }) => currentAns[i] === q.correct).length;
+      const sc = idxs.filter(({ q, i }) => isAnswerCorrect(q, currentAns[i])).length;
       const sp = idxs.length ? Math.round((sc / idxs.length) * 100) : 0;
       params.set(`s${s.id}p`, String(sp));
       params.set(`s${s.id}c`, String(sc));
@@ -128,7 +128,10 @@ export default function ExamSim() {
 
   // ── ACTIVE EXAM ─────────────────────────────────────────────────────────────
   const q = qs[cur];
-  const answered = Object.keys(ans).length;
+  const isFullyAnswered = (i: number) => (ans[i]?.length ?? 0) === correctSet(qs[i]).length;
+  const answered = qs.filter((_, i) => isFullyAnswered(i)).length;
+  const multi = isMultiAnswer(q);
+  const need = correctSet(q).length;
   const timerPct = (t / cert.examDuration) * 100;
 
   // Group question indices by section for the jump grid
@@ -171,32 +174,45 @@ export default function ExamSim() {
       {/* Question card */}
       <Card>
         <CardContent className="flex flex-col gap-5 py-6 px-6">
-          <SecBadge section={q.section} topic={q.topic} />
+          <div className="flex items-center justify-between gap-3">
+            <SecBadge section={q.section} topic={q.topic} />
+            {multi && (
+              <span className="font-mono text-[10px] font-semibold px-2 py-0.5 rounded-full border border-border text-muted-foreground shrink-0">
+                Select {need} · {(ans[cur]?.length ?? 0)}/{need}
+              </span>
+            )}
+          </div>
           <p className="font-medium text-base leading-relaxed text-foreground">{q.question}</p>
           <div className="flex flex-col gap-2.5">
             {(Object.entries(q.options) as [string, string][]).map(([opt, text]) => {
-              const selected = ans[cur];
+              const picked = ans[cur] ?? [];
+              const selected = picked.includes(opt);
+              const capped = !selected && picked.length >= need;
               return (
                 <button
                   key={opt}
+                  disabled={capped}
                   onClick={() =>
                     setAns((a) => {
-                      if (a[cur] === opt) {
-                        const next = { ...a };
-                        delete next[cur];
-                        return next;
+                      const prev = a[cur] ?? [];
+                      if (prev.includes(opt)) {
+                        return { ...a, [cur]: prev.filter((o) => o !== opt) };
                       }
-                      return { ...a, [cur]: opt };
+                      if (prev.length >= need) return a;
+                      return { ...a, [cur]: [...prev, opt] };
                     })
                   }
                   className={cn(
-                    "w-full text-left px-4 py-3.5 rounded-xl flex items-start gap-3 text-sm leading-snug border transition-all cursor-pointer",
-                    selected === opt
+                    "w-full text-left px-4 py-3.5 rounded-xl flex items-start gap-3 text-sm leading-snug border transition-all",
+                    capped ? "cursor-default" : "cursor-pointer",
+                    selected
                       ? ""
+                      : capped
+                      ? "bg-card border-border opacity-50"
                       : "bg-card border-border hover:bg-muted/50 hover:border-border-strong"
                   )}
                   style={
-                    selected === opt
+                    selected
                       ? {
                           background: "oklch(0.491 0.113 244 / 0.12)",
                           borderColor: "var(--primary)",
@@ -226,21 +242,27 @@ export default function ExamSim() {
         >
           ← Prev
         </Button>
-        {cur < qs.length - 1 ? (
-          <Button
-            variant="outline"
-            onClick={() => navigate(cur + 1)}
-            className="flex-1"
-          >
-            Next →
-          </Button>
-        ) : (
+        {answered === qs.length ? (
           <Button
             onClick={() => submitExam(ans, qs)}
             className="flex-1 font-semibold"
             style={{ background: "var(--color-bar-correct)", color: "var(--bg-surface)" }}
           >
             Submit Exam
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            disabled={cur === qs.length - 1}
+            onClick={() => navigate(cur + 1)}
+            className="flex-1"
+            title={
+              cur === qs.length - 1
+                ? `Answer all questions to submit (${qs.length - answered} remaining)`
+                : undefined
+            }
+          >
+            Next →
           </Button>
         )}
       </div>
@@ -282,7 +304,7 @@ export default function ExamSim() {
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {sg.indices.map((i) => {
-                    const isAnswered = !!ans[i];
+                    const isAnswered = isFullyAnswered(i);
                     const isSkipped = !isAnswered && visited.has(i);
                     const isCurrent = i === cur;
                     return (

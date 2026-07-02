@@ -15,6 +15,14 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "Behind the Cloud",
   description: "Official cloud exam guides turned into scenario-based practice questions, instant feedback, and realistic mock exams — one certification track at a time.",
+  icons: {
+    icon: [
+      { url: "/images/favicon.svg", type: "image/svg+xml" },
+      { url: "/images/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/images/favicon-16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: "/images/apple-touch-icon-180.png",
+  },
 };
 
 export default function RootLayout({

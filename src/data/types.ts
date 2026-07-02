@@ -2,10 +2,28 @@ export interface Question {
   id: string;
   question: string;
   options: { A: string; B: string; C: string; D: string };
-  correct: string;
+  /** Single answer: "B". Multi-answer (choose N): ["B", "D"]. */
+  correct: string | string[];
   explanation: string;
   topic: string;
   section: number;
+}
+
+/** Normalizes `correct` to an array, single or multi. */
+export function correctSet(q: Question): string[] {
+  return Array.isArray(q.correct) ? q.correct : [q.correct];
+}
+
+export function isMultiAnswer(q: Question): boolean {
+  return Array.isArray(q.correct) && q.correct.length > 1;
+}
+
+/** Order-independent comparison of a picked option set against the correct set. */
+export function isAnswerCorrect(q: Question, picked: string[] | undefined): boolean {
+  if (!picked?.length) return false;
+  const want = correctSet(q);
+  if (picked.length !== want.length) return false;
+  return want.every((opt) => picked.includes(opt));
 }
 
 export interface Flashcard {
