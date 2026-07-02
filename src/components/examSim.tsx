@@ -187,7 +187,7 @@ export default function ExamSim() {
             {(Object.entries(q.options) as [string, string][]).map(([opt, text]) => {
               const picked = ans[cur] ?? [];
               const selected = picked.includes(opt);
-              const capped = !selected && picked.length >= need;
+              const capped = !selected && multi && picked.length >= need;
               return (
                 <button
                   key={opt}
@@ -198,6 +198,7 @@ export default function ExamSim() {
                       if (prev.includes(opt)) {
                         return { ...a, [cur]: prev.filter((o) => o !== opt) };
                       }
+                      if (!multi) return { ...a, [cur]: [opt] };
                       if (prev.length >= need) return a;
                       return { ...a, [cur]: [...prev, opt] };
                     })
