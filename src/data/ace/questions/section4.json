@@ -1,29 +1,29 @@
 [
   {
     "id": "s4_q01",
-    "question": "A developer needs to understand what permissions are granted by a specific IAM role before assigning it. How do you view the permissions included in a predefined IAM role?",
+    "question": "A developer needs to understand what permissions are granted by a specific IAM role before assigning it. Which two methods let you view the permissions included in a predefined IAM role? (Choose two.)",
     "options": {
       "A": "gcloud iam roles describe ROLE_NAME",
-      "B": "gcloud iam policies list --role=ROLE_NAME",
+      "B": "In the Cloud Console, go to IAM & Admin > Roles, select the role, and view its Permissions tab",
       "C": "gcloud projects get-iam-policy PROJECT_ID --filter=role=ROLE_NAME",
       "D": "gcloud iam permissions list --role=ROLE_NAME"
     },
-    "correct": "A",
-    "explanation": "A is correct because gcloud iam roles describe ROLE_NAME shows the full description of a role including all included permissions, the role stage, and the description. B is wrong because gcloud iam policies list does not accept a role filter and lists IAM policies differently. C is wrong because gcloud projects get-iam-policy shows which roles are bound to which members in a project, not the permissions within a role. D is wrong because gcloud iam permissions list is not a valid command.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because gcloud iam roles describe ROLE_NAME shows the full role definition including all included permissions, the role stage, and the description. B is correct because the Cloud Console's IAM & Admin > Roles page lets you select any predefined or custom role and view its full permission list in the UI. C is wrong because gcloud projects get-iam-policy shows which roles are bound to which members in a project, not the permissions contained within a role. D is wrong because gcloud iam permissions list is not a valid command.",
     "topic": "IAM Policies",
     "section": 4
   },
   {
     "id": "s4_q02",
-    "question": "Your organization has a policy that all production workloads must use service accounts with only the minimum permissions required. A Cloud Run service needs to write to Cloud Storage and publish to Pub/Sub. Which approach best implements least privilege?",
+    "question": "Your organization has a policy that all production workloads must use service accounts with only the minimum permissions required. A Cloud Run service needs to write to Cloud Storage and publish to Pub/Sub. Which two actions together best implement least privilege for this service? (Choose two.)",
     "options": {
       "A": "Use the default Compute Engine service account which has broad project access",
-      "B": "Create a dedicated service account and grant only roles/storage.objectCreator and roles/pubsub.publisher",
-      "C": "Grant roles/editor to the service account for full project access",
-      "D": "Use the App Engine default service account"
+      "B": "Create a dedicated service account for the Cloud Run service",
+      "C": "Grant the dedicated service account only roles/storage.objectCreator and roles/pubsub.publisher",
+      "D": "Grant roles/editor to the service account for full project access"
     },
-    "correct": "B",
-    "explanation": "B is correct because creating a dedicated service account with only the specific roles needed (storage.objectCreator for writing to GCS, pubsub.publisher for publishing messages) implements the principle of least privilege. A is wrong because the default Compute Engine service account has broad permissions across all compute services. C is wrong because roles/editor grants write access to almost all Google Cloud services, far exceeding what's needed. D is wrong because the App Engine default service account is not appropriate for Cloud Run and may have permissions that don't match the workload's needs.",
+    "correct": ["B", "C"],
+    "explanation": "B is correct because a dedicated service account, used by nothing else, ensures the workload's identity isn't shared with other services and any grants apply only to this Cloud Run service. C is correct because granting only the two roles the workload actually needs (storage.objectCreator for writing to GCS, pubsub.publisher for publishing messages) implements least privilege. A is wrong because the default Compute Engine service account has broad permissions across all compute services and is shared by other resources. D is wrong because roles/editor grants write access to almost all Google Cloud services, far exceeding what's needed.",
     "topic": "Service Accounts",
     "section": 4
   },
@@ -57,29 +57,29 @@
   },
   {
     "id": "s4_q05",
-    "question": "An IAM policy is set at the organization level granting a user roles/storage.admin. The same user is denied roles/storage.admin at a specific project through an IAM deny policy. What is the effective access for the user in that project?",
+    "question": "An IAM policy is set at the organization level granting a user roles/storage.admin. The same user is denied roles/storage.admin at a specific project through an IAM deny policy. Which two statements about the effective access for the user in that project are correct? (Choose two.)",
     "options": {
       "A": "The user has roles/storage.admin because organization-level grants override project-level denies",
       "B": "The user is denied roles/storage.admin in that project because deny policies take precedence over allow policies",
-      "C": "The policies conflict and the user has no access to any Google Cloud resources",
+      "C": "The deny policy blocks only the storage.admin permissions in that project; the user keeps roles/storage.admin access in any other project where no matching deny policy applies",
       "D": "The user must re-authenticate to determine which policy applies"
     },
-    "correct": "B",
-    "explanation": "B is correct because IAM deny policies explicitly deny specific permissions regardless of any allow policies — deny always overrides allow. Even though the organization-level grant would normally be inherited, the project-level deny policy prevents the user from exercising those permissions in that project. A is wrong because deny policies specifically override allow grants — this is their purpose. C is wrong because the conflict is resolved by the deny taking precedence — it doesn't remove access to other services. D is wrong because IAM policy evaluation is deterministic, not dependent on re-authentication.",
+    "correct": ["B", "C"],
+    "explanation": "B is correct because IAM deny policies explicitly deny specific permissions regardless of any allow policies — deny always overrides allow. Even though the organization-level grant would normally be inherited, the project-level deny policy prevents the user from exercising those permissions in that project. C is correct because a deny policy's scope is limited to the resource (and permissions) it targets — it does not revoke the user's inherited grant elsewhere in the hierarchy. A is wrong because deny policies specifically override allow grants, not the other way around. D is wrong because IAM policy evaluation is deterministic, not dependent on re-authentication.",
     "topic": "IAM Policies",
     "section": 4
   },
   {
     "id": "s4_q06",
-    "question": "You need to create a custom IAM role that grants only the ability to list and describe Compute Engine instances (not start, stop, or delete them). What is the minimum set of permissions for this custom role?",
+    "question": "You need to create a custom IAM role that grants only the ability to list and describe Compute Engine instances (not start, stop, or delete them). Which two permissions must the custom role include? (Choose two.)",
     "options": {
-      "A": "compute.instances.get, compute.instances.list",
-      "B": "compute.instances.get, compute.instances.list, compute.instances.describe",
-      "C": "roles/compute.viewer",
-      "D": "compute.instances.get, compute.instances.list, compute.projects.get"
+      "A": "compute.instances.list",
+      "B": "compute.instances.get",
+      "C": "compute.instances.describe",
+      "D": "compute.projects.get"
     },
-    "correct": "A",
-    "explanation": "A is correct because compute.instances.get retrieves details of a single instance and compute.instances.list lists all instances — together they provide the minimum permissions for read-only access to instance inventory. B is wrong because compute.instances.describe is not a distinct permission from compute.instances.get — get is used for both single-resource retrieval and describe operations. C is wrong because roles/compute.viewer is a predefined role containing many more permissions than needed, violating least privilege for a custom role. D is wrong because compute.projects.get grants access to project metadata which is beyond the stated requirement.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because compute.instances.list is required to enumerate the instances in a project or zone. B is correct because compute.instances.get is required to retrieve the details of a single instance (what the Console and 'describe' commands use under the hood). C is wrong because compute.instances.describe is not a real IAM permission — the get permission covers describe-style single-resource lookups. D is wrong because compute.projects.get grants access to project-level metadata, which is beyond the stated requirement and not needed to list or view instances.",
     "topic": "Role Types",
     "section": 4
   },
@@ -211,15 +211,15 @@
   },
   {
     "id": "s4_q16",
-    "question": "You need to create a short-lived credential for a service account that a human administrator will use temporarily for an emergency operation. Which command generates a short-lived access token for a service account?",
+    "question": "You need to create a short-lived credential for a service account that a human administrator will use temporarily for an emergency operation. Which two commands generate a short-lived credential for a service account through impersonation? (Choose two.)",
     "options": {
       "A": "gcloud iam service-accounts keys create --expiration=1h",
       "B": "gcloud auth print-access-token --impersonate-service-account=SA_EMAIL",
       "C": "gcloud iam service-accounts create --temporary",
-      "D": "gcloud auth service-account login SA_EMAIL --duration=1h"
+      "D": "gcloud auth print-identity-token --impersonate-service-account=SA_EMAIL"
     },
-    "correct": "B",
-    "explanation": "B is correct because gcloud auth print-access-token --impersonate-service-account generates a short-lived OAuth access token by impersonating the specified service account. The token has a limited lifetime (typically 1 hour) and doesn't create a persistent key. A is wrong because gcloud iam service-accounts keys create generates a long-lived JSON key file, not a short-lived token, and the --expiration flag refers to key expiry on creation, not a short-lived session token. C is wrong because gcloud iam service-accounts create creates a new service account, not a temporary credential. D is wrong because gcloud auth service-account login is not a valid gcloud command.",
+    "correct": ["B", "D"],
+    "explanation": "B is correct because gcloud auth print-access-token --impersonate-service-account generates a short-lived OAuth access token by impersonating the specified service account, without creating a persistent key. D is correct because gcloud auth print-identity-token --impersonate-service-account generates a short-lived OIDC identity token the same way, for cases where an identity token rather than an access token is needed. A is wrong because gcloud iam service-accounts keys create generates a long-lived JSON key file — it has no --expiration flag for issuing short-lived session tokens. C is wrong because gcloud iam service-accounts create creates a new service account, not a temporary credential.",
     "topic": "Short-lived Credentials",
     "section": 4
   },
@@ -239,15 +239,15 @@
   },
   {
     "id": "s4_q18",
-    "question": "You are defining custom IAM roles for your organization. Which statement correctly describes the difference between predefined roles and custom roles?",
+    "question": "You are defining custom IAM roles for your organization. Which two statements correctly describe the difference between predefined roles and custom roles? (Choose two.)",
     "options": {
       "A": "Custom roles can include any permissions from any Google Cloud service without restriction",
       "B": "Predefined roles are managed by Google and updated automatically; custom roles are defined by users and must be manually maintained as APIs evolve",
-      "C": "Custom roles can only be created at the project level, not the organization level",
+      "C": "Custom roles can include only a subset of available IAM permissions — Google marks certain permissions as unsupported for custom roles and excludes them",
       "D": "Predefined roles can only be applied at the organization level"
     },
-    "correct": "B",
-    "explanation": "B is correct because predefined roles are managed and updated by Google when new features or APIs are released, while custom roles require manual maintenance — if a new permission is needed for a feature you use, you must update the custom role manually. A is wrong because custom roles have restrictions — some permissions are not available for custom roles (e.g., some owner-level permissions). C is wrong because custom roles can be created at both the organization level (available to all projects) and the project level. D is wrong because predefined roles can be applied at any level of the resource hierarchy.",
+    "correct": ["B", "C"],
+    "explanation": "B is correct because predefined roles are managed and updated by Google when new features or APIs are released, while custom roles require manual maintenance — if a new permission is needed for a feature you use, you must update the custom role manually. C is correct because not every permission is eligible for custom roles; Google publishes a list of permissions supported for custom role creation, and some (mostly high-risk or admin-level) permissions are excluded. A is wrong because it contradicts C — custom roles are restricted to the supported permission set. D is wrong because predefined roles can be applied at any level of the resource hierarchy, not just the organization.",
     "topic": "Role Types",
     "section": 4
   },
@@ -295,15 +295,15 @@
   },
   {
     "id": "s4_q22",
-    "question": "You need to create an IAM policy binding that grants the group engineering@example.com the roles/bigquery.dataEditor role on a specific BigQuery dataset. Which command achieves this?",
+    "question": "You need to create an IAM policy binding that grants the group engineering@example.com the roles/bigquery.dataEditor role on a specific BigQuery dataset (not the whole project). Which command achieves this?",
     "options": {
-      "A": "gcloud projects add-iam-policy-binding PROJECT_ID --member=group:engineering@example.com --role=roles/bigquery.dataEditor",
+      "A": "bq add-iam-policy-binding --member=group:engineering@example.com --role=roles/bigquery.dataEditor PROJECT_ID:DATASET_ID",
       "B": "bq set-iam-policy DATASET --member=group:engineering@example.com --role=roles/bigquery.dataEditor",
       "C": "gcloud iam roles add-binding DATASET --member=group:engineering@example.com --role=roles/bigquery.dataEditor",
-      "D": "gcloud bigquery datasets add-iam-policy-binding DATASET_ID --member=group:engineering@example.com --role=roles/bigquery.dataEditor"
+      "D": "gcloud projects add-iam-policy-binding PROJECT_ID --member=group:engineering@example.com --role=roles/bigquery.dataEditor"
     },
     "correct": "A",
-    "explanation": "A is correct — while option D looks appealing, BigQuery dataset IAM policies are most commonly managed via gcloud projects add-iam-policy-binding (project-level) or via the bq CLI. For fine-grained dataset-level IAM, gcloud projects add-iam-policy-binding at the project level is valid. D uses a gcloud bigquery datasets command structure that doesn't exist. B uses the bq CLI but the syntax is for setting a full policy, not adding a binding. A is the correct command that matches standard IAM binding syntax.",
+    "explanation": "A is correct because the bq CLI's add-iam-policy-binding command adds a single member-role binding directly to a dataset's IAM policy, scoped to just that dataset. B is wrong because bq set-iam-policy replaces the entire policy document (it takes a policy file, not member/role flags) rather than adding one binding. C is wrong because gcloud iam roles add-binding is not a valid command — gcloud iam roles manages custom role definitions, not bindings. D is wrong because it grants the role at the project level, giving the group dataEditor access to every dataset in the project instead of just the one specified.",
     "topic": "IAM Policies",
     "section": 4
   },
@@ -519,15 +519,15 @@
   },
   {
     "id": "s4_q38",
-    "question": "A security review finds that several developers have direct IAM role bindings on production projects. The security team wants to enforce that access is granted only through Google Groups, not individual user accounts. How can this be enforced as a policy?",
+    "question": "A security review finds that several developers have direct IAM role bindings on production projects. The security team wants to detect and remediate this so that access is granted only through Google Groups, not individual user accounts. What should they use?",
     "options": {
-      "A": "Create an org policy constraint that restricts IAM members to group: type only",
+      "A": "Policy Analyzer / IAM Recommender to find IAM bindings on individual user accounts and flag them for remediation to group-based bindings",
       "B": "Use IAM Conditions to deny access for user: type principals",
       "C": "Manually audit and remove individual user bindings periodically",
       "D": "Enable Essential Contacts requiring group email addresses only"
     },
     "correct": "A",
-    "explanation": "A is correct because there is an organization policy configuration capability to restrict IAM policy members to specific domains and types — enforcing group-based access through organizational policy controls can be achieved through domain restriction policies. B is wrong because IAM conditions can restrict attributes but cannot easily target 'user: type' as a condition to deny. C is wrong because periodic manual audits don't prevent the anti-pattern from recurring. D is wrong because Essential Contacts is for operational notifications, not IAM policy enforcement.",
+    "explanation": "A is correct because Google Cloud has no org policy constraint that blocks binding IAM roles to individual user accounts — enforcement instead relies on Policy Analyzer / IAM Recommender (Policy Intelligence tools) to surface direct user bindings across the organization so they can be reviewed and replaced with group-based bindings, combined with process controls. B is wrong because IAM Conditions evaluate request attributes (time, resource, IP) at authorization time — they cannot target or deny bindings based on principal type (user: vs group:). C is wrong because manual, ad hoc audits don't scale and don't prevent the anti-pattern from recurring, unlike a repeatable tool-driven process. D is wrong because Essential Contacts is for routing operational and security notifications, not for enforcing or auditing IAM binding types.",
     "topic": "IAM Policies",
     "section": 4
   },
@@ -603,15 +603,15 @@
   },
   {
     "id": "s4_q44",
-    "question": "You are creating a custom IAM role and want to include the permission to create Cloud Storage buckets. What is the correct permission string for creating buckets?",
+    "question": "You are creating a custom IAM role and want to include permissions to create and list Cloud Storage buckets. Which two permission strings should you include? (Choose two.)",
     "options": {
-      "A": "storage.create",
-      "B": "storage.buckets.create",
+      "A": "storage.buckets.create",
+      "B": "storage.buckets.list",
       "C": "cloudstorage.buckets.create",
       "D": "gcs.buckets.create"
     },
-    "correct": "B",
-    "explanation": "B is correct because Google Cloud IAM permissions follow the format service.resource.verb — for Cloud Storage (service: storage), creating buckets (resource: buckets, verb: create) gives storage.buckets.create. A is wrong because storage.create is incomplete and not a valid permission. C is wrong because the service identifier is storage, not cloudstorage. D is wrong because gcs is not the IAM service identifier — the correct identifier is storage.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because Google Cloud IAM permissions follow the format service.resource.verb — for Cloud Storage (service: storage), creating buckets (resource: buckets, verb: create) gives storage.buckets.create. B is correct because storage.buckets.list follows the same pattern for enumerating buckets. C is wrong because the service identifier is storage, not cloudstorage. D is wrong because gcs is not the IAM service identifier — the correct identifier is storage.",
     "topic": "Custom IAM Roles",
     "section": 4
   },
@@ -645,15 +645,15 @@
   },
   {
     "id": "s4_q47",
-    "question": "You need to assign a service account to a Cloud Run service (not just a VM). How does assigning a service account to a Cloud Run service affect its behavior?",
+    "question": "You need to assign a service account to a Cloud Run service (not just a VM). Which two statements correctly describe how assigning a service account to a Cloud Run service affects its behavior? (Choose two.)",
     "options": {
       "A": "It only affects which billing account is charged for the Cloud Run service",
       "B": "The Cloud Run service runs as the specified service account identity, and all calls to Google Cloud APIs from the service are authenticated as that service account",
-      "C": "It determines which region the Cloud Run service can be deployed in",
+      "C": "If the service account is compromised, the attacker's access is limited to the IAM roles granted to that service account, reducing blast radius compared to using an over-privileged account",
       "D": "It allows the Cloud Run service to access the internet without Cloud NAT"
     },
-    "correct": "B",
-    "explanation": "B is correct because the service account assigned to a Cloud Run service becomes the identity of that service — when the service calls Google Cloud APIs (Cloud Storage, Pub/Sub, Cloud SQL, etc.), the request is authenticated and authorized as that service account, enabling IAM-based access control. A is wrong because billing is associated with the project, not the service account. C is wrong because the service account identity has no bearing on which region a service can be deployed in. D is wrong because the service account affects API authentication, not network connectivity — Cloud NAT or external IPs control outbound internet access.",
+    "correct": ["B", "C"],
+    "explanation": "B is correct because the service account assigned to a Cloud Run service becomes the identity of that service — when the service calls Google Cloud APIs (Cloud Storage, Pub/Sub, Cloud SQL, etc.), the request is authenticated and authorized as that service account, enabling IAM-based access control. C is correct because scoping the service account's IAM roles to only what the service needs directly limits what an attacker can do if the container is compromised — this is the practical security payoff of B. A is wrong because billing is associated with the project, not the service account. D is wrong because the service account affects API authentication, not network connectivity — Cloud NAT or external IPs control outbound internet access.",
     "topic": "Service Accounts",
     "section": 4
   },

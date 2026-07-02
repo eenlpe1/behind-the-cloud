@@ -374,6 +374,10 @@ body {
   border-color: var(--border-subtle) !important;
   opacity: 0.4;
 }
+.opt-btn--selected {
+  background: oklch(0.491 0.113 244 / 0.12) !important;
+  border-color: var(--primary) !important;
+}
 
 /* ─── Feedback panels ────────────────────────────────────────────────────── */
 .feedback-correct {

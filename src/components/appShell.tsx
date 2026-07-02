@@ -8,6 +8,7 @@ import {
   ClipboardList,
   ChevronRight,
 } from "lucide-react";
+import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/themeToggle";
 import { useCert } from "@/components/certProvider";
 import { cn } from "@/lib/utils";
@@ -29,7 +30,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const activeMode = MODE_ITEMS.find((m) => pathname.endsWith(`/${m.id}`));
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <h2 className="sr-only">
         Behind the Cloud —{" "}
         {cert ? `${cert.provider} ${cert.name}` : "Certification Practice"}
@@ -40,7 +41,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div className="max-w-235 mx-auto px-6 h-14 flex items-center justify-between gap-6">
           {/* Left: wordmark → home, then cert name if in cert context */}
           <div className="flex items-center gap-2 shrink-0 min-w-0">
-            <Link href="/" className="flex items-center shrink-0">
+            <Link href="/" className="flex items-center gap-2 shrink-0">
+              <Logo />
               <span className="font-semibold text-sm tracking-tight">
                 Behind the Cloud
               </span>
@@ -139,9 +141,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      <main className="max-w-[940px] mx-auto px-6 py-6 pb-16">{children}</main>
+      <main className="max-w-[940px] mx-auto px-6 py-6 pb-16 flex-1 w-full">
+        {children}
+      </main>
 
-      <footer className="max-w-[940px] mx-auto px-6 pb-8 border-t border-border pt-6 mt-2">
+      <footer className="max-w-[940px] mx-auto px-6 pb-8 border-t border-border pt-6 mt-2 w-full">
         <p className="text-xs text-muted-foreground text-center tracking-wide">
           {cert
             ? `Aligned to ${cert.provider} ${cert.shortName} Exam Guide · ${cert.guideDate} · AI-generated — verify with official Google Cloud docs`

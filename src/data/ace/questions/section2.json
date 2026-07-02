@@ -43,15 +43,15 @@
   },
   {
     "id": "s2_q04",
-    "question": "Your team is deploying a GKE cluster for a production workload that requires high availability across multiple zones and automatic management of the control plane. Which GKE configuration should you use?",
+    "question": "Your team is deploying a GKE cluster for a production workload that requires high availability across multiple zones and automatic management of the control plane. Which two GKE configurations meet this requirement? (Choose two.)",
     "options": {
       "A": "GKE Standard with a zonal cluster",
       "B": "GKE Autopilot with a regional cluster",
-      "C": "GKE Standard with a private zonal cluster",
+      "C": "GKE Standard with a regional cluster",
       "D": "A single-node GKE cluster for cost optimization"
     },
-    "correct": "B",
-    "explanation": "B is correct because GKE Autopilot manages node provisioning and scaling automatically, and a regional cluster distributes the control plane and nodes across multiple zones for high availability. A is wrong because a zonal cluster has a single-zone control plane, creating a single point of failure. C is wrong because a private zonal cluster is still single-zone. D is wrong because a single-node cluster has no redundancy and is not suitable for production.",
+    "correct": ["B", "C"],
+    "explanation": "B is correct because GKE Autopilot manages node provisioning and scaling automatically, and a regional cluster replicates the control plane across three zones and spreads nodes across zones for high availability. C is correct because a GKE Standard regional cluster also runs a multi-zone, Google-managed control plane and distributes nodes across zones — Google always manages the control plane in both Standard and Autopilot, so the HA requirement is met even though node management is manual in Standard. A is wrong because a zonal cluster has a single-zone control plane, creating a single point of failure. D is wrong because a single-node cluster has no redundancy and is not suitable for production.",
     "topic": "GKE",
     "section": 2
   },
@@ -66,7 +66,7 @@
     },
     "correct": "C",
     "explanation": "C is correct because Cloud Spanner provides fully managed relational database capabilities with ACID transactions, SQL support, and horizontal scaling to handle petabytes of data. A is wrong because Bigtable is a NoSQL wide-column store optimized for high-throughput analytics, not ACID SQL transactions. B is wrong because Firestore is a NoSQL document database with limited SQL capabilities and is not designed for complex relational queries. D is wrong because Memorystore is an in-memory cache (Redis/Memcached), not a persistent relational database.",
-    "topic": "Cloud SQL",
+    "topic": "Cloud Spanner",
     "section": 2
   },
   {
@@ -80,7 +80,7 @@
     },
     "correct": "B",
     "explanation": "B is correct because Pub/Sub handles high-throughput message ingestion, Dataflow provides managed stream processing, and Bigtable is optimized for low-latency reads at massive scale for time-series IoT data. A is wrong because Cloud SQL cannot handle millions of events per second ingestion. C is wrong because Firestore is a document database not designed for high-throughput streaming ingestion. D is wrong because Cloud Storage is object storage, not a streaming ingestion service.",
-    "topic": "BigQuery",
+    "topic": "Data Solutions",
     "section": 2
   },
   {
@@ -99,16 +99,16 @@
   },
   {
     "id": "s2_q08",
-    "question": "You need to create a load balancer that distributes HTTPS traffic to backend services across multiple regions with a single anycast IP address. Which load balancer should you use?",
+    "question": "You need to create a load balancer that provides a single global anycast IP address and distributes traffic to backend services across multiple regions. Which two load balancer types meet this requirement? (Choose two.)",
     "options": {
       "A": "Regional internal Application Load Balancer",
       "B": "Global external Application Load Balancer",
-      "C": "Regional external Network Load Balancer",
+      "C": "Global external proxy Network Load Balancer",
       "D": "Internal TCP/UDP Load Balancer"
     },
-    "correct": "B",
-    "explanation": "B is correct because the Global external Application Load Balancer uses a single anycast IP, supports HTTPS, and distributes traffic across backends in multiple regions using Google's global network. A is wrong because a regional internal Application Load Balancer is for internal traffic within a single region. C is wrong because a Network Load Balancer operates at Layer 4 and is regional, not global. D is wrong because an Internal TCP/UDP Load Balancer is for internal traffic within a VPC and is regional.",
-    "topic": "Cloud SQL",
+    "correct": ["B", "C"],
+    "explanation": "B is correct because the Global external Application Load Balancer uses a single global anycast IP, performs Layer 7 HTTP(S) routing, and distributes traffic across backends in multiple regions using Google's global network. C is correct because the Global external proxy Network Load Balancer (TCP/SSL proxy) also provisions a single global anycast IP and routes traffic to backend services in multiple regions over Google's global network, terminating TCP/SSL connections at the edge closest to the user. A is wrong because a regional internal Application Load Balancer is scoped to internal traffic within a single region, not a global anycast IP. D is wrong because an Internal TCP/UDP Load Balancer is for internal traffic within a single region/VPC, not global.",
+    "topic": "Load Balancing",
     "section": 2
   },
   {
@@ -136,7 +136,7 @@
     },
     "correct": "B",
     "explanation": "B is correct because Cloud Interconnect provides a dedicated physical connection (Dedicated Interconnect) or a connection through a partner provider (Partner Interconnect) that does not traverse the public internet, offering consistent bandwidth and low latency. A is wrong because Cloud VPN encrypts traffic but still traverses the public internet, which doesn't meet the no-public-internet requirement. C is wrong because VPC Network Peering connects two VPC networks within Google Cloud — it doesn't connect on-premises data centers. D is wrong because Cloud NAT provides outbound internet access for private instances, not on-premises connectivity.",
-    "topic": "Cloud SQL",
+    "topic": "VPC Networking",
     "section": 2
   },
   {
@@ -150,7 +150,7 @@
     },
     "correct": "C",
     "explanation": "C is correct because Memorystore for Redis is a fully managed in-memory data store providing sub-millisecond latency, ideal for session caching where data is temporary and acceptable to lose (since it can be rebuilt). A is wrong because Spanner is a globally distributed relational database with millisecond-range latency — overkill for temporary session data. B is wrong because Firestore is a persistent NoSQL document store with higher latency than an in-memory cache. D is wrong because Cloud Storage is object storage with higher latency, not suitable for sub-millisecond session access.",
-    "topic": "Cloud SQL",
+    "topic": "Memorystore",
     "section": 2
   },
   {
@@ -360,7 +360,7 @@
     },
     "correct": "B",
     "explanation": "B is correct because Cloud Spanner is the only fully managed relational database that provides horizontal scaling, global distribution across regions, and ACID transactions with external consistency at a global scale. A is wrong because Cloud SQL with read replicas provides read scalability but write operations go to a single primary — it doesn't horizontally scale writes globally. C is wrong because Bigtable is NoSQL and doesn't support ACID transactions or complex SQL. D is wrong because Firestore is a NoSQL document database without complex relational query support or traditional ACID transaction semantics.",
-    "topic": "Cloud SQL",
+    "topic": "Cloud Spanner",
     "section": 2
   },
   {
@@ -374,7 +374,7 @@
     },
     "correct": "B",
     "explanation": "B is correct because Premium Network Service Tier routes traffic over Google's private global backbone network from the point of entry closest to the user, providing lower latency, higher reliability, and consistent performance for global applications. A is wrong because Standard Tier reduces costs by routing traffic over the public internet, but Premium Tier is chosen for performance, not cost. C is wrong because single-region applications don't benefit as much from Premium Tier's global routing — Standard Tier may suffice. D is wrong because internal load balancers between GKE pods use internal networking and are not subject to Network Service Tier selection.",
-    "topic": "Cloud SQL",
+    "topic": "VPC Networking",
     "section": 2
   },
   {
@@ -435,43 +435,43 @@
   },
   {
     "id": "s2_q32",
-    "question": "A GKE application needs to install and configure kubectl to interact with the cluster. After creating the cluster, what command fetches credentials and configures kubectl?",
+    "question": "A team needs to install and configure kubectl to interact with a new GKE cluster. Which two actions are required to authenticate kubectl to the cluster? (Choose two.)",
     "options": {
-      "A": "kubectl config set-cluster CLUSTER_NAME",
+      "A": "Install the gke-gcloud-auth-plugin component for gcloud",
       "B": "gcloud container clusters get-credentials CLUSTER_NAME --region REGION",
       "C": "gcloud auth configure-docker REGION-docker.pkg.dev",
       "D": "kubectl apply -f kubeconfig.yaml"
     },
-    "correct": "B",
-    "explanation": "B is correct because gcloud container clusters get-credentials fetches the cluster credentials from GKE and automatically configures the kubectl context, allowing subsequent kubectl commands to target the cluster. A is wrong because kubectl config set-cluster requires manually specifying server URLs and certificates — it doesn't automatically fetch credentials. C is wrong because gcloud auth configure-docker configures Docker authentication for Artifact Registry, not kubectl cluster access. D is wrong because there is no standard kubeconfig.yaml file to apply — kubeconfig is a local file managed by the gcloud command.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because kubectl requires the gke-gcloud-auth-plugin binary to be installed (a separate gcloud component) in order to authenticate to GKE clusters using Google identities. B is correct because gcloud container clusters get-credentials fetches the cluster credentials from GKE and configures the local kubectl context, allowing subsequent kubectl commands to target the cluster. C is wrong because gcloud auth configure-docker configures Docker/Artifact Registry authentication, not kubectl cluster access. D is wrong because there is no standard kubeconfig.yaml file to apply — kubeconfig is a local file managed by the gcloud command.",
     "topic": "GKE",
     "section": 2
   },
   {
     "id": "s2_q33",
-    "question": "Your company needs to store archival compliance data that must be retained for 7 years and will rarely if ever be accessed. Cost is the primary driver. Which Cloud Storage class is correct?",
+    "question": "Your company needs to store archival compliance data that must be retained for 7 years and will rarely if ever be accessed (no more than a few times total over the retention period). Cost is the primary driver. Which two Cloud Storage classes are reasonable choices for this data? (Choose two.)",
     "options": {
       "A": "Standard",
       "B": "Nearline",
       "C": "Coldline",
       "D": "Archive"
     },
-    "correct": "D",
-    "explanation": "D is correct because Archive storage offers the lowest storage cost per GB and is designed for data accessed less than once per year with a 365-day minimum storage duration — ideal for long-term compliance archives. A is wrong because Standard has the highest storage cost and is for frequently accessed data. B is wrong because Nearline is for monthly access and would be significantly more expensive for 7-year archival data. C is wrong because Coldline is for quarterly access — Archive is even cheaper for data that is essentially never accessed.",
+    "correct": ["C", "D"],
+    "explanation": "D is correct because Archive storage offers the lowest storage cost per GB and is designed for data accessed less than once per year with a 365-day minimum storage duration — the best fit for long-term compliance archives that are essentially never accessed. C is correct because Coldline, designed for access no more than once per quarter, is also far cheaper than Standard or Nearline and remains a defensible, cost-effective choice for rarely-accessed compliance data, even though Archive is cheaper still. A is wrong because Standard carries the highest storage cost and targets frequently accessed data. B is wrong because Nearline targets monthly access and costs more than Coldline or Archive for data that is accessed only a few times over 7 years.",
     "topic": "Cloud Storage",
     "section": 2
   },
   {
     "id": "s2_q34",
-    "question": "You need to establish connectivity between two VPC networks in different projects within the same organization so their resources can communicate using internal IPs. Which approach has the lowest latency and no bandwidth limits?",
+    "question": "You need resources in different projects within the same organization to communicate using internal IPs, with the lowest possible latency and no bandwidth limits. Which two approaches meet this requirement? (Choose two.)",
     "options": {
       "A": "Cloud VPN with BGP routing",
       "B": "VPC Network Peering",
       "C": "Cloud Interconnect between the two VPCs",
       "D": "Shared VPC with both projects as service projects"
     },
-    "correct": "B",
-    "explanation": "B is correct because VPC Network Peering directly connects two VPC networks using Google's internal network infrastructure with no additional hops, providing lowest latency and no bandwidth limitations unlike VPN tunnels. A is wrong because Cloud VPN adds encryption overhead and has bandwidth limits per tunnel, and it's designed for external connectivity. C is wrong because Cloud Interconnect is for on-premises to Google Cloud connectivity, not VPC-to-VPC connectivity. D is wrong because Shared VPC would require one project to become a host, changing the network architecture significantly.",
+    "correct": ["B", "D"],
+    "explanation": "B is correct because VPC Network Peering directly connects two VPC networks using Google's internal network infrastructure with no additional hops, providing low latency and no bandwidth limitations unlike VPN tunnels. D is correct because Shared VPC lets projects share a single VPC network, so resources communicate over internal IPs within the same network with no peering or tunnel overhead at all — and no bandwidth limits. A is wrong because Cloud VPN adds encryption overhead and per-tunnel bandwidth limits, and it's designed for external connectivity. C is wrong because Cloud Interconnect connects on-premises networks to Google Cloud, not two VPCs to each other.",
     "topic": "VPC Networking",
     "section": 2
   },
@@ -486,7 +486,7 @@
     },
     "correct": "C",
     "explanation": "C is correct because Bigtable is a fully managed NoSQL wide-column store designed for high-throughput, low-latency analytics workloads with millions of rows per second, making it ideal for time-series financial transaction data. A is wrong because Cloud SQL cannot handle millions of transactions per second ingestion. B is wrong because Firestore is a document database with much lower throughput than Bigtable for this scale. D is wrong because Memorystore is an in-memory cache — data is not persistent and the storage capacity is insufficient for 30 days of high-volume transaction data.",
-    "topic": "BigQuery",
+    "topic": "Bigtable",
     "section": 2
   },
   {
@@ -505,15 +505,15 @@
   },
   {
     "id": "s2_q37",
-    "question": "A developer needs to run a Kubernetes workload that maintains a stable network identity and persistent storage — each Pod must have a unique, stable hostname and its own PersistentVolume. Which Kubernetes resource is appropriate?",
+    "question": "A developer is deploying a Kubernetes workload using a StatefulSet. Which two guarantees does a StatefulSet provide that distinguish it from a Deployment? (Choose two.)",
     "options": {
-      "A": "Deployment",
-      "B": "DaemonSet",
-      "C": "StatefulSet",
-      "D": "ReplicaSet"
+      "A": "Each Pod gets a stable, unique network identity (e.g., pod-0, pod-1) that persists across rescheduling",
+      "B": "Pods are created, scaled, and terminated in a defined, ordered sequence",
+      "C": "Pods are load-balanced across all cluster nodes with no ordering guarantees",
+      "D": "All replicas share a single PersistentVolume that is mounted read-write by every Pod simultaneously"
     },
-    "correct": "C",
-    "explanation": "C is correct because StatefulSets provide stable, unique network identities (pod-0, pod-1, etc.) and ordered, persistent storage via PersistentVolumeClaims — exactly what databases and other stateful applications need. A is wrong because Deployments are for stateless workloads where Pods are interchangeable and don't require stable identities. B is wrong because DaemonSets run exactly one Pod per node, used for cluster-wide services like logging agents. D is wrong because ReplicaSets are lower-level than Deployments and don't provide stable identities.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because StatefulSets assign each Pod a stable, unique hostname and network identity based on an ordinal index, which persists across rescheduling — unlike Deployment Pods, which are interchangeable and get new random names. B is correct because StatefulSets create, scale, and terminate Pods one at a time in strict ordinal order, unlike Deployments which manage Pods with no ordering guarantee. C is wrong because it describes Deployment-style behavior, not the ordered guarantees a StatefulSet provides. D is wrong because StatefulSets typically provision a separate PersistentVolumeClaim per Pod, not a single shared read-write volume.",
     "topic": "GKE",
     "section": 2
   },
@@ -570,20 +570,20 @@
     },
     "correct": "B",
     "explanation": "B is correct because Google Cloud Managed Service for Apache Kafka provides fully managed Kafka clusters for teams that need Apache Kafka's specific features (topic partitioning, consumer groups, Kafka Streams) for real-time streaming and event-driven architectures. A is wrong because Kafka is a streaming platform, not a relational database. C is wrong because Kafka is not a batch processing framework — Dataflow handles batch and stream processing pipelines. D is wrong because while Pub/Sub and Kafka both handle messaging, they have different semantics — Kafka has persistent logs and consumer offsets that differ from Pub/Sub's push/pull model.",
-    "topic": "BigQuery",
+    "topic": "Data Solutions",
     "section": 2
   },
   {
     "id": "s2_q42",
-    "question": "You need to create a Cloud NGFW policy rule that applies to all VMs in a specific VPC rather than targeting individual VMs by tag. What is the correct target configuration?",
+    "question": "You want a firewall rule or policy to apply to all VMs in a specific VPC network rather than targeting individual VMs by tag. Which two approaches achieve this? (Choose two.)",
     "options": {
-      "A": "Target tags: all-instances",
-      "B": "Apply the firewall policy to the VPC network directly",
+      "A": "Create a legacy VPC firewall rule with no target tags or service accounts specified",
+      "B": "Associate a Cloud NGFW network firewall policy directly with the VPC network",
       "C": "Target service account: compute@developer.gserviceaccount.com",
       "D": "Target IP range: 0.0.0.0/0"
     },
-    "correct": "B",
-    "explanation": "B is correct because Cloud NGFW hierarchical and network firewall policies can be associated (applied) directly to a VPC network, causing all rules in that policy to apply to all VMs in that network without needing tag targeting. A is wrong because there is no all-instances tag — network policies are associated at the network level. C is wrong because targeting a specific service account would only apply to VMs using that service account. D is wrong because 0.0.0.0/0 is an IP range for source/destination in rules, not a targeting mechanism for which VMs the rule applies to.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because a legacy VPC firewall rule with no target tags or service accounts specified applies, by default, to all instances in the network. B is correct because Cloud NGFW network firewall policies can be associated directly with a VPC network, causing all rules in that policy to apply to every VM in that network without needing tag targeting. C is wrong because targeting a specific service account only applies the rule to VMs running as that service account, not all VMs. D is wrong because 0.0.0.0/0 is an IP range used for a rule's source/destination, not a mechanism for targeting which VMs the rule applies to.",
     "topic": "Cloud NGFW",
     "section": 2
   },
@@ -617,15 +617,15 @@
   },
   {
     "id": "s2_q45",
-    "question": "You need to decide whether to use GPUs or TPUs for a workload. The workload involves training a custom TensorFlow model with very large matrix operations at scale. Which accelerator is recommended and why?",
+    "question": "Which two statements about GPUs and TPUs for machine learning workloads on Google Cloud are true? (Choose two.)",
     "options": {
-      "A": "GPUs — they are always faster than TPUs for all ML workloads",
-      "B": "TPUs — they are Google's custom ASICs optimized for large-scale TensorFlow/JAX matrix operations and offer higher throughput per dollar for these workloads",
-      "C": "GPUs — TPUs only support inference, not training",
-      "D": "Neither — use high-memory CPU instances for TensorFlow training"
+      "A": "TPUs are Google's custom ASICs optimized for large-scale matrix multiplication in frameworks like TensorFlow and JAX",
+      "B": "GPUs offer broader compatibility across ML frameworks (PyTorch, TensorFlow, JAX, etc.) and are a strong choice when framework flexibility is needed",
+      "C": "TPUs only support inference workloads, not training",
+      "D": "CPU instances provide throughput comparable to GPUs and TPUs for large neural network training"
     },
-    "correct": "B",
-    "explanation": "B is correct because TPUs are specifically designed for the matrix multiplication operations that dominate neural network training in TensorFlow and JAX, offering significantly higher throughput per dollar for large-scale training compared to GPUs. A is wrong because while GPUs are more versatile, TPUs typically outperform GPUs for large TensorFlow/JAX training workloads. C is wrong because TPUs support both training and inference. D is wrong because CPU instances are orders of magnitude slower than hardware accelerators for ML training.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because TPUs are purpose-built ASICs optimized for the matrix multiplication operations that dominate neural network training, offering high throughput per dollar for large-scale TensorFlow and JAX workloads. B is correct because GPUs support a broader range of ML frameworks and workloads, making them a strong general-purpose choice when framework flexibility is a priority. C is wrong because TPUs support both training and inference. D is wrong because CPU instances are orders of magnitude slower than hardware accelerators for large-scale ML training.",
     "topic": "Compute Engine",
     "section": 2
   },

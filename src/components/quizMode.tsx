@@ -1,6 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
-import type { Question } from "@/data/types";
+import { correctSet, isAnswerCorrect, isMultiAnswer, type Question } from "@/data/types";
 import { useCert } from "@/components/certProvider";
 import { AceCert } from "@/data/ace";
 import SecBadge from "@/components/secBadge";
@@ -11,7 +11,8 @@ import { cn } from "@/lib/utils";
 export default function QuizMode({ section, topic }: Readonly<{ section: number; topic: string | null }>) {
   const cert = useCert() ?? AceCert;
   const [q, setQ] = useState<Question | null>(() => cert.getRandomQuestion(section, topic, null));
-  const [sel, setSel] = useState<string | null>(null);
+  const [picks, setPicks] = useState<string[]>([]);
+  const [revealed, setRevealed] = useState(false);
   const [score, setScore] = useState({ c: 0, t: 0 });
   const [dots, setDots] = useState<boolean[]>([]);
   const [prevSection, setPrevSection] = useState(section);
@@ -20,30 +21,50 @@ export default function QuizMode({ section, topic }: Readonly<{ section: number;
   if (prevSection !== section || prevTopic !== topic) {
     setPrevSection(section);
     setPrevTopic(topic);
-    setSel(null);
+    setPicks([]);
+    setRevealed(false);
     setQ(cert.getRandomQuestion(section, topic, null));
   }
 
   const load = useCallback(() => {
-    setSel(null);
+    setPicks([]);
+    setRevealed(false);
     setQ(cert.getRandomQuestion(section, topic, q?.id ?? null));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [section, topic]);
 
-  const pick = (opt: string) => {
-    if (sel || !q) return;
-    setSel(opt);
-    const ok = opt === q.correct;
+  const multi = q ? isMultiAnswer(q) : false;
+  const need = q ? correctSet(q).length : 1;
+
+  const reveal = (finalPicks: string[]) => {
+    if (!q) return;
+    const ok = isAnswerCorrect(q, finalPicks);
+    setRevealed(true);
     setScore((s) => ({ c: s.c + (ok ? 1 : 0), t: s.t + 1 }));
     setDots((d) => [ok, ...d].slice(0, 10));
+  };
+
+  const pick = (opt: string) => {
+    if (revealed || !q) return;
+    if (!multi) {
+      setPicks([opt]);
+      reveal([opt]);
+      return;
+    }
+    setPicks((prev) => {
+      if (prev.includes(opt)) return prev.filter((o) => o !== opt);
+      if (prev.length >= need) return prev;
+      return [...prev, opt];
+    });
   };
 
   const optClass = (opt: string) =>
     cn(
       "opt-btn",
-      sel && opt === q!.correct && "opt-btn--correct",
-      sel && opt === sel && opt !== q!.correct && "opt-btn--wrong",
-      sel && opt !== sel && opt !== q!.correct && "opt-btn--dimmed",
+      revealed && correctSet(q!).includes(opt) && "opt-btn--correct",
+      revealed && picks.includes(opt) && !correctSet(q!).includes(opt) && "opt-btn--wrong",
+      revealed && !picks.includes(opt) && !correctSet(q!).includes(opt) && "opt-btn--dimmed",
+      !revealed && multi && picks.includes(opt) && "opt-btn--selected",
     );
 
   if (!q) return (
@@ -101,13 +122,20 @@ export default function QuizMode({ section, topic }: Readonly<{ section: number;
       {/* Question card */}
       <Card>
         <CardContent className="flex flex-col gap-5 py-6 px-6">
-          <SecBadge section={q.section} topic={q.topic} />
+          <div className="flex items-center justify-between gap-3">
+            <SecBadge section={q.section} topic={q.topic} />
+            {multi && !revealed && (
+              <span className="font-mono text-[10px] font-semibold px-2 py-0.5 rounded-full border border-border text-muted-foreground shrink-0">
+                Select {need} · {picks.length}/{need}
+              </span>
+            )}
+          </div>
           <p className="font-medium text-base leading-relaxed text-foreground">{q.question}</p>
           <div className="flex flex-col gap-2.5">
             {(Object.entries(q.options) as [string, string][]).map(([opt, text]) => (
               <button
                 key={opt}
-                disabled={!!sel}
+                disabled={revealed || (multi && !picks.includes(opt) && picks.length >= need)}
                 onClick={() => pick(opt)}
                 className={optClass(opt)}
               >
@@ -119,16 +147,29 @@ export default function QuizMode({ section, topic }: Readonly<{ section: number;
             ))}
           </div>
 
+          {multi && !revealed && (
+            <Button
+              disabled={picks.length !== need}
+              onClick={() => reveal(picks)}
+              size="lg"
+              className="w-full font-medium"
+            >
+              Check Answer
+            </Button>
+          )}
+
           {/* Feedback — uses theme-aware --fb-* tokens */}
-          {sel && (
+          {revealed && (
             <div
               className={cn(
                 "slide-up rounded-xl px-5 py-4 border-l-4 flex flex-col gap-1.5",
-                sel === q.correct ? "feedback-correct" : "feedback-wrong",
+                isAnswerCorrect(q, picks) ? "feedback-correct" : "feedback-wrong",
               )}
             >
               <p className="feedback-title text-sm font-semibold">
-                {sel === q.correct ? "Correct" : `Incorrect — Answer: ${q.correct}`}
+                {isAnswerCorrect(q, picks)
+                  ? "Correct"
+                  : `Incorrect — Answer: ${correctSet(q).join(", ")}`}
               </p>
               <p className="feedback-body text-sm leading-relaxed">{q.explanation}</p>
             </div>
@@ -136,7 +177,7 @@ export default function QuizMode({ section, topic }: Readonly<{ section: number;
         </CardContent>
       </Card>
 
-      {sel && (
+      {revealed && (
         <Button onClick={load} size="lg" className="w-full font-medium">
           Next Question →
         </Button>

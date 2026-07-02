@@ -5,7 +5,7 @@ import AppShell from "@/components/appShell";
 import { Card, CardContent } from "@/components/ui/card";
 import SecBadge from "@/components/secBadge";
 import { cn } from "@/lib/utils";
-import type { Question } from "@/data/types";
+import { correctSet, isAnswerCorrect, type Question } from "@/data/types";
 import { useCert } from "@/components/certProvider";
 import { AceCert } from "@/data/ace";
 
@@ -13,7 +13,7 @@ type Filter = "all" | "correct" | "incorrect";
 
 interface ReviewEntry {
   question: Question;
-  picked: string | undefined;
+  picked: string[] | undefined;
   isCorrect: boolean;
   index: number;
 }
@@ -23,6 +23,7 @@ export default function ExamReviewPage() {
   const cert = useCert() ?? AceCert;
   const router = useRouter();
   const [filter, setFilter] = useState<Filter>("all");
+  const [section, setSection] = useState<number | "all">("all");
 
   const [entries] = useState<ReviewEntry[]>(() => {
     if (typeof globalThis.window === "undefined") return [];
@@ -31,13 +32,13 @@ export default function ExamReviewPage() {
       if (!raw) return [];
       const { questionIds, answers } = JSON.parse(raw) as {
         questionIds: string[];
-        answers: Record<number, string>;
+        answers: Record<number, string[]>;
       };
       const byId = new Map(cert.allQuestions.map((q) => [q.id, q]));
       return questionIds.flatMap((id, i) => {
         const q = byId.get(id);
         if (!q) return [];
-        return [{ question: q, picked: answers[i], isCorrect: answers[i] === q.correct, index: i }];
+        return [{ question: q, picked: answers[i], isCorrect: isAnswerCorrect(q, answers[i]), index: i }];
       });
     } catch {
       return [];
@@ -48,9 +49,9 @@ export default function ExamReviewPage() {
     if (entries.length === 0) router.replace(`/${slug}/exam`);
   }, [entries.length, router, slug]);
 
-  const visible = entries.filter((e) =>
-    filter === "all" ? true : filter === "correct" ? e.isCorrect : !e.isCorrect
-  );
+  const visible = entries
+    .filter((e) => (filter === "all" ? true : filter === "correct" ? e.isCorrect : !e.isCorrect))
+    .filter((e) => (section === "all" ? true : e.question.section === section));
 
   const correctCount = entries.filter((e) => e.isCorrect).length;
   const incorrectCount = entries.length - correctCount;
@@ -98,6 +99,38 @@ export default function ExamReviewPage() {
           })}
         </div>
 
+        {/* Section filter */}
+        <div className="flex gap-1.5 overflow-x-auto">
+          <button
+            onClick={() => setSection("all")}
+            className={cn(
+              "shrink-0 px-3 py-1 rounded-full text-xs font-semibold border transition-all",
+              section === "all"
+                ? "border-foreground/30 text-foreground bg-muted"
+                : "border-border text-muted-foreground hover:text-foreground"
+            )}
+          >
+            All sections
+          </button>
+          {cert.sections.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => setSection(s.id)}
+              className={cn(
+                "shrink-0 px-3 py-1 rounded-full text-xs font-semibold border transition-all",
+                section === s.id ? "border-transparent" : "border-border text-muted-foreground hover:text-foreground"
+              )}
+              style={
+                section === s.id
+                  ? { background: `var(--sec-${s.id}-bg)`, color: `var(--sec-${s.id}-text)` }
+                  : undefined
+              }
+            >
+              {s.short}
+            </button>
+          ))}
+        </div>
+
         {/* Question list */}
         <div className="flex flex-col gap-3">
           {visible.length === 0 && (
@@ -115,6 +148,8 @@ export default function ExamReviewPage() {
 function QuestionCard({ entry }: { entry: ReviewEntry }) {
   const { question: q, picked, isCorrect } = entry;
   const opts = Object.entries(q.options) as [string, string][];
+  const correct = correctSet(q);
+  const multi = correct.length > 1;
 
   return (
     <Card className={cn("overflow-hidden border", isCorrect ? "border-l-[3px]" : "border-l-[3px]")}
@@ -124,7 +159,14 @@ function QuestionCard({ entry }: { entry: ReviewEntry }) {
 
         {/* Meta + status */}
         <div className="flex items-start justify-between gap-3">
-          <SecBadge section={q.section} topic={q.topic} />
+          <div className="flex flex-wrap items-center gap-1.5">
+            <SecBadge section={q.section} topic={q.topic} />
+            {multi && (
+              <span className="inline-flex items-center font-mono text-[10px] px-2 py-0.5 rounded border border-border text-muted-foreground">
+                Choose {correct.length}
+              </span>
+            )}
+          </div>
           <span
             className="text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0"
             style={
@@ -142,8 +184,8 @@ function QuestionCard({ entry }: { entry: ReviewEntry }) {
         {/* Options */}
         <div className="flex flex-col gap-1.5">
           {opts.map(([opt, text]) => {
-            const isCorrectOpt = opt === q.correct;
-            const isPickedOpt = opt === picked;
+            const isCorrectOpt = correct.includes(opt);
+            const isPickedOpt = !!picked?.includes(opt);
             const isWrongPick = isPickedOpt && !isCorrectOpt;
 
             return (
@@ -193,7 +235,7 @@ function QuestionCard({ entry }: { entry: ReviewEntry }) {
               </div>
             );
           })}
-          {!picked && (
+          {!picked?.length && (
             <p className="text-xs text-muted-foreground italic px-1">Not answered</p>
           )}
         </div>

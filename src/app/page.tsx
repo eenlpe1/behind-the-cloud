@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { ALL_CERTS, UPCOMING_CERTS } from "@/data/certs";
 import { MODES } from "@/lib/reviewer";
+import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/themeToggle";
 import { cn } from "@/lib/utils";
 
@@ -63,7 +64,8 @@ export default async function Home() {
       {/* Header */}
       <header className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-235 mx-auto px-6 h-14 flex items-center justify-between">
-          <span className="font-semibold text-sm tracking-tight">
+          <span className="flex items-center gap-2 font-semibold text-sm tracking-tight">
+            <Logo />
             Behind the Cloud
           </span>
           <div className="flex items-center gap-2">

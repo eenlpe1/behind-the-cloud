@@ -74,7 +74,7 @@
     "question": "Your GKE cluster needs to pull container images from a private Artifact Registry repository. What is the recommended way to configure this access?",
     "options": {
       "A": "Hardcode registry credentials in the Kubernetes Pod spec",
-      "B": "Configure the GKE node service account with the roles/artifactregistry.reader IAM role and ensure Artifact Registry is in the same region",
+      "B": "Configure the GKE node service account with the roles/artifactregistry.reader IAM role on the repository",
       "C": "Make the Artifact Registry repository public",
       "D": "Create a Kubernetes Secret with Docker credentials and reference it in the Pod spec"
     },
@@ -127,29 +127,29 @@
   },
   {
     "id": "s3_q10",
-    "question": "You need to set up lifecycle management for Cloud Storage objects so that files in a bucket are automatically moved to Coldline storage after 30 days and deleted after 365 days. What is the correct approach?",
+    "question": "You need to set up lifecycle management for Cloud Storage objects so that files in a bucket are automatically transitioned to Coldline storage after 30 days and deleted after 365 days. Which two actions are natively supported by a Cloud Storage Object Lifecycle Management rule? (Choose two.)",
     "options": {
-      "A": "Write a Cloud Function that runs daily and checks object creation dates",
-      "B": "Configure an Object Lifecycle Management policy on the bucket with two rules: one to transition to Coldline after 30 days and one to delete after 365 days",
-      "C": "Use Cloud Scheduler to trigger gsutil commands to move and delete objects",
-      "D": "Set object expiration manually when uploading each file"
+      "A": "SetStorageClass — transition an object to a different storage class once a condition (such as age) is met",
+      "B": "Delete — permanently remove an object once a condition (such as age) is met",
+      "C": "Notify — publish a Pub/Sub message when an object ages past a condition",
+      "D": "Invoke — trigger a Cloud Function to reprocess the object once a condition is met"
     },
-    "correct": "B",
-    "explanation": "B is correct because Cloud Storage Object Lifecycle Management allows you to define rules based on object age (and other conditions) that automatically transition objects to different storage classes or delete them — no additional compute or orchestration needed. A is wrong because using Cloud Functions adds operational complexity when native lifecycle management achieves the same result. C is wrong because Cloud Scheduler with gsutil is an operationally complex custom solution. D is wrong because setting expiration per object manually is unscalable and error-prone.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because SetStorageClass is a native Object Lifecycle Management action that transitions an object to a different storage class (e.g., Coldline) when its rule conditions are met. B is correct because Delete is the other native lifecycle action, permanently removing objects once conditions such as age are met — together these two actions implement the described 30-day/365-day policy with no extra compute. C is wrong because publishing notifications on object changes is a separate feature (Pub/Sub notifications for Cloud Storage), not a lifecycle rule action. D is wrong because lifecycle rules cannot invoke Cloud Functions — only SetStorageClass, Delete, and AbortIncompleteMultipartUpload are supported actions.",
     "topic": "Cloud Storage Mgmt",
     "section": 3
   },
   {
     "id": "s3_q11",
-    "question": "You need to query data from a Cloud SQL instance using BigQuery without copying the data. Which feature enables this?",
+    "question": "You need to query data from a Cloud SQL instance using BigQuery without copying the data. Which two statements about BigQuery federated queries with Cloud SQL are correct? (Choose two.)",
     "options": {
-      "A": "Cloud SQL federated queries from BigQuery using BigQuery Omni",
-      "B": "BigQuery federated queries using Cloud SQL connections",
-      "C": "Export Cloud SQL data to Cloud Storage, then load into BigQuery",
-      "D": "Create a BigQuery view that reads from Cloud SQL directly"
+      "A": "You must first create a BigQuery connection resource that links to the Cloud SQL instance",
+      "B": "Federated queries support Cloud SQL for MySQL and Cloud SQL for PostgreSQL as data sources",
+      "C": "Federated queries require BigQuery Omni, which is used to query data in AWS S3 or Azure Blob Storage",
+      "D": "Federated queries automatically copy the Cloud SQL data into a BigQuery-managed table before each query runs"
     },
-    "correct": "B",
-    "explanation": "B is correct because BigQuery supports federated queries that connect to Cloud SQL (MySQL and PostgreSQL) via a Cloud SQL connection, allowing you to query Cloud SQL data from BigQuery without copying it. A is wrong because BigQuery Omni is for querying data in AWS S3 or Azure Blob Storage, not Cloud SQL. C is wrong because exporting and loading creates a data copy and doesn't provide live query access. D is wrong because BigQuery views cannot directly read from external databases — federated queries require a connection resource.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because BigQuery federated queries require a Cloud SQL connection resource to be created first, which stores the connection details and authenticates BigQuery to the Cloud SQL instance. B is correct because BigQuery's federated query support for Cloud SQL covers both MySQL and PostgreSQL instances. C is wrong because BigQuery Omni is for querying data stored in AWS S3 or Azure Blob Storage, not for Cloud SQL federated queries. D is wrong because federated queries read data live from Cloud SQL at query time — they do not copy or materialize the data into a BigQuery table.",
     "topic": "Database Backup",
     "section": 3
   },
@@ -169,15 +169,15 @@
   },
   {
     "id": "s3_q13",
-    "question": "You need to resize a VPC subnet's IPv4 address range because the original /24 range is running out of IP addresses. What is a key constraint when resizing a subnet?",
+    "question": "You need to resize a VPC subnet's IPv4 address range because the original /24 range is running out of IP addresses. Which two statements about resizing a subnet's primary IP range are correct? (Choose two.)",
     "options": {
-      "A": "You must delete all VMs in the subnet before resizing",
-      "B": "You can only expand a subnet's range, not shrink it, and the new range must contain the existing range",
-      "C": "Subnet resizing requires creating a new VPC and migrating resources",
-      "D": "You can resize the subnet freely up or down with no constraints"
+      "A": "You can only expand a subnet's range, not shrink it",
+      "B": "The new range must fully contain (be a superset of) the existing range",
+      "C": "You must delete all VMs in the subnet before resizing",
+      "D": "Resizing requires creating a new VPC and migrating resources into it"
     },
-    "correct": "B",
-    "explanation": "B is correct because Google Cloud only allows expanding (not shrinking) a subnet's IP range, and the new range must be a superset of the existing range to avoid conflicting with existing IP allocations. A is wrong because subnet expansion does not require stopping or deleting VMs. C is wrong because subnet resizing is done in place without needing a new VPC. D is wrong because there are constraints — you cannot shrink a subnet, only expand it.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because Google Cloud only allows expanding a subnet's primary IP range — you cannot shrink it. B is correct because the new, larger range must fully contain the existing range so that already-allocated IPs remain valid and no conflicts arise. C is wrong because expanding a subnet is done in place and does not require deleting or stopping VMs. D is wrong because resizing modifies the existing subnet resource directly — it does not require creating a new VPC.",
     "topic": "VPC Management",
     "section": 3
   },
@@ -225,15 +225,15 @@
   },
   {
     "id": "s3_q17",
-    "question": "You need to view the logs from a specific Cloud Run service revision to troubleshoot a startup failure. Where should you look first?",
+    "question": "You need to view the logs from a specific Cloud Run service revision to troubleshoot a startup failure. Which two statements about locating these logs are correct? (Choose two.)",
     "options": {
-      "A": "Cloud Trace — it captures all request traces including startup",
-      "B": "Cloud Logging — filter by resource type cloudrun_revision and the specific revision name",
-      "C": "Cloud Monitoring — check the container startup latency metric",
-      "D": "Cloud Profiler — view the startup CPU profile"
+      "A": "Cloud Logging captures the revision's stdout/stderr output and can be filtered by resource type cloudrun_revision and the specific revision name",
+      "B": "The Cloud Run service page in the Google Cloud Console has a Logs tab that surfaces these log entries directly",
+      "C": "Cloud Trace captures the container's stdout/stderr output produced during startup",
+      "D": "Cloud Profiler records the log messages produced when a container fails to start"
     },
-    "correct": "B",
-    "explanation": "B is correct because Cloud Logging collects stdout/stderr output from Cloud Run revisions, and filtering by resource type cloudrun_revision with the specific revision name shows all logs including startup errors and application output. A is wrong because Cloud Trace captures request tracing data, not application logs or startup errors. C is wrong because Cloud Monitoring metrics show performance data, not log messages or error details. D is wrong because Cloud Profiler captures CPU/memory profiles of running applications, not startup failures.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because Cloud Logging collects stdout/stderr from Cloud Run revisions, and filtering by resource type cloudrun_revision with the specific revision name isolates the startup error output. B is correct because the Cloud Run service page in the Console has a dedicated Logs tab that surfaces this same Cloud Logging data without leaving the service view. C is wrong because Cloud Trace captures request timing/span data, not stdout/stderr or startup error messages. D is wrong because Cloud Profiler captures CPU/memory profiles of running applications — it does not record log output.",
     "topic": "Cloud Logging",
     "section": 3
   },
@@ -421,15 +421,15 @@
   },
   {
     "id": "s3_q31",
-    "question": "You need to deploy Google Cloud Managed Service for Prometheus to monitor a GKE cluster. What is the primary benefit of using managed Prometheus over self-hosted Prometheus?",
+    "question": "You need to deploy Google Cloud Managed Service for Prometheus to monitor a GKE cluster. Which two statements about Managed Service for Prometheus are correct? (Choose two.)",
     "options": {
-      "A": "Managed Prometheus supports more metrics than open-source Prometheus",
-      "B": "Managed Prometheus eliminates the operational burden of running and scaling Prometheus infrastructure while maintaining compatibility with the Prometheus ecosystem",
-      "C": "Managed Prometheus is free while self-hosted Prometheus incurs licensing costs",
-      "D": "Managed Prometheus only works with GKE and not other compute platforms"
+      "A": "It eliminates the operational burden of running and scaling your own Prometheus server infrastructure",
+      "B": "It maintains compatibility with the open-source Prometheus ecosystem, including PromQL queries and existing exporters",
+      "C": "It can only collect metrics from GKE workloads, not from Compute Engine or other platforms",
+      "D": "It is a proprietary system that requires rewriting existing PromQL queries and Grafana dashboards"
     },
-    "correct": "B",
-    "explanation": "B is correct because Google Cloud Managed Service for Prometheus provides a fully managed, globally scalable backend for Prometheus metrics that is compatible with existing PromQL queries, Grafana dashboards, and Prometheus exporters — without requiring you to operate Prometheus servers. A is wrong because the metrics available depend on exporters, not the hosting model. C is wrong because self-hosted Prometheus is open-source and free — the cost difference is operational (Managed Prometheus vs. managing your own). D is wrong because Managed Prometheus can also collect metrics from Compute Engine and other compute platforms.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because Managed Service for Prometheus provides a fully managed, globally scalable backend, so you no longer need to operate and scale your own Prometheus servers. B is correct because it is designed to be compatible with the open-source Prometheus ecosystem — existing PromQL queries, Grafana dashboards, and exporters continue to work. C is wrong because Managed Service for Prometheus can also collect metrics from Compute Engine and other compute platforms, not just GKE. D is wrong because it is PromQL- and Grafana-compatible, so existing queries and dashboards do not need to be rewritten.",
     "topic": "Cloud Monitoring",
     "section": 3
   },
@@ -533,15 +533,15 @@
   },
   {
     "id": "s3_q39",
-    "question": "You need to manage Kubernetes deployments, services, and stateful sets in a GKE cluster. A team member updates a deployment image. What kubectl command applies a new container image to an existing deployment?",
+    "question": "You need to manage Kubernetes deployments, services, and stateful sets in a GKE cluster. Which two kubectl approaches correctly update the container image of an existing deployment? (Choose two.)",
     "options": {
-      "A": "kubectl apply -f deployment.yaml",
-      "B": "kubectl set image deployment/myapp container-name=new-image:tag",
+      "A": "kubectl set image deployment/myapp container-name=new-image:tag",
+      "B": "Update the image field in deployment.yaml, then run kubectl apply -f deployment.yaml",
       "C": "kubectl update deployment myapp --image=new-image:tag",
       "D": "kubectl replace deployment myapp --image=new-image:tag"
     },
-    "correct": "B",
-    "explanation": "B is correct because kubectl set image allows you to update a specific container's image in an existing deployment without needing to modify and reapply a YAML file, triggering a rolling update automatically. A is valid if you update the YAML file first, but the question asks about a specific container image update without YAML modification. C is wrong because kubectl update is not a valid kubectl command. D is wrong because kubectl replace recreates a resource from a file, not from a flag argument.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because kubectl set image directly updates a specific container's image on an existing deployment and triggers a rolling update, without needing a YAML file. B is correct because editing the manifest and re-running kubectl apply is the standard declarative way to update a deployment's image. C is wrong because kubectl update is not a valid kubectl command. D is wrong because kubectl replace requires a full resource manifest (via -f) to replace the existing object — it does not accept an --image flag.",
     "topic": "GKE Operations",
     "section": 3
   },
@@ -603,15 +603,15 @@
   },
   {
     "id": "s3_q44",
-    "question": "You need to deploy an AI agent to Agent Runtime on Gemini Enterprise Agent Platform. What is Agent Runtime designed to handle that a standard Cloud Run deployment does not natively provide?",
+    "question": "You need to deploy an AI agent to Agent Runtime on Gemini Enterprise Agent Platform. Which two capabilities does Agent Runtime provide that a standard Cloud Run deployment does not natively provide? (Choose two.)",
     "options": {
-      "A": "Agent Runtime provides a custom VPC for agent workloads",
-      "B": "Agent Runtime provides managed session state, tool execution orchestration, and long-running agent task management for conversational AI agents",
-      "C": "Agent Runtime provides lower costs for AI inference compared to Cloud Run",
-      "D": "Agent Runtime provides automatic model fine-tuning based on agent interactions"
+      "A": "Managed session state for multi-turn conversational agent interactions",
+      "B": "Tool execution orchestration for agent function/tool calling",
+      "C": "Automatic fine-tuning of the underlying model based on agent interactions",
+      "D": "A custom VPC dedicated exclusively to agent workloads"
     },
-    "correct": "B",
-    "explanation": "B is correct because Agent Runtime on Gemini Enterprise Agent Platform is specifically designed for AI agents and provides managed infrastructure for session state persistence, tool calling orchestration, and long-running multi-turn interactions — capabilities not natively built into standard Cloud Run. A is wrong because VPC configuration is standard across Google Cloud services. C is wrong because Agent Runtime is a specialized service and not necessarily cheaper than Cloud Run for generic workloads. D is wrong because Agent Runtime does not provide automatic model fine-tuning.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because Agent Runtime is purpose-built for conversational AI agents and manages session state across multi-turn interactions, which standard Cloud Run does not provide out of the box. B is correct because Agent Runtime also provides orchestration for tool/function calling made by the agent, another capability not native to a plain Cloud Run deployment. C is wrong because Agent Runtime does not perform automatic model fine-tuning. D is wrong because VPC configuration (Serverless VPC Access, VPC networks) is a standard Google Cloud networking capability available to Cloud Run and other services alike, not something unique to Agent Runtime.",
     "topic": "Compute Management",
     "section": 3
   },
@@ -687,15 +687,15 @@
   },
   {
     "id": "s3_q50",
-    "question": "You need to configure autoscaling for the node pools in a GKE Standard cluster so nodes are added when resource utilization is high and removed when underutilized. What should you enable?",
+    "question": "You need to configure autoscaling for the node pools in a GKE Standard cluster so nodes are added when resource utilization is high and removed when underutilized. Which two statements about GKE Cluster Autoscaler are correct? (Choose two.)",
     "options": {
-      "A": "Horizontal Pod Autoscaler (HPA) on the node pool",
-      "B": "Cluster Autoscaler on the node pool by enabling autoscaling with min and max node counts",
-      "C": "Vertical Pod Autoscaler (VPA) at the cluster level",
-      "D": "Node auto-provisioning without specifying min/max counts"
+      "A": "It is enabled per node pool with a configured minimum and maximum node count",
+      "B": "It scales the number of nodes up when Pods cannot be scheduled due to insufficient resources, and down when nodes are underutilized",
+      "C": "It automatically adjusts the CPU and memory requests of individual Pods",
+      "D": "It is the same feature as node auto-provisioning and uses identical configuration"
     },
-    "correct": "B",
-    "explanation": "B is correct because GKE Cluster Autoscaler scales the number of nodes in a node pool up when Pods cannot be scheduled due to resource constraints and down when nodes are underutilized — you configure it by enabling autoscaling on the node pool with minimum and maximum node counts. A is wrong because HPA scales Pods, not nodes. C is wrong because VPA adjusts Pod resource requests, not node counts. D is wrong because node auto-provisioning automatically creates and deletes node pools based on workload requirements — it's a different feature from node pool autoscaling and requires a different configuration approach.",
+    "correct": ["A", "B"],
+    "explanation": "A is correct because Cluster Autoscaler is configured on a per-node-pool basis, with a minimum and maximum node count bounding how far it can scale. B is correct because it adds nodes when Pods are unschedulable due to resource constraints and removes nodes once they become underutilized and their Pods can be rescheduled elsewhere. C is wrong because adjusting individual Pod resource requests is what Vertical Pod Autoscaler (VPA) does, not Cluster Autoscaler. D is wrong because node auto-provisioning is a distinct feature that automatically creates and deletes entire node pools based on workload requirements — it is configured separately from node pool autoscaling.",
     "topic": "GKE Operations",
     "section": 3
   }
