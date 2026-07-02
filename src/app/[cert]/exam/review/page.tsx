@@ -99,7 +99,7 @@ export default function ExamReviewPage() {
           })}
         </div>
 
-        {/* Topic filter */}
+        {/* Section filter */}
         <div className="flex gap-1.5 overflow-x-auto">
           <button
             onClick={() => setSection("all")}
@@ -110,7 +110,7 @@ export default function ExamReviewPage() {
                 : "border-border text-muted-foreground hover:text-foreground"
             )}
           >
-            All topics
+            All sections
           </button>
           {cert.sections.map((s) => (
             <button
